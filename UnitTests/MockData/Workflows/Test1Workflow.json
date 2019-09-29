@@ -1,0 +1,65 @@
+﻿{
+  "$type": "Headway.WorkflowEngine.Workflow, Headway.WorkflowEngine",
+  "FullName": "Headway.WorkflowEngine.UnitTests.MockData.Workflows.Test1Workflow",
+  "InitialState": {
+    "Name": "Not Started",
+    "Transitions": [
+      {
+        "Name": "Start",
+        "ToStateName": "Reviewing"
+      }
+    ],
+    "CanEnter": null,
+    "EnterAction": null,
+    "ExitAction": null
+  },
+  "States": [
+    {
+      "Name": "Reviewing",
+      "Transitions": [
+        {
+          "Name": "Review Complete",
+          "ToStateName": "Complete"
+        },
+        {
+          "Name": "Need More Info",
+          "ToStateName": "More Info Needed"
+        }
+      ],
+      "CanEnter": null,
+      "EnterAction": null,
+      "ExitAction": null
+    },
+    {
+      "Name": "More Info Needed",
+      "Transitions": [
+        {
+          "Name": "Review",
+          "ToStateName": "Reviewing"
+        }
+      ],
+      "CanEnter": null,
+      "EnterAction": {
+        "$type": "Headway.Dynamo.Commands.MacroCommand, Headway.Dynamo",
+        "Commands": [
+          {
+            "$type": "Headway.Dynamo.Commands.SetPropertyValueCommand, Headway.Dynamo",
+            "PropertyName": "Info",
+            "Value" : "Dude"
+          },
+          {
+            "$type": "Headway.WorkflowEngine.Commands.TransitionToWhenCommand, Headway.WorkflowEngine",
+            "TransitionName": "Review"
+          }
+        ]
+      },
+      "ExitAction": null
+    },
+    {
+      "Name": "Complete",
+      "CanEnter": null,
+      "EnterAction": null,
+      "ExitAction": null
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+
+    <AssemblyName>Headway.WorkflowEngine.UnitTests</AssemblyName>
+
+    <RootNamespace>Headway.WorkflowEngine.UnitTests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="MockData\ItemTypes\NewEmployeeOnboardingTaskType.json" />
+    <None Remove="MockData\ItemTypes\Test1ItemType.json" />
+    <None Remove="MockData\Templates\NewEmployeeOnboardingTaskTemplate.json" />
+    <None Remove="MockData\Templates\Test1Template.json" />
+    <None Remove="MockData\Workflows\.NewEmployeeOnboarding.json.un~" />
+    <None Remove="MockData\Workflows\NewEmployeeOnboarding.json" />
+    <None Remove="MockData\Workflows\NewEmployeeOnboarding.json~" />
+    <None Remove="MockData\Workflows\Test1Workflow.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="MockData\ItemTypes\NewEmployeeOnboardingTaskType.json" />
+    <EmbeddedResource Include="MockData\ItemTypes\Test1ItemType.json" />
+    <EmbeddedResource Include="MockData\Templates\NewEmployeeOnboardingTaskTemplate.json" />
+    <EmbeddedResource Include="MockData\Templates\Test1Template.json" />
+    <EmbeddedResource Include="MockData\Workflows\NewEmployeeOnboarding.json" />
+    <EmbeddedResource Include="MockData\Workflows\Test1Workflow.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Headway.Dynamo" Version="0.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
+    <PackageReference Include="Ninject" Version="3.3.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Headway.WorkflowEngine.csproj" />
+  </ItemGroup>
+
+</Project>

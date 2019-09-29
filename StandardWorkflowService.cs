@@ -1,0 +1,62 @@
+﻿using System;
+using Headway.Dynamo.Exceptions;
+using Headway.WorkflowEngine.Resolvers;
+
+namespace Headway.WorkflowEngine
+{
+    public sealed class StandardWorkflowService : IWorkflowService
+    {
+        private IServiceProvider serviceProvider;
+        private IWorkflowItemTemplateResolver workflowItemTemplateResolver;
+        private IWorkflowByNameResolver workflowByNameResolver;
+
+        public StandardWorkflowService(IServiceProvider svcProvider)
+        {
+            if (svcProvider == null)
+            {
+                throw new ArgumentNullException(nameof(svcProvider));
+            }
+            this.serviceProvider = svcProvider;
+
+            this.workflowItemTemplateResolver = this.serviceProvider.GetService(typeof(IWorkflowItemTemplateResolver)) as IWorkflowItemTemplateResolver;
+            if (this.workflowItemTemplateResolver == null)
+            {
+                throw new ServiceNotFoundException(typeof(IWorkflowItemTemplateResolver));
+            }
+
+            this.workflowByNameResolver = this.serviceProvider.GetService(typeof(IWorkflowByNameResolver)) as IWorkflowByNameResolver;
+            if (this.workflowByNameResolver == null)
+            {
+                throw new ServiceNotFoundException(typeof(IWorkflowByNameResolver));
+            }
+        }
+
+        public WorkflowItem CreateWorkflowItem(string templateName, object context)
+        {
+            var workflowItemTemplate = this.workflowItemTemplateResolver.Resolve(templateName);
+            if (workflowItemTemplate == null)
+            {
+                var msg = string.Format("Workflow item template {0} not found", templateName);
+                throw new InvalidOperationException(msg);
+            }
+
+             return workflowItemTemplate.CreateInstance(this.serviceProvider, context);
+        }
+
+        public WorkflowTransitionResult TransitionTo(WorkflowItem item, string transitionName)
+        {
+            if (item == null)
+            {
+                throw new ArgumentNullException(nameof(item));
+            }
+
+            var workflow = this.workflowByNameResolver.Resolve(item.WorkflowName);
+            if (workflow == null)
+            {
+                var msg = string.Format("Workflow {0} not found", item.WorkflowName);
+            }
+
+            return workflow.TransitionTo(item, transitionName, this.serviceProvider);
+        }
+    }
+}

@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Headway.WorkflowEngine</RootNamespace>
+    <AssemblyName>Headway.WorkflowEngine</AssemblyName>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="UnitTests\**" />
+    <EmbeddedResource Remove="UnitTests\**" />
+    <None Remove="UnitTests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ItemTypes\TaskItemType.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="ItemTypes\TaskItemType.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Headway.Dynamo" Version="0.1.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Factories\" />
+  </ItemGroup>
+
+</Project>
