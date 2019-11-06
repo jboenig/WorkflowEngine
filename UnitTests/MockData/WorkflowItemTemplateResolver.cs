@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Headway.WorkflowEngine.Resolvers;
 using Headway.Dynamo.Serialization;
 
@@ -9,9 +10,9 @@ namespace Headway.WorkflowEngine.UnitTests.MockData
         private Dictionary<string, WorkflowItemTemplate> templates = new Dictionary<string, WorkflowItemTemplate>();
         private JsonResourceObjectResolver<WorkflowItemTemplate> jsonResourceTemplateResolver;
 
-        public WorkflowItemTemplateResolver()
+        public WorkflowItemTemplateResolver(IServiceProvider svcProvider)
         {
-            this.jsonResourceTemplateResolver = new JsonResourceObjectResolver<WorkflowItemTemplate>(this.GetType().Assembly);
+            this.jsonResourceTemplateResolver = new JsonResourceObjectResolver<WorkflowItemTemplate>(svcProvider, this.GetType().Assembly);
         }
 
         public WorkflowItemTemplate Resolve(string key)

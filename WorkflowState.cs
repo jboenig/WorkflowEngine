@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Headway.Dynamo;
 using Headway.Dynamo.Conditions;
@@ -135,17 +136,18 @@ namespace Headway.WorkflowEngine
         /// Thrown if execution of the <see cref="Command"/> used for the enter
         /// action fails for any reason.
         /// </exception>
-        public CommandResult ExecuteEnterAction(IServiceProvider serviceProvider, object context)
+        public Task<CommandResult> ExecuteEnterAction(IServiceProvider serviceProvider, object context)
         {
-            CommandResult res = CommandResult.Success;
-
             var enterAction = this.EnterAction;
             if (enterAction != null)
             {
-                res = enterAction.Execute(serviceProvider, context);
+                return enterAction.Execute(serviceProvider, context);
             }
 
-            return res;
+            return new Task<CommandResult>(() =>
+            {
+                return CommandResult.Success;
+            });
         }
 
         /// <summary>
@@ -161,17 +163,18 @@ namespace Headway.WorkflowEngine
         /// Thrown if execution of the <see cref="Command"/> used for the exit
         /// action fails for any reason.
         /// </exception>
-        public CommandResult ExecuteExitAction(IServiceProvider serviceProvider, object context)
+        public Task<CommandResult> ExecuteExitAction(IServiceProvider serviceProvider, object context)
         {
-            CommandResult res = CommandResult.Success;
-
             var exitAction = this.ExitAction;
             if (exitAction != null)
             {
-                res = exitAction.Execute(serviceProvider, context);
+                return exitAction.Execute(serviceProvider, context);
             }
 
-            return res;
+            return new Task<CommandResult>(() =>
+            {
+                return CommandResult.Success;
+            });
         }
 
         #endregion

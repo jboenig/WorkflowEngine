@@ -348,13 +348,17 @@ namespace Headway.WorkflowEngine
 
                 ///////////////////////////////////////////////////////////////////
                 // Execute ExitAction associated with the FROM state
-                actionRes = fromState.ExecuteExitAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
+                var exitActionTask = fromState.ExecuteExitAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
+                exitActionTask.RunSynchronously();
+                actionRes = exitActionTask.Result;
 
                 if (actionRes.IsSuccess)
                 {
                     ///////////////////////////////////////////////////////////////////
                     // Execute Action associated with the transition
-                    actionRes = transition.ExecuteAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
+                    var transitionActionTask = transition.ExecuteAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
+                    transitionActionTask.RunSynchronously();
+                    actionRes = transitionActionTask.Result;
                 }
 
                 if (actionRes.IsSuccess)
@@ -375,7 +379,9 @@ namespace Headway.WorkflowEngine
                 {
                     ///////////////////////////////////////////////////////////////////
                     // Execute EnterAction associated with the TO state
-                    actionRes = toState.ExecuteEnterAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
+                    var enterActionTask = toState.ExecuteEnterAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
+                    enterActionTask.RunSynchronously();
+                    actionRes = enterActionTask.Result;
                 }
 
                 if (!actionRes.IsSuccess)

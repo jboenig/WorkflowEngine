@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Design;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Ninject;
 
 using Headway.Dynamo.Metadata;
 using Headway.Dynamo.Runtime;
@@ -16,32 +17,28 @@ namespace WorkflowEngine.UnitTests
     [TestClass]
     public class WorkflowItemRepoTests
     {
-        private IServiceProvider serviceProvider;
+        private IKernel kernel;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            var serviceContainer = new ServiceContainer();
-            var workflowByNameResolver = new WorkflowByNameResolver();
-            serviceContainer.AddService(typeof(IWorkflowByNameResolver), workflowByNameResolver);
-            serviceContainer.AddService(typeof(IObjectResolver<string, Workflow>), workflowByNameResolver);
-            serviceContainer.AddService(typeof(IWorkflowItemTemplateResolver), new WorkflowItemTemplateResolver());
-            serviceContainer.AddService(typeof(IWorkflowItemTypeResolver), new WorkflowItemTypeResolver());
-            var converterService = new JsonConverterService();
-            serviceContainer.AddService(typeof(IJsonConverterService), converterService);
-            serviceContainer.AddService(typeof(ISerializerConfigService), new StandardSerializerConfigService(converterService));
-            serviceContainer.AddService(typeof(IMetadataProvider), new StandardMetadataProvider());
-            this.serviceProvider = serviceContainer;
+            this.kernel = new StandardKernel();
+            this.kernel.Bind<IServiceProvider>().ToConstant(this.kernel);
+            this.kernel.Bind<IWorkflowByNameResolver>().To<WorkflowByNameResolver>();
+            this.kernel.Bind<IWorkflowItemTemplateResolver>().To<WorkflowItemTemplateResolver>();
+            this.kernel.Bind<IWorkflowItemTypeResolver>().To<WorkflowItemTypeResolver>();
+            this.kernel.Bind<ISerializerConfigService>().To<StandardSerializerConfigService>();
+            this.kernel.Bind<IMetadataProvider>().To<StandardMetadataProvider>();
         }
 
         [TestMethod]
         public void CreateAndSaveWorkflowItemTest1()
         {
-            var metadataProvider = this.serviceProvider.GetService(typeof(IMetadataProvider)) as IMetadataProvider;
-            var workflowItemTemplateResolver = this.serviceProvider.GetService(typeof(IWorkflowItemTemplateResolver)) as IWorkflowItemTemplateResolver;
+            var metadataProvider = this.kernel.GetService(typeof(IMetadataProvider)) as IMetadataProvider;
+            var workflowItemTemplateResolver = this.kernel.GetService(typeof(IWorkflowItemTemplateResolver)) as IWorkflowItemTemplateResolver;
             var workflowItemTemplate = workflowItemTemplateResolver.Resolve("MockData.Templates.Test1Template");
             Assert.IsNotNull(workflowItemTemplate);
-            var workflowItem = workflowItemTemplate.CreateInstance(this.serviceProvider, null);
+            var workflowItem = workflowItemTemplate.CreateInstance(this.kernel, null);
             Assert.IsNotNull(workflowItem);
             Assert.AreEqual(workflowItem.ItemType.DisplayName, "Issue");
             Assert.AreEqual(workflowItem.ItemType.Abbreviation, "ISS");
@@ -50,7 +47,7 @@ namespace WorkflowEngine.UnitTests
             var repo = new FlatFileRepo<WorkflowItem>(
                 workflowItemTypeInfo,
                 "workflowitems.json",
-                this.serviceProvider);
+                this.kernel);
 
             repo.Add(workflowItem);
             repo.SaveChanges();

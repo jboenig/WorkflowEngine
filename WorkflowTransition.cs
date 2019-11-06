@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Headway.Dynamo.Runtime;
 using Headway.Dynamo.Commands;
@@ -162,17 +163,18 @@ namespace Headway.WorkflowEngine
         /// Thrown if execution of the <see cref="Command"/> assigned to the
         /// action fails for any reason.
         /// </exception>
-        public CommandResult ExecuteAction(IServiceProvider serviceProvider, object context)
+        public Task<CommandResult> ExecuteAction(IServiceProvider serviceProvider, object context)
         {
-            CommandResult res = CommandResult.Success;
-
             var action = this.Action;
             if (action != null)
             {
-                res = action.Execute(serviceProvider, context);
+                return action.Execute(serviceProvider, context);
             }
 
-            return res;
+            return new Task<CommandResult>(() =>
+            {
+                return CommandResult.Success;
+            });
         }
 
         #endregion

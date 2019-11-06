@@ -3,7 +3,8 @@ using System.ComponentModel.Design;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ninject;
 
-using Headway.Dynamo.Runtime;
+using Headway.Dynamo.Metadata;
+using Headway.Dynamo.Serialization;
 using Headway.WorkflowEngine;
 using Headway.WorkflowEngine.UnitTests.MockData;
 using Headway.WorkflowEngine.Resolvers;
@@ -22,6 +23,8 @@ namespace WorkflowEngine.UnitTests
             kernel.Bind<IWorkflowByNameResolver>().To<WorkflowByNameResolver>();
             kernel.Bind<IWorkflowItemTemplateResolver>().To<WorkflowItemTemplateResolver>();
             kernel.Bind<IWorkflowItemTypeResolver>().To<WorkflowItemTypeResolver>();
+            kernel.Bind<ISerializerConfigService>().To<StandardSerializerConfigService>();
+            kernel.Bind<IMetadataProvider>().To<StandardMetadataProvider>();
             kernel.Bind<IWorkflowService>().To<StandardWorkflowService>();
             kernel.Bind<IServiceProvider>().ToConstant(kernel);
             this.serviceProvider = kernel;

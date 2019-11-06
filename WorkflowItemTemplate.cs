@@ -100,7 +100,7 @@ namespace Headway.WorkflowEngine
             string itemId = Guid.NewGuid().ToString();
 
             // Instantiate new workflow item and pass workflow as constructor parameter
-            WorkflowItem workflowItem = workflowItemObjectType.CreateInstance<WorkflowItem>(itemType, itemId, workflow.FullName);
+            WorkflowItem workflowItem = workflowItemObjectType.CreateInstance<WorkflowItem>(svcProvider, itemType, itemId, workflow.FullName);
 
             // Initialize new instance
             this.InitWorkflowItem(workflowItem);

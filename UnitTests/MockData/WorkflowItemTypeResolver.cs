@@ -8,9 +8,9 @@ namespace Headway.WorkflowEngine.UnitTests.MockData
     {
         private JsonResourceObjectResolver<WorkflowItemType> jsonResourceItemTypeResolver;
 
-        public WorkflowItemTypeResolver()
+        public WorkflowItemTypeResolver(IServiceProvider svcProvider)
         {
-            this.jsonResourceItemTypeResolver = new JsonResourceObjectResolver<WorkflowItemType>(this.GetType().Assembly);
+            this.jsonResourceItemTypeResolver = new JsonResourceObjectResolver<WorkflowItemType>(svcProvider, this.GetType().Assembly);
         }
 
         public WorkflowItemType Resolve(string key)

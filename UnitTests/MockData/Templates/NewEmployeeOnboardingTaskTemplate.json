@@ -3,5 +3,5 @@
   "FullName": "Headway.WorkflowEngine.UnitTests.MockData.Templates.NewEmployeeOnboardingTaskTemplate",
   "ItemTypeFullName": "MockData.ItemTypes.NewEmployeeOnboardingTaskType",
   "WorkflowName": "MockData.Workflows.NewEmployeeOnboarding",
-  "InitialState": "Enter New Hire"
+  "InitialState": "Enter New Hire Information"
 }

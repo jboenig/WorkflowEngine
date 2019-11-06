@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using Headway.Dynamo.Metadata;
 using Headway.Dynamo.Metadata.Reflection;
 using Newtonsoft.Json;
@@ -99,6 +100,20 @@ namespace Headway.WorkflowEngine
                 }
             }
         }
+
+        #region Serialization
+
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context)
+        {
+            var svcProvider = context.Context as IServiceProvider;
+            if (svcProvider != null)
+            {
+                this.metadataProvider = svcProvider.GetService(typeof(IMetadataProvider)) as IMetadataProvider;
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// Returns the logical name of the view used to
