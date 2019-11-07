@@ -32,14 +32,6 @@ namespace Headway.WorkflowEngine
     public interface IWorkflowSubject
     {
         /// <summary>
-        /// Gets the <see cref="Workflow"/> associated with this object.
-        /// </summary>
-//        Workflow Workflow
-//        {
-//            get;
-//        }
-
-        /// <summary>
         /// Gets the fully qualified name of the <see cref="Workflow"/> associated with
         /// this object.
         /// </summary>

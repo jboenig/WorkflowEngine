@@ -19,10 +19,25 @@
 
 namespace Headway.WorkflowEngine
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IWorkflowService
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="templateName"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
         WorkflowItem CreateWorkflowItem(string templateName, object context);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="transitionName"></param>
+        /// <returns></returns>
         WorkflowTransitionResult TransitionTo(WorkflowItem item, string transitionName);
     }
 }

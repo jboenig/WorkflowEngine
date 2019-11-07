@@ -120,7 +120,7 @@ namespace Headway.WorkflowEngine
         #region Public Methods
 
         /// <summary>
-        /// Gets a <see cref="Workflowtransition"/> by name.
+        /// Gets a <see cref="WorkflowTransition"/> by name.
         /// </summary>
         /// <param name="transitionName">
         /// Name of transition to retrieve.

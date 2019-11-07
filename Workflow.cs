@@ -228,6 +228,13 @@ namespace Headway.WorkflowEngine
             return WorkflowTransitionResult.Success;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="workflowSubject"></param>
+        /// <param name="transitionName"></param>
+        /// <param name="serviceProvider"></param>
+        /// <returns></returns>
         public WorkflowTransitionResult IsTransitionToAllowed(IWorkflowSubject workflowSubject, string transitionName, IServiceProvider serviceProvider)
         {
             ///////////////////////////////////////////////////////////////////
@@ -282,7 +289,7 @@ namespace Headway.WorkflowEngine
         /// <see cref="WorkflowTransition.Condition"/> evaluates to true.
         /// The <see cref="WorkflowState.ExitAction"/>,
         /// <see cref="WorkflowTransition.Action"/>, and
-        /// <see cref="WorkflorState.EnterAction"/> are all fired
+        /// <see cref="WorkflowState.EnterAction"/> are all fired
         /// along the way.
         /// </remarks>
         /// <exception cref="ArgumentNullException">

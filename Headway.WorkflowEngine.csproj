@@ -7,6 +7,12 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <DocumentationFile>C:\Users\jeffb\Source\Repos\Headway.WorkflowEngine\Headway.WorkflowEngine.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="UnitTests\**" />
     <EmbeddedResource Remove="UnitTests\**" />
@@ -14,20 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ItemTypes\TaskItemType.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="ItemTypes\TaskItemType.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Headway.Dynamo" Version="0.3.0" />
+    <PackageReference Include="Headway.Dynamo" Version="0.3.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Factories\" />
   </ItemGroup>
 
 </Project>

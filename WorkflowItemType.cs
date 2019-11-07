@@ -34,6 +34,10 @@ namespace Headway.WorkflowEngine
         private ObjectType objectType;
         private IMetadataProvider metadataProvider;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="metadataProvider"></param>
         public WorkflowItemType(IMetadataProvider metadataProvider)
         {
             this.metadataProvider = metadataProvider;
@@ -134,22 +138,8 @@ namespace Headway.WorkflowEngine
 
         #endregion
 
-        /// <summary>
-        /// Returns the logical name of the view used to
-        /// render the given workflow item.
-        /// </summary>
-        /// <param name="viewMode">Mode of view to return</param>
-        /// <returns>
-        /// Name of the view to use for this type of workflow item
-        /// and the specified workflow state and context.
-        /// </returns>
         //public abstract string GetViewName(WorkflowViewModes viewMode);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="viewMode"></param>
-        /// <param name="viewName"></param>
         //public abstract void SetViewName(WorkflowViewModes viewMode, string viewName);
     }
 }

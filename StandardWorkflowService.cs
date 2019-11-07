@@ -23,12 +23,19 @@ using Headway.WorkflowEngine.Resolvers;
 
 namespace Headway.WorkflowEngine
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class StandardWorkflowService : IWorkflowService
     {
         private IServiceProvider serviceProvider;
         private IWorkflowItemTemplateResolver workflowItemTemplateResolver;
         private IWorkflowByNameResolver workflowByNameResolver;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="svcProvider"></param>
         public StandardWorkflowService(IServiceProvider svcProvider)
         {
             if (svcProvider == null)
@@ -50,6 +57,12 @@ namespace Headway.WorkflowEngine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="templateName"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public WorkflowItem CreateWorkflowItem(string templateName, object context)
         {
             var workflowItemTemplate = this.workflowItemTemplateResolver.Resolve(templateName);
@@ -62,6 +75,12 @@ namespace Headway.WorkflowEngine
              return workflowItemTemplate.CreateInstance(this.serviceProvider, context);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="transitionName"></param>
+        /// <returns></returns>
         public WorkflowTransitionResult TransitionTo(WorkflowItem item, string transitionName)
         {
             if (item == null)

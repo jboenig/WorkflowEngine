@@ -17,12 +17,17 @@
 // with Headway.WorkflowEngine. If not, see http://www.gnu.org/licenses/.
 ////////////////////////////////////////////////////////////////////////////////
 
-using System;
-
 namespace Headway.WorkflowEngine.Exceptions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class WorkflowNotFoundException : WorkflowException
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="workflowFullName"></param>
         public WorkflowNotFoundException(string workflowFullName) :
             base(string.Format("Workflow {0} not found", workflowFullName), null)
         {

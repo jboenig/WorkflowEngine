@@ -153,22 +153,10 @@ namespace Headway.WorkflowEngine
         /// <param name="workflowItem">
         /// <see cref="WorkflowItem"/> object to initialize.
         /// </param>
-        /// <remarks>
-        /// <list type="bullet">
-        /// <listheader>
         /// <description>
         /// The following properties are already initialized when this method
         /// is invoked
         /// </description>
-        /// </listheader>
-        /// <item>
-        /// <description><see cref="WorkflowItem.Workflow"/></description>
-        /// </item>
-        /// <item>
-        /// <description><see cref="WorkflowItem.ItemType"/></description>
-        /// </item>
-        /// </list>
-        /// </remarks>
         protected virtual void InitWorkflowItem(WorkflowItem workflowItem)
         {
             workflowItem.CurrentState = this.InitialState;

@@ -175,7 +175,7 @@ namespace Headway.WorkflowEngine
         /// <param name="serviceProvider">Interface to service provider.</param>
         /// <param name="context"></param>
         /// <remarks>
-        /// If <see cref="WorkflowState.Action"/> is null then this
+        /// If <see cref="WorkflowTransition.Action"/> is null then this
         /// method does nothing.
         /// </remarks>
         /// <exception cref="ActionFailedException">

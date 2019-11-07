@@ -1,0 +1,964 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Headway.WorkflowEngine</name>
+    </assembly>
+    <members>
+        <member name="T:Headway.WorkflowEngine.Commands.TransitionToWhenCommand">
+            <summary>
+            This command is designed to be used in a workflow to
+            invoke a transition when a specified condition is true.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.Commands.TransitionToWhenCommand.TransitionName">
+            <summary>
+            Gets or sets the name of the transition to use.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.Commands.TransitionToWhenCommand.Condition">
+            <summary>
+            Gets or sets the <see cref="P:Headway.WorkflowEngine.Commands.TransitionToWhenCommand.Condition"/> that determines
+            if the transition will occur.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Commands.TransitionToWhenCommand.Execute(System.IServiceProvider,System.Object)">
+            <summary>
+            Executes this command.
+            </summary>
+            <param name="serviceProvider">Interface to service provider</param>
+            <param name="context">User defined context data</param>
+            <returns>
+            Returns a <see cref="T:Headway.Dynamo.Commands.CommandResult"/> object that describes
+            the result.
+            </returns>
+            <remarks>
+            The <see cref="P:Headway.WorkflowEngine.Commands.TransitionToWhenCommand.Condition"/> is evaluated and
+            if true, the transition is applied.
+            </remarks>
+        </member>
+        <member name="T:Headway.WorkflowEngine.Exceptions.ActionFailedException">
+            <summary>
+            Exception thrown when an action fails during workflow execution.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Exceptions.ActionFailedException.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Exceptions.ActionFailedException.#ctor(System.String,System.Exception)">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+            <param name="innerException"></param>
+        </member>
+        <member name="T:Headway.WorkflowEngine.Exceptions.InitialStateNotFoundException">
+            <summary>
+            Exception thrown when a workflow has no initial
+            state defined.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Exceptions.InitialStateNotFoundException.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.Exceptions.InitialStateNotFoundException.Message">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Headway.WorkflowEngine.Exceptions.StateNotFoundException">
+            <summary>
+            Exception thrown when an expected state cannot be found
+            in a workflow.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Exceptions.StateNotFoundException.#ctor(Headway.WorkflowEngine.Workflow,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="workflow"></param>
+            <param name="stateName"></param>
+        </member>
+        <member name="P:Headway.WorkflowEngine.Exceptions.StateNotFoundException.Message">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Headway.WorkflowEngine.Exceptions.TransitionNotFoundException">
+            <summary>
+            Exception thrown when an expected transition cannot be
+            found in a state.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Exceptions.TransitionNotFoundException.#ctor(Headway.WorkflowEngine.WorkflowState,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="state"></param>
+            <param name="transitionName"></param>
+        </member>
+        <member name="P:Headway.WorkflowEngine.Exceptions.TransitionNotFoundException.Message">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Headway.WorkflowEngine.Exceptions.WorkflowException">
+            <summary>
+            Base class for workflow exceptions.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Exceptions.WorkflowException.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Exceptions.WorkflowException.#ctor(System.String,System.Exception)">
+            <summary>
+            Construct from a message and inner exception.
+            </summary>
+            <param name="message">Message</param>
+            <param name="innerException">Inner exception</param>
+        </member>
+        <member name="T:Headway.WorkflowEngine.Exceptions.WorkflowNotFoundException">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Exceptions.WorkflowNotFoundException.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="workflowFullName"></param>
+        </member>
+        <member name="T:Headway.WorkflowEngine.IWorkflowItemByIdResolver">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Headway.WorkflowEngine.IWorkflowService">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.IWorkflowService.CreateWorkflowItem(System.String,System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="templateName"></param>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Headway.WorkflowEngine.IWorkflowService.TransitionTo(Headway.WorkflowEngine.WorkflowItem,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="item"></param>
+            <param name="transitionName"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Headway.WorkflowEngine.IWorkflowSubject">
+            <summary>
+            Interface to objects that can move through
+            a <see cref="T:Headway.WorkflowEngine.Workflow"/>.
+            </summary>
+            <remarks>
+            This interface provides the minimal set of properties and
+            methods needed to apply workflow transitions.
+            </remarks>
+        </member>
+        <member name="P:Headway.WorkflowEngine.IWorkflowSubject.WorkflowName">
+            <summary>
+            Gets the fully qualified name of the <see cref="T:Headway.WorkflowEngine.Workflow"/> associated with
+            this object.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.IWorkflowSubject.CurrentState">
+            <summary>
+            Gets the name of workflow current state this object is in.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.IWorkflowSubject.GetContextObject(System.IServiceProvider)">
+            <summary>
+            Gets the context object.
+            </summary>
+            <param name="svcProvider">Reference to service provider</param>
+            <returns>Context object</returns>
+        </member>
+        <member name="M:Headway.WorkflowEngine.IWorkflowSubject.OnTransitioningTo(Headway.WorkflowEngine.WorkflowTransition)">
+            <summary>
+            Called before this object is transitioned to a new state.
+            </summary>
+            <param name="transition"></param>
+        </member>
+        <member name="M:Headway.WorkflowEngine.IWorkflowSubject.OnTransitionedTo(Headway.WorkflowEngine.WorkflowTransition)">
+            <summary>
+            Called after this object is transitioned to a new state.
+            </summary>
+            <param name="transition"></param>
+        </member>
+        <member name="T:Headway.WorkflowEngine.Resolvers.IWorkflowByNameResolver">
+            <summary>
+            Resolves <see cref="T:Headway.WorkflowEngine.Workflow"/> objects given
+            a unique name as a key.
+            </summary>
+        </member>
+        <member name="T:Headway.WorkflowEngine.Resolvers.IWorkflowItemTemplateResolver">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Headway.WorkflowEngine.Resolvers.IWorkflowItemTypeResolver">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Headway.WorkflowEngine.StandardWorkflowService">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.StandardWorkflowService.#ctor(System.IServiceProvider)">
+            <summary>
+            
+            </summary>
+            <param name="svcProvider"></param>
+        </member>
+        <member name="M:Headway.WorkflowEngine.StandardWorkflowService.CreateWorkflowItem(System.String,System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="templateName"></param>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Headway.WorkflowEngine.StandardWorkflowService.TransitionTo(Headway.WorkflowEngine.WorkflowItem,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="item"></param>
+            <param name="transitionName"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Headway.WorkflowEngine.Workflow">
+            <summary>
+            Encapsulates a workflow is a set of states and transitions
+            that can be applied to a <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/>.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Workflow.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Workflow.#ctor(System.String)">
+            <summary>
+            Constructs a <see cref="T:Headway.WorkflowEngine.Workflow"/> given a
+            fully qualified name.
+            </summary>
+            <param name="fullName">
+            Fully qualified name of the workflow.
+            </param>
+        </member>
+        <member name="P:Headway.WorkflowEngine.Workflow.Name">
+            <summary>
+            Gets the name of the workflow.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.Workflow.DisplayName">
+            <summary>
+            Gets the display name of the workflow.
+            </summary>        
+        </member>
+        <member name="P:Headway.WorkflowEngine.Workflow.Namespace">
+            <summary>
+            Gets the namespace of the workflow.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.Workflow.FullName">
+            <summary>
+            Gets the fullname of the workflow.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.Workflow.PrimaryKey">
+            <summary>
+            Gets the primary key for this object.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.Workflow.InitialState">
+            <summary>
+            Gets the initial state in this workflow.
+            </summary>
+            <remarks>
+            <para>
+            This value defines the state that workflow subjects
+            should start in.
+            </para>
+            <para>
+            The value assigned to this property is automatically
+            added to the <see cref="P:Headway.WorkflowEngine.Workflow.States"/> collection.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:Headway.WorkflowEngine.Workflow.States">
+            <summary>
+            Gets the collection of <see cref="T:Headway.WorkflowEngine.WorkflowState"/> objects
+            contained by this <see cref="T:Headway.WorkflowEngine.Workflow"/>.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Workflow.FindStateByName(System.String)">
+            <summary>
+            Searches the <see cref="P:Headway.WorkflowEngine.Workflow.States"/> collection
+            for a <see cref="T:Headway.WorkflowEngine.WorkflowState"/> matching the specified
+            name.
+            </summary>
+            <param name="stateName">Name of state to find.</param>
+            <returns>
+            Returns the <see cref="T:Headway.WorkflowEngine.WorkflowState"/> matching the
+            specified name or null if no matching state is found.
+            </returns>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Workflow.LoadInitialState(Headway.WorkflowEngine.IWorkflowSubject,System.IServiceProvider)">
+            <summary>
+            Sets an <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> object to the initial
+            state defined by this workflow.
+            </summary>
+            <param name="workflowSubject">
+            Workflow subject to transition to initialize.
+            </param>
+            <param name="serviceProvider">
+            Interface to service provider.
+            </param>
+            <returns>
+            Returns a <see cref="T:Headway.WorkflowEngine.WorkflowTransitionResult"/> object
+            that encapsulates the result of the operation.
+            </returns>
+            <remarks>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when workflowSubject is null.
+            </exception>
+            <exception cref="T:Headway.WorkflowEngine.Exceptions.InitialStateNotFoundException">
+            Thrown when the workflow has no initial state defined.
+            </exception>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Workflow.IsTransitionToAllowed(Headway.WorkflowEngine.IWorkflowSubject,System.String,System.IServiceProvider)">
+            <summary>
+            
+            </summary>
+            <param name="workflowSubject"></param>
+            <param name="transitionName"></param>
+            <param name="serviceProvider"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Workflow.TransitionTo(Headway.WorkflowEngine.IWorkflowSubject,System.String,System.IServiceProvider)">
+            <summary>
+            Transitions the specified workflow subject to a
+            new state along a given <see cref="T:Headway.WorkflowEngine.WorkflowTransition"/>.
+            </summary>
+            <param name="workflowSubject">
+            Workflow subject to transition to a new state.
+            </param>
+            <param name="transitionName">
+            Name of the <see cref="T:Headway.WorkflowEngine.WorkflowTransition"/> to follow to
+            the new state.
+            </param>
+            <param name="serviceProvider">
+            Interface to service provider.
+            </param>
+            <returns>
+            Returns a <see cref="T:Headway.WorkflowEngine.WorkflowTransitionResult"/> object
+            that encapsulates the result of the operation.
+            </returns>
+            <remarks>
+            The transition is only allowed if the
+            <see cref="P:Headway.WorkflowEngine.WorkflowTransition.Condition"/> evaluates to true.
+            The <see cref="P:Headway.WorkflowEngine.WorkflowState.ExitAction"/>,
+            <see cref="P:Headway.WorkflowEngine.WorkflowTransition.Action"/>, and
+            <see cref="P:Headway.WorkflowEngine.WorkflowState.EnterAction"/> are all fired
+            along the way.
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when workflowSubject or transitionName is null.
+            </exception>
+            <exception cref="T:Headway.WorkflowEngine.Exceptions.StateNotFoundException">
+            Thrown when the current state of the workflow subject cannot be
+            found in the workflow.
+            </exception>
+            <exception cref="T:Headway.WorkflowEngine.Exceptions.TransitionNotFoundException">
+            Thrown when the specified transitionName cannot be found
+            in the FROM state.
+            </exception>
+            <exception cref="T:Headway.WorkflowEngine.Exceptions.ActionFailedException">
+            Thrown when an action fails exiting a state, transitioning,
+            or entering a state.
+            </exception>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Workflow.Analyze">
+            <summary>
+            Check for disconnects between states and transitions.
+            </summary>
+            <returns>
+            A <see cref="T:Headway.WorkflowEngine.WorkflowAnalysis"/> object containing counters
+            and information about errors found during analysis.
+            </returns>
+        </member>
+        <member name="T:Headway.WorkflowEngine.WorkflowAnalysis">
+            <summary>
+            Encapsulates information about a workflow that is generated by calling
+            the <see cref="M:Headway.WorkflowEngine.Workflow.Analyze"/> method, which looks for consistency
+            errors and gathers counts on the number of nodes in the workflow.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowAnalysis.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowAnalysis.StateCount">
+            <summary>
+            Gets the number of states in the workflow.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowAnalysis.TransitionCount">
+            <summary>
+            Gets the number of transitions in the workflow.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowAnalysis.Errors">
+            <summary>
+            Gets the collection of errors found in the workflow
+            during analysis.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowAnalysis.HasErrors">
+            <summary>
+            Gets a flag indicating whether or not the analysis
+            unconvered any errors in the workflow.
+            </summary>
+        </member>
+        <member name="T:Headway.WorkflowEngine.WorkflowSubjectExtensions">
+            <summary>
+            Extension methods for the <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> interface.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowSubjectExtensions.TransitionTo(Headway.WorkflowEngine.IWorkflowSubject,System.String,System.IServiceProvider)">
+            <summary>
+            Transitions the workflow subject to a new state along the
+            specified transition.
+            </summary>
+            <param name="serviceProvider">
+            Interface to service provider.
+            </param>
+            <param name="workflowSubject">
+            Workflow subject to transition to a new state.
+            </param>
+            <param name="transitionName">
+            Name of transition to follow.
+            </param>
+            <returns>
+            Returns a <see cref="T:Headway.WorkflowEngine.WorkflowTransitionResult"/> object
+            that encapsulates the result of the operation.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when workflowSubject or transitionName is null.
+            </exception>
+            <exception cref="T:Headway.WorkflowEngine.Exceptions.StateNotFoundException">
+            Thrown when the current state of the workflow subject cannot be
+            found in the workflow.
+            </exception>
+            <exception cref="T:Headway.WorkflowEngine.Exceptions.TransitionNotFoundException">
+            Thrown when the specified transitionName cannot be found
+            in the FROM state.
+            </exception>
+            <exception cref="T:Headway.WorkflowEngine.Exceptions.ActionFailedException">
+            Thrown when an action fails exiting a state, transitioning,
+            or entering a state.
+            </exception>
+        </member>
+        <member name="T:Headway.WorkflowEngine.WorkflowItem">
+            <summary>
+            Base class for items that participate in workflow.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowItem.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowItem.#ctor(Headway.Dynamo.Metadata.ObjectType)">
+            <summary>
+            Constructs a <see cref="T:Headway.WorkflowEngine.WorkflowItem"/> given
+            an <see cref="T:Headway.Dynamo.Metadata.ObjectType"/>
+            </summary>
+            <param name="objType">
+            Object metadata for this <see cref="T:Headway.WorkflowEngine.WorkflowItem"/>
+            </param>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowItem.Id">
+            <summary>
+            Gets the unique identifier for this
+            <see cref="T:Headway.WorkflowEngine.WorkflowItem"/>.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowItem.WorkflowName">
+            <summary>
+            Gets the <see cref="T:Headway.WorkflowEngine.Workflow"/> associated with this object.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowItem.ItemType">
+            <summary>
+            Contains metadata for the workflow item.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowItem.CurrentState">
+            <summary>
+            Gets the name of workflow current state this object is in.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowItem.LastTransition">
+            <summary>
+            Gets or sets the name of the last transition that occurred
+            on this <see cref="T:Headway.WorkflowEngine.WorkflowItem"/>.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowItem.GetContextObject(System.IServiceProvider)">
+            <summary>
+            Gets the context object.
+            </summary>
+            <param name="svcProvider">Reference to service provider</param>
+            <returns>Context object</returns>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowItem.OnTransitioningTo(Headway.WorkflowEngine.WorkflowTransition)">
+            <summary>
+            Called before this object is transitioned to a new state.
+            </summary>
+            <param name="transition"></param>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowItem.OnTransitionedTo(Headway.WorkflowEngine.WorkflowTransition)">
+            <summary>
+            Called after this object is transitioned to a new state.
+            </summary>
+            <param name="transition"></param>
+        </member>
+        <member name="T:Headway.WorkflowEngine.WorkflowItemTemplate">
+            <summary>
+            Template used to create and initialize new instances of
+            <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> objects.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowItemTemplate.ItemTypeFullName">
+            <summary>
+            Full name reference to the metadata for the
+            <see cref="T:Headway.WorkflowEngine.WorkflowItem"/> objects created by
+            this template.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowItemTemplate.WorkflowName">
+            <summary>
+            Name of the workflow to associate with new instances
+            of <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> created by this
+            template.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowItemTemplate.InitialState">
+            <summary>
+            Gets or sets the initial workflow state for items
+            created by this template.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowItemTemplate.CreateInstance(System.IServiceProvider,System.Object)">
+            <summary>
+            Creates a new instance of an <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/>
+            object for the given context.
+            </summary>
+            <param name="svcProvider">Reference to service provider</param>
+            <param name="context">
+            Context object data to associated with the new workflow subject
+            </param>
+            <returns>
+            An instance of <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/>.
+            </returns>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowItemTemplate.InitWorkflowItem(Headway.WorkflowEngine.WorkflowItem)">
+            <summary>
+            Initializes newly created <see cref="T:Headway.WorkflowEngine.WorkflowItem"/> objects
+            created by this template.
+            </summary>
+            <param name="workflowItem">
+            <see cref="T:Headway.WorkflowEngine.WorkflowItem"/> object to initialize.
+            </param>
+            <description>
+            The following properties are already initialized when this method
+            is invoked
+            </description>
+        </member>
+        <member name="T:Headway.WorkflowEngine.WorkflowItemType">
+            <summary>
+            Provides metadata for a type of workflow item.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowItemType.#ctor(Headway.Dynamo.Metadata.IMetadataProvider)">
+            <summary>
+            
+            </summary>
+            <param name="metadataProvider"></param>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowItemType.FullName">
+            <summary>
+            Gets or sets the fully qualified name of this
+            <see cref="T:Headway.WorkflowEngine.WorkflowItemType"/> object.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowItemType.DisplayName">
+            <summary>
+            Gets the display name used to refer to this type
+            of workflow item (e.g. Issue, Ticket,
+            Case, Incident, ...)
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowItemType.Abbreviation">
+            <summary>
+            Gets the abbreviated name used to refer to this type
+            of workflow item (e.g. ISS, TCKT,
+            CASE, INCD, ...)
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowItemType.ObjectTypeFullName">
+            <summary>
+            Gets or sets the full name of the object type.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowItemType.ObjectType">
+            <summary>
+            Gets or sets the <see cref="P:Headway.WorkflowEngine.WorkflowItemType.ObjectType"/> metadata
+            for this <see cref="T:Headway.WorkflowEngine.WorkflowItemType"/>.
+            </summary>
+        </member>
+        <member name="T:Headway.WorkflowEngine.WorkflowTransitionResultCode">
+            <summary>
+            Result codes that can occur when an attempt is made to
+            transition an <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> from one
+            state to another.
+            </summary>
+        </member>
+        <member name="F:Headway.WorkflowEngine.WorkflowTransitionResultCode.Success">
+            <summary>
+            Transition successful.
+            </summary>
+        </member>
+        <member name="F:Headway.WorkflowEngine.WorkflowTransitionResultCode.NotAllowed">
+            <summary>
+            Transition not allowed based on failed prerequisite conditions.
+            </summary>
+        </member>
+        <member name="F:Headway.WorkflowEngine.WorkflowTransitionResultCode.ActionFailed">
+            <summary>
+            Indicates that at least one action failed.
+            </summary>
+        </member>
+        <member name="F:Headway.WorkflowEngine.WorkflowTransitionResultCode.Exception">
+            <summary>
+            Indicates that an exception occurred during the transition
+            </summary>
+        </member>
+        <member name="T:Headway.WorkflowEngine.WorkflowTransitionResult">
+            <summary>
+            Encapsulates results that can occur an attempt is made to
+            to transition an <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> from one
+            state to another.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowTransitionResult.#ctor(Headway.WorkflowEngine.WorkflowTransitionResultCode,System.String)">
+            <summary>
+            Constructs a <see cref="T:Headway.WorkflowEngine.WorkflowTransitionResult"/> given a result
+            code and a description.
+            </summary>
+            <param name="resultCode">Code describing the result.</param>
+            <param name="description">Text description of the result.</param>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowTransitionResult.#ctor(System.Exception)">
+            <summary>
+            Constructs a <see cref="T:Headway.WorkflowEngine.WorkflowTransitionResult"/> given an
+            exception object.
+            </summary>
+            <param name="ex">Exception that occurred during the transition.</param>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowTransitionResult.#ctor(Headway.Dynamo.Commands.CommandResult)">
+            <summary>
+            Constructs a <see cref="T:Headway.WorkflowEngine.WorkflowTransitionResult"/> given an
+            exception object.
+            </summary>
+            <param name="actionRes">
+            Result of the last command executed.
+            </param>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowTransitionResult.ResultCode">
+            <summary>
+            Gets the result code.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowTransitionResult.Description">
+            <summary>
+            Gets the description.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowTransitionResult.Exception">
+            <summary>
+            Gets the Exception that occurred during a transition.
+            </summary>
+            <remarks>
+            Null if no exception occurred.
+            </remarks>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowTransitionResult.ActionResult">
+            <summary>
+            Gets the <see cref="T:Headway.Dynamo.Commands.CommandResult"/> from the
+            actions executed.
+            </summary>
+            <remarks>
+            If a failure occurs, this should be the first
+            error encountered, since processing stops when
+            an error occurs.
+            </remarks>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowTransitionResult.IsSuccess">
+            <summary>
+            Gets a flag indicating whether or not the transition was successful.
+            </summary>
+        </member>
+        <member name="F:Headway.WorkflowEngine.WorkflowTransitionResult.Success">
+            <summary>
+            Singleton object used to indicate success.
+            </summary>
+        </member>
+        <member name="T:Headway.WorkflowEngine.WorkflowState">
+            <summary>
+            Encapsulates a state in a <see cref="T:Headway.WorkflowEngine.Workflow"/>.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowState.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowState.#ctor(System.String)">
+            <summary>
+            Constructs a <see cref="T:Headway.WorkflowEngine.WorkflowState"/> given a name.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowState.Name">
+            <summary>
+            Gets the name of the state.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowState.Transitions">
+            <summary>
+            Gets the collection of transitions from this state to
+            other states.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowState.CanEnter">
+            <summary>
+            Gets the <see cref="T:Headway.Dynamo.Conditions.Condition"/> that determines if
+            this state can be entered in the current context.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowState.EnterAction">
+            <summary>
+            Gets the <see cref="T:Headway.Dynamo.Commands.Command"/> that is executed
+            when this state is entered.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowState.ExitAction">
+            <summary>
+            Gets the <see cref="T:Headway.Dynamo.Commands.Command"/> that is executed
+            when this state is exited.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowState.GetTransition(System.String)">
+            <summary>
+            Gets a <see cref="T:Headway.WorkflowEngine.WorkflowTransition"/> by name.
+            </summary>
+            <param name="transitionName">
+            Name of transition to retrieve.
+            </param>
+            <returns>
+            Returns the <see cref="T:Headway.WorkflowEngine.WorkflowTransition"/> object matching
+            the specified name or null if no transition with the given
+            name exists in this state.
+            </returns>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowState.ExecuteEnterAction(System.IServiceProvider,System.Object)">
+            <summary>
+            Executes the enter action for this state if there is one.
+            </summary>
+            <param name="serviceProvider">Interface to service provider.</param>
+            <param name="context">Context object for the command.</param>
+            <remarks>
+            If <see cref="P:Headway.WorkflowEngine.WorkflowState.EnterAction"/> is null then this
+            method does nothing.
+            </remarks>
+            <exception cref="T:Headway.WorkflowEngine.Exceptions.ActionFailedException">
+            Thrown if execution of the <see cref="T:Headway.Dynamo.Commands.Command"/> used for the enter
+            action fails for any reason.
+            </exception>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowState.ExecuteExitAction(System.IServiceProvider,System.Object)">
+            <summary>
+            Executes the exit action for this state if there is one.
+            </summary>
+            <param name="serviceProvider">Interface to service provider.</param>
+            <param name="context">Context object for the command.</param>
+            <remarks>
+            If <see cref="P:Headway.WorkflowEngine.WorkflowState.ExitAction"/> is null then this
+            method does nothing.
+            </remarks>
+            <exception cref="T:Headway.WorkflowEngine.Exceptions.ActionFailedException">
+            Thrown if execution of the <see cref="T:Headway.Dynamo.Commands.Command"/> used for the exit
+            action fails for any reason.
+            </exception>
+        </member>
+        <member name="T:Headway.WorkflowEngine.WorkflowState.EqualityComparer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowState.EqualityComparer.Equals(Headway.WorkflowEngine.WorkflowState,Headway.WorkflowEngine.WorkflowState)">
+            <summary>
+            
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowState.EqualityComparer.GetHashCode(Headway.WorkflowEngine.WorkflowState)">
+            <summary>
+            
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Headway.WorkflowEngine.WorkflowTransition">
+            <summary>
+            Encapsulates a transition from one <see cref="T:Headway.WorkflowEngine.WorkflowState"/>
+            to another.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowTransition.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowTransition.#ctor(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <param name="toStateName"></param>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowTransition.Name">
+            <summary>
+            Gets the name of the transition.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowTransition.ToStateName">
+            <summary>
+            Gets the name of the state this transition goes to.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowTransition.Condition">
+            <summary>
+            Gets the <see cref="P:Headway.WorkflowEngine.WorkflowTransition.Condition"/> that determines if
+            this transition is allowed in the current context.
+            state.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowTransition.Action">
+            <summary>
+            Gets the <see cref="T:Headway.Dynamo.Commands.Command"/> that is executed
+            when this transition is taken.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowTransition.UserPrompt">
+            <summary>
+            Gets or sets the prompt presented to the user prior
+            to applying this transition.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowTransition.UserPromptView">
+            <summary>
+            Gets or sets the prompt view presented to the user prior
+            to applying this transition.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowTransition.ConditionErrorMessage">
+            <summary>
+            Gets or sets the condition evaluation message
+            to applying this transition.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowTransition.IsAllowed(System.IServiceProvider,System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="serviceProvider">Interface to service provider.</param>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowTransition.ExecuteAction(System.IServiceProvider,System.Object)">
+            <summary>
+            Executes the action assigned to the <see cref="P:Headway.WorkflowEngine.WorkflowTransition.Action"/>
+            property.
+            </summary>
+            <param name="serviceProvider">Interface to service provider.</param>
+            <param name="context"></param>
+            <remarks>
+            If <see cref="P:Headway.WorkflowEngine.WorkflowTransition.Action"/> is null then this
+            method does nothing.
+            </remarks>
+            <exception cref="T:Headway.WorkflowEngine.Exceptions.ActionFailedException">
+            Thrown if execution of the <see cref="T:Headway.Dynamo.Commands.Command"/> assigned to the
+            action fails for any reason.
+            </exception>
+        </member>
+        <member name="T:Headway.WorkflowEngine.WorkflowTransition.EqualityComparer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowTransition.EqualityComparer.Equals(Headway.WorkflowEngine.WorkflowTransition,Headway.WorkflowEngine.WorkflowTransition)">
+            <summary>
+            
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowTransition.EqualityComparer.GetHashCode(Headway.WorkflowEngine.WorkflowTransition)">
+            <summary>
+            
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Headway.WorkflowEngine.WorkflowViewModes">
+            <summary>
+            Defines different modes for viewing workflow subjects.
+            </summary>
+        </member>
+        <member name="F:Headway.WorkflowEngine.WorkflowViewModes.Summary">
+            <summary>
+            Summary view mode
+            </summary>
+        </member>
+        <member name="F:Headway.WorkflowEngine.WorkflowViewModes.Detail">
+            <summary>
+            Detail view mode
+            </summary>
+        </member>
+    </members>
+</doc>

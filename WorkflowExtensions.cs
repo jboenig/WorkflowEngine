@@ -20,6 +20,7 @@
 using System;
 using Headway.Dynamo.Exceptions;
 using Headway.WorkflowEngine.Resolvers;
+using Headway.WorkflowEngine.Exceptions;
 
 namespace Headway.WorkflowEngine
 {

@@ -28,10 +28,19 @@ namespace Headway.WorkflowEngine.Exceptions
     /// </summary>
     public sealed class ActionFailedException : WorkflowException
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public ActionFailedException(string message)
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="innerException"></param>
         public ActionFailedException(string message, Exception innerException)
         {
         }
