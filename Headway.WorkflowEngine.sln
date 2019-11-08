@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Headway.WorkflowEngine", "H
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Headway.WorkflowEngine.UnitTests", "UnitTests\Headway.WorkflowEngine.UnitTests.csproj", "{7E2268A3-F244-438F-8906-EDD302631EBC}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Headway.Dynamo", "..\Headway.Dynamo\Headway.Dynamo.csproj", "{BE7E5534-8BC0-4428-B178-88E607E02A58}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{7E2268A3-F244-438F-8906-EDD302631EBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E2268A3-F244-438F-8906-EDD302631EBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E2268A3-F244-438F-8906-EDD302631EBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE7E5534-8BC0-4428-B178-88E607E02A58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE7E5534-8BC0-4428-B178-88E607E02A58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE7E5534-8BC0-4428-B178-88E607E02A58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE7E5534-8BC0-4428-B178-88E607E02A58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

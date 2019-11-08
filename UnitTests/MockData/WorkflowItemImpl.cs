@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Headway.Dynamo.Metadata;
-using Headway.WorkflowEngine;
+using System.Runtime.Serialization;
 
 namespace Headway.WorkflowEngine.UnitTests.MockData
 {
-    internal class WorkflowItemImpl : Headway.WorkflowEngine.WorkflowItem
+    [Serializable]
+    internal class WorkflowItemImpl : WorkflowItem
     {
         private string id;
         private string workflowName;
@@ -29,13 +26,13 @@ namespace Headway.WorkflowEngine.UnitTests.MockData
         public override string Id
         {
             get { return this.id; }
-            set { throw new NotImplementedException(); }
+            set { this.id = value; }
         }
 
         public override string WorkflowName
         {
             get { return this.workflowName; }
-            set { throw new NotImplementedException(); }
+            set { this.workflowName = value; }
         }
 
         public override WorkflowItemType ItemType
@@ -70,5 +67,28 @@ namespace Headway.WorkflowEngine.UnitTests.MockData
         public override void OnTransitioningTo(WorkflowTransition transition)
         {
         }
+
+        #region Serialization
+
+        /// <summary>
+        /// Serialization constructor.
+        /// </summary>
+        /// <param name="info">Serialiation info</param>
+        /// <param name="context">Streaming context</param>
+        /// <remarks>
+        /// Deserializes the given SerializationInfo into a new
+        /// instance of this class.
+        /// </remarks>
+        protected WorkflowItemImpl(SerializationInfo info, StreamingContext context) :
+            base(info, context)
+        {
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+        }
+
+        #endregion
     }
 }
