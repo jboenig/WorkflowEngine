@@ -134,25 +134,71 @@
             </summary>
             <param name="workflowFullName"></param>
         </member>
-        <member name="T:Headway.WorkflowEngine.IWorkflowItemByIdResolver">
+        <member name="T:Headway.WorkflowEngine.Factories.IWorkflowItemFactory">
+            <summary>
+            Interface to factory that creates <see cref="T:Headway.WorkflowEngine.WorkflowItem"/>
+            objects.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Factories.IWorkflowItemFactory.CreateWorkflowItem(System.String,System.Object)">
+            <summary>
+            Creates a <see cref="T:Headway.WorkflowEngine.WorkflowItem"/> based on the specified
+            template.
+            </summary>
+            <param name="templateName">
+            Name of template to use to generate new <see cref="T:Headway.WorkflowEngine.WorkflowItem"/>
+            </param>
+            <param name="context">
+            Reference to context object.
+            </param>
+            <returns>
+            New instance of a <see cref="T:Headway.WorkflowEngine.WorkflowItem"/> based on specified
+            template and context data.
+            </returns>
+        </member>
+        <member name="T:Headway.WorkflowEngine.Implementations.StandardWorkflowItemFactory">
+            <summary>
+            Implements <see cref="T:Headway.WorkflowEngine.Factories.IWorkflowItemFactory"/> based on
+            templates supplied by the injected <see cref="T:Headway.WorkflowEngine.Resolvers.IWorkflowItemTemplateResolver"/>
+            service.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Implementations.StandardWorkflowItemFactory.#ctor(System.IServiceProvider)">
+            <summary>
+            Constructs a <see cref="T:Headway.WorkflowEngine.Implementations.StandardWorkflowItemFactory"/> given
+            a reference to an IServiceProvider.
+            </summary>
+            <param name="svcProvider">
+            Service provider to supply services during item creation.
+            </param>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Implementations.StandardWorkflowItemFactory.CreateWorkflowItem(System.String,System.Object)">
+            <summary>
+            Creates a new <see cref="T:Headway.WorkflowEngine.WorkflowItem"/> based on the name
+            of a <see cref="T:Headway.WorkflowEngine.WorkflowItemTemplate"/>.
+            </summary>
+            <param name="templateName">
+            Name of template to use to create the item.
+            </param>
+            <param name="context">
+            Context object to associate with the new item
+            </param>
+            <returns>
+            Returns a new <see cref="T:Headway.WorkflowEngine.WorkflowItem"/>
+            </returns>
+        </member>
+        <member name="T:Headway.WorkflowEngine.Implementations.StandardWorkflowTransitionService">
             <summary>
             
             </summary>
         </member>
-        <member name="T:Headway.WorkflowEngine.IWorkflowService">
+        <member name="M:Headway.WorkflowEngine.Implementations.StandardWorkflowTransitionService.#ctor(System.IServiceProvider)">
             <summary>
             
             </summary>
+            <param name="svcProvider"></param>
         </member>
-        <member name="M:Headway.WorkflowEngine.IWorkflowService.CreateWorkflowItem(System.String,System.Object)">
-            <summary>
-            
-            </summary>
-            <param name="templateName"></param>
-            <param name="context"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Headway.WorkflowEngine.IWorkflowService.TransitionTo(Headway.WorkflowEngine.WorkflowItem,System.String)">
+        <member name="M:Headway.WorkflowEngine.Implementations.StandardWorkflowTransitionService.TransitionTo(Headway.WorkflowEngine.WorkflowItem,System.String)">
             <summary>
             
             </summary>
@@ -206,6 +252,12 @@
             a unique name as a key.
             </summary>
         </member>
+        <member name="T:Headway.WorkflowEngine.Resolvers.IWorkflowItemByIdResolver">
+            <summary>
+            Service interface for resolving <see cref="T:Headway.WorkflowEngine.WorkflowItem"/> objects
+            given a unique ID.
+            </summary>
+        </member>
         <member name="T:Headway.WorkflowEngine.Resolvers.IWorkflowItemTemplateResolver">
             <summary>
             
@@ -216,26 +268,12 @@
             
             </summary>
         </member>
-        <member name="T:Headway.WorkflowEngine.StandardWorkflowService">
+        <member name="T:Headway.WorkflowEngine.Services.IWorkflowTransitionService">
             <summary>
             
             </summary>
         </member>
-        <member name="M:Headway.WorkflowEngine.StandardWorkflowService.#ctor(System.IServiceProvider)">
-            <summary>
-            
-            </summary>
-            <param name="svcProvider"></param>
-        </member>
-        <member name="M:Headway.WorkflowEngine.StandardWorkflowService.CreateWorkflowItem(System.String,System.Object)">
-            <summary>
-            
-            </summary>
-            <param name="templateName"></param>
-            <param name="context"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Headway.WorkflowEngine.StandardWorkflowService.TransitionTo(Headway.WorkflowEngine.WorkflowItem,System.String)">
+        <member name="M:Headway.WorkflowEngine.Services.IWorkflowTransitionService.TransitionTo(Headway.WorkflowEngine.WorkflowItem,System.String)">
             <summary>
             
             </summary>
@@ -506,7 +544,8 @@
         </member>
         <member name="P:Headway.WorkflowEngine.WorkflowItem.WorkflowName">
             <summary>
-            Gets the <see cref="T:Headway.WorkflowEngine.Workflow"/> associated with this object.
+            Gets the fully qualified name of the <see cref="T:Headway.WorkflowEngine.Workflow"/> associated with
+            this object.
             </summary>
         </member>
         <member name="P:Headway.WorkflowEngine.WorkflowItem.ItemType">

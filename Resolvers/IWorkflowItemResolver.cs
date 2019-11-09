@@ -17,27 +17,15 @@
 // with Headway.WorkflowEngine. If not, see http://www.gnu.org/licenses/.
 ////////////////////////////////////////////////////////////////////////////////
 
-namespace Headway.WorkflowEngine
+using Headway.Dynamo.Runtime;
+
+namespace Headway.WorkflowEngine.Resolvers
 {
     /// <summary>
-    /// 
+    /// Service interface for resolving <see cref="WorkflowItem"/> objects
+    /// given a unique ID.
     /// </summary>
-    public interface IWorkflowService
+    public interface IWorkflowItemByIdResolver : IObjectResolver<string, WorkflowItem>
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="templateName"></param>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        WorkflowItem CreateWorkflowItem(string templateName, object context);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="item"></param>
-        /// <param name="transitionName"></param>
-        /// <returns></returns>
-        WorkflowTransitionResult TransitionTo(WorkflowItem item, string transitionName);
     }
 }

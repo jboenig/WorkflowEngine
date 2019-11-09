@@ -26,7 +26,7 @@ namespace Headway.WorkflowEngine
     /// <summary>
     /// Base class for items that participate in workflow.
     /// </summary>
-    public abstract class WorkflowItem : Headway.Dynamo.Runtime.Dynamo, IWorkflowSubject
+    public abstract class WorkflowItem : Dynamo.Runtime.Dynamo, IWorkflowSubject
     {
         /// <summary>
         /// Default constructor
@@ -58,13 +58,9 @@ namespace Headway.WorkflowEngine
         }
 
         /// <summary>
-        /// Gets the <see cref="Workflow"/> associated with this object.
+        /// Gets the fully qualified name of the <see cref="Workflow"/> associated with
+        /// this object.
         /// </summary>
-//        public abstract Workflow Workflow
-//        {
-//            get;
-//        }
-
         public abstract string WorkflowName
         {
             get;

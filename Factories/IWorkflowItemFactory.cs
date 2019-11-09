@@ -17,14 +17,28 @@
 // with Headway.WorkflowEngine. If not, see http://www.gnu.org/licenses/.
 ////////////////////////////////////////////////////////////////////////////////
 
-using Headway.Dynamo.Runtime;
-
-namespace Headway.WorkflowEngine
+namespace Headway.WorkflowEngine.Factories
 {
     /// <summary>
-    /// 
+    /// Interface to factory that creates <see cref="WorkflowItem"/>
+    /// objects.
     /// </summary>
-    public interface IWorkflowItemByIdResolver : IObjectResolver<string, WorkflowItem>
+    public interface IWorkflowItemFactory
     {
+        /// <summary>
+        /// Creates a <see cref="WorkflowItem"/> based on the specified
+        /// template.
+        /// </summary>
+        /// <param name="templateName">
+        /// Name of template to use to generate new <see cref="WorkflowItem"/>
+        /// </param>
+        /// <param name="context">
+        /// Reference to context object.
+        /// </param>
+        /// <returns>
+        /// New instance of a <see cref="WorkflowItem"/> based on specified
+        /// template and context data.
+        /// </returns>
+        WorkflowItem CreateWorkflowItem(string templateName, object context);
     }
 }

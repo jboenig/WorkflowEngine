@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.Design;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ninject;
 
@@ -8,75 +7,71 @@ using Headway.Dynamo.Serialization;
 using Headway.WorkflowEngine;
 using Headway.WorkflowEngine.UnitTests.MockData;
 using Headway.WorkflowEngine.Resolvers;
+using Headway.WorkflowEngine.Factories;
+using Headway.WorkflowEngine.Services;
+using Headway.WorkflowEngine.Implementations;
 
 namespace WorkflowEngine.UnitTests
 {
     [TestClass]
     public class WorkflowTransitionTests
     {
-        private IServiceProvider serviceProvider;
+        private IKernel kernel;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            var kernel = new StandardKernel();
-            kernel.Bind<IWorkflowByNameResolver>().To<WorkflowByNameResolver>();
-            kernel.Bind<IWorkflowItemTemplateResolver>().To<WorkflowItemTemplateResolver>();
-            kernel.Bind<IWorkflowItemTypeResolver>().To<WorkflowItemTypeResolver>();
-            kernel.Bind<ISerializerConfigService>().To<StandardSerializerConfigService>();
-            kernel.Bind<IMetadataProvider>().To<StandardMetadataProvider>();
-            kernel.Bind<IWorkflowService>().To<StandardWorkflowService>();
-            kernel.Bind<IServiceProvider>().ToConstant(kernel);
-            this.serviceProvider = kernel;
-
-            //var serviceContainer = new ServiceContainer();
-            //serviceContainer.AddService(typeof(IWorkflowByNameResolver), new WorkflowByNameResolver());
-            //serviceContainer.AddService(typeof(IWorkflowItemTemplateResolver), new WorkflowItemTemplateResolver());
-            //serviceContainer.AddService(typeof(IWorkflowItemTypeResolver), new WorkflowItemTypeResolver());
-            //            serviceContainer.AddService(typeof(IObjectResolver<PrimaryKeyValue, Workflow>), new WorkflowByPKResolver());
-            //this.serviceProvider = serviceContainer;
+            this.kernel = new StandardKernel();
+            this.kernel.Bind<IWorkflowByNameResolver>().To<WorkflowByNameResolver>();
+            this.kernel.Bind<IWorkflowItemTemplateResolver>().To<WorkflowItemTemplateResolver>();
+            this.kernel.Bind<IWorkflowItemTypeResolver>().To<WorkflowItemTypeResolver>();
+            this.kernel.Bind<ISerializerConfigService>().To<StandardSerializerConfigService>();
+            this.kernel.Bind<IMetadataProvider>().To<StandardMetadataProvider>();
+            this.kernel.Bind<IWorkflowItemFactory>().To<StandardWorkflowItemFactory>();
+            this.kernel.Bind<IWorkflowTransitionService>().To<StandardWorkflowTransitionService>();
+            this.kernel.Bind<IServiceProvider>().ToConstant(kernel);
         }
 
         [TestMethod]
         public void TransitionTest1()
         {
-            var workflowService = this.serviceProvider.GetService(typeof(IWorkflowService)) as IWorkflowService;
+            var workflowItemFactory = this.kernel.GetService(typeof(IWorkflowItemFactory)) as IWorkflowItemFactory;
 
-            var workflowItem = workflowService.CreateWorkflowItem("MockData.Templates.Test1Template", null);
+            var workflowItem = workflowItemFactory.CreateWorkflowItem("MockData.Templates.Test1Template", null);
             Assert.IsNotNull(workflowItem);
             Assert.AreEqual(workflowItem.ItemType.DisplayName, "Issue");
             Assert.AreEqual(workflowItem.ItemType.Abbreviation, "ISS");
 
-            var workflowResolver = this.serviceProvider.GetService(typeof(IWorkflowByNameResolver)) as IWorkflowByNameResolver;
+            var workflowResolver = this.kernel.GetService(typeof(IWorkflowByNameResolver)) as IWorkflowByNameResolver;
             Assert.IsNotNull(workflowResolver);
             var workflow = workflowResolver.Resolve(workflowItem.WorkflowName);
             Assert.IsNotNull(workflow);
 
-            var res = workflow.TransitionTo(workflowItem, "Start", this.serviceProvider);
+            var res = workflow.TransitionTo(workflowItem, "Start", this.kernel);
             Assert.IsTrue(res.IsSuccess);
         }
 
         [TestMethod]
         public void TransitionToWhenTest()
         {
-            var workflowItemTemplateResolver = this.serviceProvider.GetService(typeof(IWorkflowItemTemplateResolver)) as IWorkflowItemTemplateResolver;
+            var workflowItemTemplateResolver = this.kernel.GetService(typeof(IWorkflowItemTemplateResolver)) as IWorkflowItemTemplateResolver;
             var workflowItemTemplate = workflowItemTemplateResolver.Resolve("MockData.Templates.Test1Template");
             Assert.IsNotNull(workflowItemTemplate);
 
-            var workflowItem = workflowItemTemplate.CreateInstance(this.serviceProvider, null) as WorkflowItemImpl;
+            var workflowItem = workflowItemTemplate.CreateInstance(this.kernel, null) as WorkflowItemImpl;
             Assert.IsNotNull(workflowItem);
             Assert.AreEqual(workflowItem.ItemType.DisplayName, "Issue");
             Assert.AreEqual(workflowItem.ItemType.Abbreviation, "ISS");
 
-            var workflowResolver = this.serviceProvider.GetService(typeof(IWorkflowByNameResolver)) as IWorkflowByNameResolver;
+            var workflowResolver = this.kernel.GetService(typeof(IWorkflowByNameResolver)) as IWorkflowByNameResolver;
             Assert.IsNotNull(workflowResolver);
             var workflow = workflowResolver.Resolve(workflowItem.WorkflowName);
             Assert.IsNotNull(workflow);
 
-            var resStartTransition = workflow.TransitionTo(workflowItem, "Start", this.serviceProvider);
+            var resStartTransition = workflow.TransitionTo(workflowItem, "Start", this.kernel);
             Assert.IsTrue(resStartTransition.IsSuccess);
 
-            var resNeedMoreInfoTransition = workflow.TransitionTo(workflowItem, "Need More Info", this.serviceProvider);
+            var resNeedMoreInfoTransition = workflow.TransitionTo(workflowItem, "Need More Info", this.kernel);
             Assert.IsTrue(resNeedMoreInfoTransition.IsSuccess);
 
             Assert.AreEqual(workflowItem.CurrentState, "Reviewing");
@@ -86,17 +81,17 @@ namespace WorkflowEngine.UnitTests
         [TestMethod]
         public void TransitionOnboardingTest1()
         {
-            var workflowService = this.serviceProvider.GetService(typeof(IWorkflowService)) as IWorkflowService;
+            var workflowItemFactory = this.kernel.GetService(typeof(IWorkflowItemFactory)) as IWorkflowItemFactory;
 
-            var workflowItem = workflowService.CreateWorkflowItem("MockData.Templates.NewEmployeeOnboardingTaskTemplate", null);
+            var workflowItem = workflowItemFactory.CreateWorkflowItem("MockData.Templates.NewEmployeeOnboardingTaskTemplate", null);
             Assert.IsNotNull(workflowItem);
 
-            var workflowResolver = this.serviceProvider.GetService(typeof(IWorkflowByNameResolver)) as IWorkflowByNameResolver;
+            var workflowResolver = this.kernel.GetService(typeof(IWorkflowByNameResolver)) as IWorkflowByNameResolver;
             Assert.IsNotNull(workflowResolver);
             var workflow = workflowResolver.Resolve(workflowItem.WorkflowName);
             Assert.IsNotNull(workflow);
 
-            var resTransition1 = workflow.TransitionTo(workflowItem, "Create Employee Records", this.serviceProvider);
+            var resTransition1 = workflow.TransitionTo(workflowItem, "Create Employee Records", this.kernel);
             Assert.IsTrue(resTransition1.IsSuccess);
         }
     }

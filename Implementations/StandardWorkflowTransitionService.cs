@@ -19,24 +19,24 @@
 
 using System;
 using Headway.Dynamo.Exceptions;
+using Headway.WorkflowEngine.Services;
 using Headway.WorkflowEngine.Resolvers;
 
-namespace Headway.WorkflowEngine
+namespace Headway.WorkflowEngine.Implementations
 {
     /// <summary>
     /// 
     /// </summary>
-    public sealed class StandardWorkflowService : IWorkflowService
+    public sealed class StandardWorkflowTransitionService : IWorkflowTransitionService
     {
         private IServiceProvider serviceProvider;
-        private IWorkflowItemTemplateResolver workflowItemTemplateResolver;
         private IWorkflowByNameResolver workflowByNameResolver;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="svcProvider"></param>
-        public StandardWorkflowService(IServiceProvider svcProvider)
+        public StandardWorkflowTransitionService(IServiceProvider svcProvider)
         {
             if (svcProvider == null)
             {
@@ -44,35 +44,11 @@ namespace Headway.WorkflowEngine
             }
             this.serviceProvider = svcProvider;
 
-            this.workflowItemTemplateResolver = this.serviceProvider.GetService(typeof(IWorkflowItemTemplateResolver)) as IWorkflowItemTemplateResolver;
-            if (this.workflowItemTemplateResolver == null)
-            {
-                throw new ServiceNotFoundException(typeof(IWorkflowItemTemplateResolver));
-            }
-
             this.workflowByNameResolver = this.serviceProvider.GetService(typeof(IWorkflowByNameResolver)) as IWorkflowByNameResolver;
             if (this.workflowByNameResolver == null)
             {
                 throw new ServiceNotFoundException(typeof(IWorkflowByNameResolver));
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="templateName"></param>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        public WorkflowItem CreateWorkflowItem(string templateName, object context)
-        {
-            var workflowItemTemplate = this.workflowItemTemplateResolver.Resolve(templateName);
-            if (workflowItemTemplate == null)
-            {
-                var msg = string.Format("Workflow item template {0} not found", templateName);
-                throw new InvalidOperationException(msg);
-            }
-
-             return workflowItemTemplate.CreateInstance(this.serviceProvider, context);
         }
 
         /// <summary>

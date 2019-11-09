@@ -20,7 +20,6 @@
 using System;
 using System.Runtime.Serialization;
 using Headway.Dynamo.Metadata;
-using Headway.Dynamo.Metadata.Reflection;
 using Newtonsoft.Json;
 
 namespace Headway.WorkflowEngine
