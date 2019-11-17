@@ -6,7 +6,7 @@ using Ninject;
 using Headway.Dynamo.Runtime;
 using Headway.Dynamo.Serialization;
 using Headway.Dynamo.Metadata;
-using Headway.WorkflowEngine;
+using Headway.WorkflowEngine.Implementations;
 using Headway.WorkflowEngine.UnitTests.MockData;
 using Headway.WorkflowEngine.Resolvers;
 
@@ -22,9 +22,15 @@ namespace WorkflowEngine.UnitTests
         {
             this.kernel = new StandardKernel();
             this.kernel.Bind<IServiceProvider>().ToConstant(this.kernel);
-            this.kernel.Bind<IWorkflowByNameResolver>().To<WorkflowByNameResolver>();
-            this.kernel.Bind<IWorkflowItemTemplateResolver>().To<WorkflowItemTemplateResolver>();
-            this.kernel.Bind<IWorkflowItemTypeResolver>().To<WorkflowItemTypeResolver>();
+            this.kernel.Bind<IWorkflowByNameResolver>().To<JsonResourceWorkflowByNameResolver>().
+                WithConstructorArgument("svcProvider", this.kernel).
+                WithConstructorArgument("assembly", this.GetType().Assembly);
+            this.kernel.Bind<IWorkflowItemTemplateResolver>().To<JsonResourceWorkflowItemTemplateResolver>().
+                WithConstructorArgument("svcProvider", this.kernel).
+                WithConstructorArgument("assembly", this.GetType().Assembly);
+            this.kernel.Bind<IWorkflowItemTypeResolver>().To<JsonResourceWorkflowItemTypeResolver>().
+                WithConstructorArgument("svcProvider", this.kernel).
+                WithConstructorArgument("assembly", this.GetType().Assembly);
             this.kernel.Bind<ISerializerConfigService>().To<StandardSerializerConfigService>();
             this.kernel.Bind<IMetadataProvider>().To<StandardMetadataProvider>();
         }

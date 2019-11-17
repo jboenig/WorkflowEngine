@@ -17,38 +17,40 @@
 // with Headway.WorkflowEngine. If not, see http://www.gnu.org/licenses/.
 ////////////////////////////////////////////////////////////////////////////////
 
+using Headway.WorkflowEngine.Resolvers;
 using System;
+using Headway.Dynamo.Serialization;
 
-namespace Headway.WorkflowEngine.Exceptions
+namespace Headway.WorkflowEngine.Implementations
 {
     /// <summary>
-    /// Exception thrown when an action fails during workflow execution.
+    /// Implements <see cref="IWorkflowByNameResolver"/> by retrieving
+    /// <see cref="Workflow"/> objects from an assembly resource and
+    /// parsing as JSON.
     /// </summary>
-    public sealed class ActionFailedException : WorkflowException
+    public sealed class JsonResourceWorkflowByNameResolver : IWorkflowByNameResolver
     {
+        private JsonResourceObjectResolver<Workflow> jsonResourceWorkflowResolver;
+
         /// <summary>
-        /// Constructs an <see cref="ActionFailedException"/>
-        /// given a message.
+        /// 
         /// </summary>
-        /// <param name="message">
-        /// Message to associate with this exception.
-        /// </param>
-        public ActionFailedException(string message)
+        /// <param name="svcProvider"></param>
+        /// <param name="assembly"></param>
+        public JsonResourceWorkflowByNameResolver(IServiceProvider svcProvider,
+            System.Reflection.Assembly assembly)
         {
+            this.jsonResourceWorkflowResolver = new JsonResourceObjectResolver<Workflow>(svcProvider, assembly);
         }
 
         /// <summary>
-        /// Constructs an <see cref="ActionFailedException"/>
-        /// given a message and inner exception.
+        /// 
         /// </summary>
-        /// <param name="message">
-        /// Message to associate with this exception.
-        /// </param>
-        /// <param name="innerException">
-        /// Exception that caused the action to fail.
-        /// </param>
-        public ActionFailedException(string message, Exception innerException)
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public Workflow Resolve(string key)
         {
+            return this.jsonResourceWorkflowResolver.Resolve(key);
         }
     }
 }

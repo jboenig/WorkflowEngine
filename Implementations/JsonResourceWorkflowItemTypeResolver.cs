@@ -18,37 +18,37 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using Headway.Dynamo.Serialization;
+using Headway.WorkflowEngine.Resolvers;
 
-namespace Headway.WorkflowEngine.Exceptions
+namespace Headway.WorkflowEngine.Implementations
 {
     /// <summary>
-    /// Exception thrown when an action fails during workflow execution.
+    /// 
     /// </summary>
-    public sealed class ActionFailedException : WorkflowException
+    public sealed class JsonResourceWorkflowItemTypeResolver : IWorkflowItemTypeResolver
     {
+        private JsonResourceObjectResolver<WorkflowItemType> jsonResourceItemTypeResolver;
+
         /// <summary>
-        /// Constructs an <see cref="ActionFailedException"/>
-        /// given a message.
+        /// 
         /// </summary>
-        /// <param name="message">
-        /// Message to associate with this exception.
-        /// </param>
-        public ActionFailedException(string message)
+        /// <param name="svcProvider"></param>
+        /// <param name="assembly"></param>
+        public JsonResourceWorkflowItemTypeResolver(IServiceProvider svcProvider,
+            System.Reflection.Assembly assembly)
         {
+            this.jsonResourceItemTypeResolver = new JsonResourceObjectResolver<WorkflowItemType>(svcProvider, assembly);
         }
 
         /// <summary>
-        /// Constructs an <see cref="ActionFailedException"/>
-        /// given a message and inner exception.
+        /// 
         /// </summary>
-        /// <param name="message">
-        /// Message to associate with this exception.
-        /// </param>
-        /// <param name="innerException">
-        /// Exception that caused the action to fail.
-        /// </param>
-        public ActionFailedException(string message, Exception innerException)
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public WorkflowItemType Resolve(string key)
         {
+            return this.jsonResourceItemTypeResolver.Resolve(key);
         }
     }
 }

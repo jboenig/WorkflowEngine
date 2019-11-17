@@ -10,6 +10,8 @@ using Headway.Dynamo.Metadata.Reflection;
 using Headway.WorkflowEngine.UnitTests.MockData;
 using Headway.WorkflowEngine;
 using Headway.WorkflowEngine.Resolvers;
+using Headway.WorkflowEngine.Implementations;
+using Headway.Dynamo.Repository;
 using Headway.Dynamo.Repository.FlatFileRepo;
 
 namespace WorkflowEngine.UnitTests
@@ -24,11 +26,20 @@ namespace WorkflowEngine.UnitTests
         {
             this.kernel = new StandardKernel();
             this.kernel.Bind<IServiceProvider>().ToConstant(this.kernel);
-            this.kernel.Bind<IWorkflowByNameResolver>().To<WorkflowByNameResolver>();
-            this.kernel.Bind<IWorkflowItemTemplateResolver>().To<WorkflowItemTemplateResolver>();
-            this.kernel.Bind<IWorkflowItemTypeResolver>().To<WorkflowItemTypeResolver>();
+            this.kernel.Bind<IWorkflowByNameResolver>().To<JsonResourceWorkflowByNameResolver>().
+                WithConstructorArgument("svcProvider", this.kernel).
+                WithConstructorArgument("assembly", this.GetType().Assembly);
+            this.kernel.Bind<IWorkflowItemTemplateResolver>().To<JsonResourceWorkflowItemTemplateResolver>().
+                WithConstructorArgument("svcProvider", this.kernel).
+                WithConstructorArgument("assembly", this.GetType().Assembly);
+            this.kernel.Bind<IWorkflowItemTypeResolver>().To<JsonResourceWorkflowItemTypeResolver>().
+                WithConstructorArgument("svcProvider", this.kernel).
+                WithConstructorArgument("assembly", this.GetType().Assembly);
             this.kernel.Bind<ISerializerConfigService>().To<StandardSerializerConfigService>();
             this.kernel.Bind<IMetadataProvider>().To<StandardMetadataProvider>();
+            this.kernel.Bind<IObjectRepository<WorkflowItem>>()
+                .To<FlatFileWorkflowItemRepo>()
+                .WithConstructorArgument("filePath", "workflowitems.json");
         }
 
         [TestMethod]
@@ -43,14 +54,10 @@ namespace WorkflowEngine.UnitTests
             Assert.AreEqual(workflowItem.ItemType.DisplayName, "Issue");
             Assert.AreEqual(workflowItem.ItemType.Abbreviation, "ISS");
 
-            var workflowItemTypeInfo = metadataProvider.GetDataType<ObjectType>(typeof(WorkflowItem));
-            var repo = new FlatFileRepo<WorkflowItem>(
-                workflowItemTypeInfo,
-                "workflowitems.json",
-                this.kernel);
+            var workflowItemRepo = this.kernel.GetService(typeof(IObjectRepository<WorkflowItem>)) as IObjectRepository<WorkflowItem>;
 
-            repo.Add(workflowItem);
-            repo.SaveChanges();
+            workflowItemRepo.Add(workflowItem);
+            workflowItemRepo.SaveChanges();
         }
     }
 }

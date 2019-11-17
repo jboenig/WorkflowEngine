@@ -1,6 +1,5 @@
 ﻿using System;
 using Newtonsoft.Json;
-using Headway.Dynamo.Metadata;
 using Headway.Dynamo.Serialization;
 
 namespace Headway.WorkflowEngine.UnitTests.MockData
@@ -11,7 +10,7 @@ namespace Headway.WorkflowEngine.UnitTests.MockData
 
     internal sealed class JsonConverterService : IJsonConverterService
     {
-        public JsonConverter[] GetConverters(ObjectType objType)
+        public JsonConverter[] GetConverters(Type objType)
         {
             return new JsonConverter[]
             {

@@ -18,37 +18,39 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
+using Headway.Dynamo.Serialization;
+using Headway.WorkflowEngine.Resolvers;
 
-namespace Headway.WorkflowEngine.Exceptions
+namespace Headway.WorkflowEngine.Implementations
 {
     /// <summary>
-    /// Exception thrown when an action fails during workflow execution.
+    /// 
     /// </summary>
-    public sealed class ActionFailedException : WorkflowException
+    public sealed class JsonResourceWorkflowItemTemplateResolver : IWorkflowItemTemplateResolver
     {
+        private Dictionary<string, WorkflowItemTemplate> templates = new Dictionary<string, WorkflowItemTemplate>();
+        private JsonResourceObjectResolver<WorkflowItemTemplate> jsonResourceTemplateResolver;
+
         /// <summary>
-        /// Constructs an <see cref="ActionFailedException"/>
-        /// given a message.
+        /// 
         /// </summary>
-        /// <param name="message">
-        /// Message to associate with this exception.
-        /// </param>
-        public ActionFailedException(string message)
+        /// <param name="svcProvider"></param>
+        /// <param name="assembly"></param>
+        public JsonResourceWorkflowItemTemplateResolver(IServiceProvider svcProvider,
+            System.Reflection.Assembly assembly)
         {
+            this.jsonResourceTemplateResolver = new JsonResourceObjectResolver<WorkflowItemTemplate>(svcProvider, assembly);
         }
 
         /// <summary>
-        /// Constructs an <see cref="ActionFailedException"/>
-        /// given a message and inner exception.
+        /// 
         /// </summary>
-        /// <param name="message">
-        /// Message to associate with this exception.
-        /// </param>
-        /// <param name="innerException">
-        /// Exception that caused the action to fail.
-        /// </param>
-        public ActionFailedException(string message, Exception innerException)
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public WorkflowItemTemplate Resolve(string key)
         {
+            return this.jsonResourceTemplateResolver.Resolve(key);
         }
     }
 }

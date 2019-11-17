@@ -43,16 +43,24 @@
         </member>
         <member name="M:Headway.WorkflowEngine.Exceptions.ActionFailedException.#ctor(System.String)">
             <summary>
-            
+            Constructs an <see cref="T:Headway.WorkflowEngine.Exceptions.ActionFailedException"/>
+            given a message.
             </summary>
-            <param name="message"></param>
+            <param name="message">
+            Message to associate with this exception.
+            </param>
         </member>
         <member name="M:Headway.WorkflowEngine.Exceptions.ActionFailedException.#ctor(System.String,System.Exception)">
             <summary>
-            
+            Constructs an <see cref="T:Headway.WorkflowEngine.Exceptions.ActionFailedException"/>
+            given a message and inner exception.
             </summary>
-            <param name="message"></param>
-            <param name="innerException"></param>
+            <param name="message">
+            Message to associate with this exception.
+            </param>
+            <param name="innerException">
+            Exception that caused the action to fail.
+            </param>
         </member>
         <member name="T:Headway.WorkflowEngine.Exceptions.InitialStateNotFoundException">
             <summary>
@@ -155,6 +163,86 @@
             New instance of a <see cref="T:Headway.WorkflowEngine.WorkflowItem"/> based on specified
             template and context data.
             </returns>
+        </member>
+        <member name="T:Headway.WorkflowEngine.Implementations.FlatFileWorkflowItemRepo">
+            <summary>
+            Implements a <see cref="T:Headway.Dynamo.Repository.FlatFileRepo.FlatFileRepo`1"/> to
+            store and retrieve <see cref="T:Headway.WorkflowEngine.WorkflowItem"/> objects.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Implementations.FlatFileWorkflowItemRepo.#ctor(System.String,Headway.Dynamo.Serialization.ISerializerConfigService,System.IServiceProvider)">
+            <summary>
+            
+            </summary>
+            <param name="filePath"></param>
+            <param name="serializerConfigSvc"></param>
+            <param name="svcProvider"></param>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Implementations.FlatFileWorkflowItemRepo.Resolve(System.String)">
+            <summary>
+            Resolves an object given a key value.
+            </summary>
+            <param name="key">Key value</param>
+            <returns>Object matching the given key value.</returns>
+        </member>
+        <member name="T:Headway.WorkflowEngine.Implementations.JsonResourceWorkflowByNameResolver">
+            <summary>
+            Implements <see cref="T:Headway.WorkflowEngine.Resolvers.IWorkflowByNameResolver"/> by retrieving
+            <see cref="T:Headway.WorkflowEngine.Workflow"/> objects from an assembly resource and
+            parsing as JSON.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Implementations.JsonResourceWorkflowByNameResolver.#ctor(System.IServiceProvider,System.Reflection.Assembly)">
+            <summary>
+            
+            </summary>
+            <param name="svcProvider"></param>
+            <param name="assembly"></param>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Implementations.JsonResourceWorkflowByNameResolver.Resolve(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Headway.WorkflowEngine.Implementations.JsonResourceWorkflowItemTemplateResolver">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Implementations.JsonResourceWorkflowItemTemplateResolver.#ctor(System.IServiceProvider,System.Reflection.Assembly)">
+            <summary>
+            
+            </summary>
+            <param name="svcProvider"></param>
+            <param name="assembly"></param>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Implementations.JsonResourceWorkflowItemTemplateResolver.Resolve(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Headway.WorkflowEngine.Implementations.JsonResourceWorkflowItemTypeResolver">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Implementations.JsonResourceWorkflowItemTypeResolver.#ctor(System.IServiceProvider,System.Reflection.Assembly)">
+            <summary>
+            
+            </summary>
+            <param name="svcProvider"></param>
+            <param name="assembly"></param>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Implementations.JsonResourceWorkflowItemTypeResolver.Resolve(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
         </member>
         <member name="T:Headway.WorkflowEngine.Implementations.StandardWorkflowItemFactory">
             <summary>
