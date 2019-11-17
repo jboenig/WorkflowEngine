@@ -26,7 +26,7 @@ namespace Headway.WorkflowEngine
     /// <summary>
     /// Base class for items that participate in workflow.
     /// </summary>
-    public abstract class WorkflowItem : Dynamo.Runtime.Dynamo, IWorkflowSubject
+    public class WorkflowItem : Dynamo.Runtime.Dynamo, IWorkflowSubject
     {
         /// <summary>
         /// Default constructor
@@ -51,7 +51,7 @@ namespace Headway.WorkflowEngine
         /// Gets the unique identifier for this
         /// <see cref="WorkflowItem"/>.
         /// </summary>
-        public abstract string Id
+        public string Id
         {
             get;
             set;
@@ -61,24 +61,16 @@ namespace Headway.WorkflowEngine
         /// Gets the fully qualified name of the <see cref="Workflow"/> associated with
         /// this object.
         /// </summary>
-        public abstract string WorkflowName
+        public string WorkflowName
         {
             get;
             set;
         }
 
         /// <summary>
-        /// Contains metadata for the workflow item.
-        /// </summary>
-        public abstract WorkflowItemType ItemType
-        {
-            get;
-        }
-
-        /// <summary>
         /// Gets the name of workflow current state this object is in.
         /// </summary>
-        public abstract string CurrentState
+        public string CurrentState
         {
             get;
             set;
@@ -99,13 +91,18 @@ namespace Headway.WorkflowEngine
         /// </summary>
         /// <param name="svcProvider">Reference to service provider</param>
         /// <returns>Context object</returns>
-        public abstract object GetContextObject(IServiceProvider svcProvider);
+        public virtual object GetContextObject(IServiceProvider svcProvider)
+        {
+            return this;
+        }
 
         /// <summary>
         /// Called before this object is transitioned to a new state.
         /// </summary>
         /// <param name="transition"></param>
-        public abstract void OnTransitioningTo(WorkflowTransition transition);
+        public virtual void OnTransitioningTo(WorkflowTransition transition)
+        {
+        }
 
         /// <summary>
         /// Called after this object is transitioned to a new state.

@@ -11,8 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="MockData\ItemTypes\NewEmployeeOnboardingTaskType.json" />
-    <None Remove="MockData\ItemTypes\Test1ItemType.json" />
     <None Remove="MockData\Templates\NewEmployeeOnboardingTaskTemplate.json" />
     <None Remove="MockData\Templates\Test1Template.json" />
     <None Remove="MockData\Workflows\.NewEmployeeOnboarding.json.un~" />
@@ -22,8 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="MockData\ItemTypes\NewEmployeeOnboardingTaskType.json" />
-    <EmbeddedResource Include="MockData\ItemTypes\Test1ItemType.json" />
     <EmbeddedResource Include="MockData\Templates\NewEmployeeOnboardingTaskTemplate.json" />
     <EmbeddedResource Include="MockData\Templates\Test1Template.json" />
     <EmbeddedResource Include="MockData\Workflows\NewEmployeeOnboarding.json" />

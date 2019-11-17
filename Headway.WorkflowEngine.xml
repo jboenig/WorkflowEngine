@@ -225,25 +225,6 @@
             <param name="key"></param>
             <returns></returns>
         </member>
-        <member name="T:Headway.WorkflowEngine.Implementations.JsonResourceWorkflowItemTypeResolver">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Headway.WorkflowEngine.Implementations.JsonResourceWorkflowItemTypeResolver.#ctor(System.IServiceProvider,System.Reflection.Assembly)">
-            <summary>
-            
-            </summary>
-            <param name="svcProvider"></param>
-            <param name="assembly"></param>
-        </member>
-        <member name="M:Headway.WorkflowEngine.Implementations.JsonResourceWorkflowItemTypeResolver.Resolve(System.String)">
-            <summary>
-            
-            </summary>
-            <param name="key"></param>
-            <returns></returns>
-        </member>
         <member name="T:Headway.WorkflowEngine.Implementations.StandardWorkflowItemFactory">
             <summary>
             Implements <see cref="T:Headway.WorkflowEngine.Factories.IWorkflowItemFactory"/> based on
@@ -348,12 +329,9 @@
         </member>
         <member name="T:Headway.WorkflowEngine.Resolvers.IWorkflowItemTemplateResolver">
             <summary>
-            
-            </summary>
-        </member>
-        <member name="T:Headway.WorkflowEngine.Resolvers.IWorkflowItemTypeResolver">
-            <summary>
-            
+            Interface to services that resolve
+            <see cref="T:Headway.WorkflowEngine.WorkflowItemTemplate"/> objects based on the
+            fully qualified name of the template.
             </summary>
         </member>
         <member name="T:Headway.WorkflowEngine.Services.IWorkflowTransitionService">
@@ -636,11 +614,6 @@
             this object.
             </summary>
         </member>
-        <member name="P:Headway.WorkflowEngine.WorkflowItem.ItemType">
-            <summary>
-            Contains metadata for the workflow item.
-            </summary>
-        </member>
         <member name="P:Headway.WorkflowEngine.WorkflowItem.CurrentState">
             <summary>
             Gets the name of workflow current state this object is in.
@@ -685,20 +658,29 @@
         <member name="T:Headway.WorkflowEngine.WorkflowItemTemplate">
             <summary>
             Template used to create and initialize new instances of
-            <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> objects.
+            <see cref="T:Headway.WorkflowEngine.WorkflowItem"/> objects.
             </summary>
         </member>
-        <member name="P:Headway.WorkflowEngine.WorkflowItemTemplate.ItemTypeFullName">
+        <member name="M:Headway.WorkflowEngine.WorkflowItemTemplate.#ctor">
             <summary>
-            Full name reference to the metadata for the
-            <see cref="T:Headway.WorkflowEngine.WorkflowItem"/> objects created by
-            this template.
+            Default constructor.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowItemTemplate.ObjectTypeFullName">
+            <summary>
+            Gets or sets the full name of the object type.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowItemTemplate.ObjectType">
+            <summary>
+            Gets or sets the <see cref="T:Headway.Dynamo.Metadata.ObjectType"/> metadata
+            for this <see cref="T:Headway.WorkflowEngine.WorkflowItemTemplate"/>.
             </summary>
         </member>
         <member name="P:Headway.WorkflowEngine.WorkflowItemTemplate.WorkflowName">
             <summary>
             Name of the workflow to associate with new instances
-            of <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> created by this
+            of <see cref="T:Headway.WorkflowEngine.WorkflowItem"/> created by this
             template.
             </summary>
         </member>
@@ -710,7 +692,7 @@
         </member>
         <member name="M:Headway.WorkflowEngine.WorkflowItemTemplate.CreateInstance(System.IServiceProvider,System.Object)">
             <summary>
-            Creates a new instance of an <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/>
+            Creates a new instance of an <see cref="T:Headway.WorkflowEngine.WorkflowItem"/>
             object for the given context.
             </summary>
             <param name="svcProvider">Reference to service provider</param>
@@ -718,7 +700,7 @@
             Context object data to associated with the new workflow subject
             </param>
             <returns>
-            An instance of <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/>.
+            An instance of <see cref="T:Headway.WorkflowEngine.WorkflowItem"/>.
             </returns>
         </member>
         <member name="M:Headway.WorkflowEngine.WorkflowItemTemplate.InitWorkflowItem(Headway.WorkflowEngine.WorkflowItem)">
@@ -733,48 +715,6 @@
             The following properties are already initialized when this method
             is invoked
             </description>
-        </member>
-        <member name="T:Headway.WorkflowEngine.WorkflowItemType">
-            <summary>
-            Provides metadata for a type of workflow item.
-            </summary>
-        </member>
-        <member name="M:Headway.WorkflowEngine.WorkflowItemType.#ctor(Headway.Dynamo.Metadata.IMetadataProvider)">
-            <summary>
-            
-            </summary>
-            <param name="metadataProvider"></param>
-        </member>
-        <member name="P:Headway.WorkflowEngine.WorkflowItemType.FullName">
-            <summary>
-            Gets or sets the fully qualified name of this
-            <see cref="T:Headway.WorkflowEngine.WorkflowItemType"/> object.
-            </summary>
-        </member>
-        <member name="P:Headway.WorkflowEngine.WorkflowItemType.DisplayName">
-            <summary>
-            Gets the display name used to refer to this type
-            of workflow item (e.g. Issue, Ticket,
-            Case, Incident, ...)
-            </summary>
-        </member>
-        <member name="P:Headway.WorkflowEngine.WorkflowItemType.Abbreviation">
-            <summary>
-            Gets the abbreviated name used to refer to this type
-            of workflow item (e.g. ISS, TCKT,
-            CASE, INCD, ...)
-            </summary>
-        </member>
-        <member name="P:Headway.WorkflowEngine.WorkflowItemType.ObjectTypeFullName">
-            <summary>
-            Gets or sets the full name of the object type.
-            </summary>
-        </member>
-        <member name="P:Headway.WorkflowEngine.WorkflowItemType.ObjectType">
-            <summary>
-            Gets or sets the <see cref="P:Headway.WorkflowEngine.WorkflowItemType.ObjectType"/> metadata
-            for this <see cref="T:Headway.WorkflowEngine.WorkflowItemType"/>.
-            </summary>
         </member>
         <member name="T:Headway.WorkflowEngine.WorkflowTransitionResultCode">
             <summary>

@@ -1,7 +1,0 @@
-﻿{
-  "$type": "Headway.WorkflowEngine.WorkflowItemType, Headway.WorkflowEngine",
-  "FullName": "Headway.WorkflowEngine.UnitTests.MockData.WorkflowItemImpl",
-  "ObjectTypeFullName": "Headway.WorkflowEngine.UnitTests.MockData.WorkflowItemImpl",
-  "DisplayName": "Issue",
-  "Abbreviation":  "ISS"
-}

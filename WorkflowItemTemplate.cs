@@ -18,32 +18,85 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Headway.Dynamo.Runtime;
+using Headway.Dynamo.Metadata;
 using Headway.Dynamo.Exceptions;
+using Headway.WorkflowEngine.Exceptions;
 using Headway.WorkflowEngine.Resolvers;
 
 namespace Headway.WorkflowEngine
 {
     /// <summary>
     /// Template used to create and initialize new instances of
-    /// <see cref="IWorkflowSubject"/> objects.
+    /// <see cref="WorkflowItem"/> objects.
     /// </summary>
     public class WorkflowItemTemplate : IObjectFactory<WorkflowItem>
     {
+        private string objectTypeFullName;
+        private ObjectType objectType;
+        private IMetadataProvider metadataProvider;
+
         /// <summary>
-        /// Full name reference to the metadata for the
-        /// <see cref="WorkflowItem"/> objects created by
-        /// this template.
+        /// Default constructor.
         /// </summary>
-        public string ItemTypeFullName
+        public WorkflowItemTemplate()
         {
-            get;
-            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the full name of the object type.
+        /// </summary>
+        public string ObjectTypeFullName
+        {
+            get
+            {
+                if (this.ObjectType != null)
+                {
+                    return this.ObjectType.FullName;
+                }
+                return this.objectTypeFullName;
+            }
+            set
+            {
+                this.objectTypeFullName = value;
+                this.ObjectType = null;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the <see cref="Dynamo.Metadata.ObjectType"/> metadata
+        /// for this <see cref="WorkflowItemTemplate"/>.
+        /// </summary>
+        [JsonIgnore]
+        public ObjectType ObjectType
+        {
+            get
+            {
+                if (this.objectType == null)
+                {
+                    if (this.objectTypeFullName != null)
+                    {
+                        // Resolve object type
+                        this.objectType = this.metadataProvider.GetDataType<ObjectType>(this.objectTypeFullName);
+                    }
+                }
+                return this.objectType;
+            }
+            set
+            {
+                this.objectType = value;
+                if (this.objectType != null)
+                {
+                    this.objectTypeFullName = this.objectType.FullName;
+                }
+            }
         }
 
         /// <summary>
         /// Name of the workflow to associate with new instances
-        /// of <see cref="IWorkflowSubject"/> created by this
+        /// of <see cref="WorkflowItem"/> created by this
         /// template.
         /// </summary>
         public string WorkflowName
@@ -63,7 +116,7 @@ namespace Headway.WorkflowEngine
         }
 
         /// <summary>
-        /// Creates a new instance of an <see cref="IWorkflowSubject"/>
+        /// Creates a new instance of an <see cref="WorkflowItem"/>
         /// object for the given context.
         /// </summary>
         /// <param name="svcProvider">Reference to service provider</param>
@@ -71,7 +124,7 @@ namespace Headway.WorkflowEngine
         /// Context object data to associated with the new workflow subject
         /// </param>
         /// <returns>
-        /// An instance of <see cref="IWorkflowSubject"/>.
+        /// An instance of <see cref="WorkflowItem"/>.
         /// </returns>
         public WorkflowItem CreateInstance(IServiceProvider svcProvider,
             object context)
@@ -81,48 +134,36 @@ namespace Headway.WorkflowEngine
                 throw new ArgumentNullException(nameof(IServiceProvider));
             }
 
-            var itemTypeResolver = svcProvider.GetService(typeof(IWorkflowItemTypeResolver)) as IWorkflowItemTypeResolver;
-            if (itemTypeResolver == null)
-            {
-                throw new ServiceNotFoundException(typeof(IWorkflowItemTypeResolver));
-            }
-
             var workflowResolver = svcProvider.GetService(typeof(IWorkflowByNameResolver)) as IWorkflowByNameResolver;
             if (workflowResolver == null)
             {
                 throw new ServiceNotFoundException(typeof(IWorkflowByNameResolver));
             }
 
-            // Resolve the workflow subject metadata type information
-            var itemType = itemTypeResolver.Resolve(this.ItemTypeFullName);
-            if (itemType == null)
-            {
-                // TODO: throw better exception
-                throw new InvalidOperationException();
-            }
-
             // Resolve the workflow
             var workflow = workflowResolver.Resolve(this.WorkflowName);
             if (workflow == null)
             {
-                // TODO: throw better exception
-                throw new InvalidOperationException();
+                throw new WorkflowNotFoundException(this.WorkflowName);
             }
 
-            var workflowItemObjectType = itemType.ObjectType;
+            // Resolve the ObjectType metadata
+            var workflowItemObjectType = this.ObjectType;
             if (workflowItemObjectType == null)
             {
-                // TODO: throw better exception
-                throw new InvalidOperationException();
+                throw new DataTypeNotFound(this.ObjectTypeFullName);
             }
 
-            string itemId = Guid.NewGuid().ToString();
+            // Instantiate new workflow item
+            var workflowItem = workflowItemObjectType.CreateInstance<WorkflowItem>(svcProvider);
+            if (workflowItem != null)
+            {
+                workflowItem.WorkflowName = this.WorkflowName;
+                workflowItem.CurrentState = this.InitialState;
 
-            // Instantiate new workflow item and pass workflow as constructor parameter
-            WorkflowItem workflowItem = workflowItemObjectType.CreateInstance<WorkflowItem>(svcProvider, itemType, itemId, workflow.FullName);
-
-            // Initialize new instance
-            this.InitWorkflowItem(workflowItem);
+                // Initialize new instance
+                this.InitWorkflowItem(workflowItem);
+            }
 
             return workflowItem;
         }
@@ -140,7 +181,20 @@ namespace Headway.WorkflowEngine
         /// </description>
         protected virtual void InitWorkflowItem(WorkflowItem workflowItem)
         {
-            workflowItem.CurrentState = this.InitialState;
         }
+
+        #region Serialization
+
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context)
+        {
+            var svcProvider = context.Context as IServiceProvider;
+            if (svcProvider != null)
+            {
+                this.metadataProvider = svcProvider.GetService(typeof(IMetadataProvider)) as IMetadataProvider;
+            }
+        }
+
+        #endregion
     }
 }

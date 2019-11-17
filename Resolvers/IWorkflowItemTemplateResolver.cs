@@ -22,7 +22,9 @@ using Headway.Dynamo.Runtime;
 namespace Headway.WorkflowEngine.Resolvers
 {
     /// <summary>
-    /// 
+    /// Interface to services that resolve
+    /// <see cref="WorkflowItemTemplate"/> objects based on the
+    /// fully qualified name of the template.
     /// </summary>
     public interface IWorkflowItemTemplateResolver : IObjectResolver<string, WorkflowItemTemplate>
     {

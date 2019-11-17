@@ -1,7 +1,0 @@
-﻿{
-  "$type": "Headway.WorkflowEngine.WorkflowItemType, Headway.WorkflowEngine",
-  "FullName": "Headway.WorkflowEngine.UnitTests.MockData.NewEmployeeOnboardingTaskType",
-  "ObjectTypeFullName": "Headway.WorkflowEngine.UnitTests.MockData.NewEmployeeOnboardingTask",
-  "DisplayName": "Task",
-  "Abbreviation": "TASK"
-}

@@ -1,11 +1,13 @@
 ﻿namespace Headway.WorkflowEngine.UnitTests.MockData
 {
-    internal class NewEmployeeOnboardingTask : WorkflowItemImpl
+    internal class NewEmployeeOnboardingTask : WorkflowItem
     {
-        public NewEmployeeOnboardingTask(WorkflowItemType workflowItemType,
-            string id,
-            string workflowName) :
-            base(workflowItemType, id, workflowName)
+        public NewEmployeeOnboardingTask()
+        {
+        }
+
+        public NewEmployeeOnboardingTask(Headway.Dynamo.Metadata.ObjectType objType) :
+             base(objType)
         {
         }
     }

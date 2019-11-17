@@ -18,37 +18,45 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using Headway.Dynamo.Serialization;
-using Headway.WorkflowEngine.Resolvers;
+using System.Runtime.Serialization;
+using Headway.Dynamo.Metadata;
 
-namespace Headway.WorkflowEngine.Implementations
+namespace Headway.WorkflowEngine.UnitTests.MockData
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public sealed class JsonResourceWorkflowItemTypeResolver : IWorkflowItemTypeResolver
+    [Serializable]
+    public sealed class MyWorkflowItem : WorkflowItem
     {
-        private JsonResourceObjectResolver<WorkflowItemType> jsonResourceItemTypeResolver;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="svcProvider"></param>
-        /// <param name="assembly"></param>
-        public JsonResourceWorkflowItemTypeResolver(IServiceProvider svcProvider,
-            System.Reflection.Assembly assembly)
+        public MyWorkflowItem()
         {
-            this.jsonResourceItemTypeResolver = new JsonResourceObjectResolver<WorkflowItemType>(svcProvider, assembly);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public WorkflowItemType Resolve(string key)
+        public MyWorkflowItem(ObjectType objType) :
+            base(objType)
         {
-            return this.jsonResourceItemTypeResolver.Resolve(key);
         }
+
+        public string Info
+        {
+            get;
+            set;
+        }
+
+        #region Serialization
+
+        /// <summary>
+        /// Serialization constructor.
+        /// </summary>
+        /// <param name="info">Serialiation info</param>
+        /// <param name="context">Streaming context</param>
+        /// <remarks>
+        /// Deserializes the given SerializationInfo into a new
+        /// instance of this class.
+        /// </remarks>
+        private MyWorkflowItem(SerializationInfo info, StreamingContext context) :
+            base(info, context)
+        {
+        }
+
+        #endregion
     }
 }

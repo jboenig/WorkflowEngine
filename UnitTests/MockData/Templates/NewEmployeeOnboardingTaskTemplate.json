@@ -1,7 +1,7 @@
 ﻿{
   "$type": "Headway.WorkflowEngine.WorkflowItemTemplate, Headway.WorkflowEngine",
   "FullName": "Headway.WorkflowEngine.UnitTests.MockData.Templates.NewEmployeeOnboardingTaskTemplate",
-  "ItemTypeFullName": "MockData.ItemTypes.NewEmployeeOnboardingTaskType",
+  "ObjectTypeFullName": "Headway.WorkflowEngine.UnitTests.MockData.MyWorkflowItem",
   "WorkflowName": "MockData.Workflows.NewEmployeeOnboarding",
   "InitialState": "Enter New Hire Information"
 }
