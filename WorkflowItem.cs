@@ -18,7 +18,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Headway.Dynamo.Runtime;
 using Headway.Dynamo.Metadata;
 
 namespace Headway.WorkflowEngine
@@ -26,7 +27,8 @@ namespace Headway.WorkflowEngine
     /// <summary>
     /// Base class for items that participate in workflow.
     /// </summary>
-    public class WorkflowItem : Dynamo.Runtime.Dynamo, IWorkflowSubject
+    [JsonObject]
+    public class WorkflowItem : DynamoObject, IWorkflowSubject
     {
         /// <summary>
         /// Default constructor
@@ -119,23 +121,5 @@ namespace Headway.WorkflowEngine
                 this.LastTransition = null;
             }
         }
-
-        #region Serialization
-
-        /// <summary>
-        /// Serialization constructor.
-        /// </summary>
-        /// <param name="info">Serialiation info</param>
-        /// <param name="context">Streaming context</param>
-        /// <remarks>
-        /// Deserializes the given SerializationInfo into a new
-        /// instance of this class.
-        /// </remarks>
-        protected WorkflowItem(SerializationInfo info, StreamingContext context) :
-            base(info, context)
-        {
-        }
-
-        #endregion
     }
 }

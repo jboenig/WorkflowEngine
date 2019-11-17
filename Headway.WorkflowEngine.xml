@@ -644,17 +644,6 @@
             </summary>
             <param name="transition"></param>
         </member>
-        <member name="M:Headway.WorkflowEngine.WorkflowItem.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Serialization constructor.
-            </summary>
-            <param name="info">Serialiation info</param>
-            <param name="context">Streaming context</param>
-            <remarks>
-            Deserializes the given SerializationInfo into a new
-            instance of this class.
-            </remarks>
-        </member>
         <member name="T:Headway.WorkflowEngine.WorkflowItemTemplate">
             <summary>
             Template used to create and initialize new instances of

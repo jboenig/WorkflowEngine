@@ -23,7 +23,6 @@ using Headway.Dynamo.Metadata;
 
 namespace Headway.WorkflowEngine.UnitTests.MockData
 {
-    [Serializable]
     public sealed class MyWorkflowItem : WorkflowItem
     {
         public MyWorkflowItem()
@@ -40,23 +39,5 @@ namespace Headway.WorkflowEngine.UnitTests.MockData
             get;
             set;
         }
-
-        #region Serialization
-
-        /// <summary>
-        /// Serialization constructor.
-        /// </summary>
-        /// <param name="info">Serialiation info</param>
-        /// <param name="context">Streaming context</param>
-        /// <remarks>
-        /// Deserializes the given SerializationInfo into a new
-        /// instance of this class.
-        /// </remarks>
-        private MyWorkflowItem(SerializationInfo info, StreamingContext context) :
-            base(info, context)
-        {
-        }
-
-        #endregion
     }
 }
