@@ -70,12 +70,12 @@
         </member>
         <member name="M:Headway.WorkflowEngine.Exceptions.InitialStateNotFoundException.#ctor">
             <summary>
-            
+            Default constructor.
             </summary>
         </member>
         <member name="P:Headway.WorkflowEngine.Exceptions.InitialStateNotFoundException.Message">
             <summary>
-            
+            Gets the message associated with this exception.
             </summary>
         </member>
         <member name="T:Headway.WorkflowEngine.Exceptions.StateNotFoundException">
@@ -178,7 +178,7 @@
             <param name="serializerConfigSvc"></param>
             <param name="svcProvider"></param>
         </member>
-        <member name="M:Headway.WorkflowEngine.Implementations.FlatFileWorkflowItemRepo.Resolve(System.String)">
+        <member name="M:Headway.WorkflowEngine.Implementations.FlatFileWorkflowItemRepo.Resolve(System.Object)">
             <summary>
             Resolves an object given a key value.
             </summary>
@@ -389,7 +389,7 @@
         </member>
         <member name="P:Headway.WorkflowEngine.Workflow.PrimaryKey">
             <summary>
-            Gets the primary key for this object.
+            Gets or sets the primary key for this object.
             </summary>
         </member>
         <member name="P:Headway.WorkflowEngine.Workflow.InitialState">
@@ -602,7 +602,7 @@
             Object metadata for this <see cref="T:Headway.WorkflowEngine.WorkflowItem"/>
             </param>
         </member>
-        <member name="P:Headway.WorkflowEngine.WorkflowItem.Id">
+        <member name="P:Headway.WorkflowEngine.WorkflowItem.PrimaryKey">
             <summary>
             Gets the unique identifier for this
             <see cref="T:Headway.WorkflowEngine.WorkflowItem"/>.
@@ -691,19 +691,6 @@
             <returns>
             An instance of <see cref="T:Headway.WorkflowEngine.WorkflowItem"/>.
             </returns>
-        </member>
-        <member name="M:Headway.WorkflowEngine.WorkflowItemTemplate.InitWorkflowItem(Headway.WorkflowEngine.WorkflowItem)">
-            <summary>
-            Initializes newly created <see cref="T:Headway.WorkflowEngine.WorkflowItem"/> objects
-            created by this template.
-            </summary>
-            <param name="workflowItem">
-            <see cref="T:Headway.WorkflowEngine.WorkflowItem"/> object to initialize.
-            </param>
-            <description>
-            The following properties are already initialized when this method
-            is invoked
-            </description>
         </member>
         <member name="T:Headway.WorkflowEngine.WorkflowTransitionResultCode">
             <summary>
@@ -1017,14 +1004,29 @@
             Defines different modes for viewing workflow subjects.
             </summary>
         </member>
-        <member name="F:Headway.WorkflowEngine.WorkflowViewModes.Summary">
+        <member name="F:Headway.WorkflowEngine.WorkflowViewModes.SummaryView">
             <summary>
-            Summary view mode
+            Read-only summary view mode
             </summary>
         </member>
-        <member name="F:Headway.WorkflowEngine.WorkflowViewModes.Detail">
+        <member name="F:Headway.WorkflowEngine.WorkflowViewModes.DetailView">
             <summary>
-            Detail view mode
+            Read-only detail view mode
+            </summary>
+        </member>
+        <member name="F:Headway.WorkflowEngine.WorkflowViewModes.SummaryEdit">
+            <summary>
+            Editable summary view mode
+            </summary>
+        </member>
+        <member name="F:Headway.WorkflowEngine.WorkflowViewModes.DetailEdit">
+            <summary>
+            Editable detail view mode
+            </summary>
+        </member>
+        <member name="F:Headway.WorkflowEngine.WorkflowViewModes.ListItem">
+            <summary>
+            List item view mode
             </summary>
         </member>
     </members>

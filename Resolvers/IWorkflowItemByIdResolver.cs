@@ -25,7 +25,7 @@ namespace Headway.WorkflowEngine.Resolvers
     /// Service interface for resolving <see cref="WorkflowItem"/> objects
     /// given a unique ID.
     /// </summary>
-    public interface IWorkflowItemByIdResolver : IObjectResolver<string, WorkflowItem>
+    public interface IWorkflowItemByIdResolver : IObjectResolver<object, WorkflowItem>
     {
     }
 }

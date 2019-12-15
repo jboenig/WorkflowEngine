@@ -25,13 +25,28 @@ namespace Headway.WorkflowEngine
     public enum WorkflowViewModes
     {
         /// <summary>
-        /// Summary view mode
+        /// Read-only summary view mode
         /// </summary>
-        Summary,
+        SummaryView,
 
         /// <summary>
-        /// Detail view mode
+        /// Read-only detail view mode
         /// </summary>
-        Detail
+        DetailView,
+
+        /// <summary>
+        /// Editable summary view mode
+        /// </summary>
+        SummaryEdit,
+
+        /// <summary>
+        /// Editable detail view mode
+        /// </summary>
+        DetailEdit,
+
+        /// <summary>
+        /// List item view mode
+        /// </summary>
+        ListItem
     }
 }

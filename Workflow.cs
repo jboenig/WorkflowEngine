@@ -107,11 +107,12 @@ namespace Headway.WorkflowEngine
         }
 
         /// <summary>
-        /// Gets the primary key for this object.
+        /// Gets or sets the primary key for this object.
         /// </summary>
         public object PrimaryKey
         {
             get { return this.FullName; }
+            set { this.FullName = value.ToString(); }
         }
 
         /// <summary>

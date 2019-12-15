@@ -28,7 +28,7 @@ namespace Headway.WorkflowEngine
     /// Base class for items that participate in workflow.
     /// </summary>
     [JsonObject]
-    public class WorkflowItem : DynamoObject, IWorkflowSubject
+    public class WorkflowItem : DynamoObject, IWorkflowSubject, IPrimaryKeyAccessor
     {
         /// <summary>
         /// Default constructor
@@ -53,7 +53,7 @@ namespace Headway.WorkflowEngine
         /// Gets the unique identifier for this
         /// <see cref="WorkflowItem"/>.
         /// </summary>
-        public string Id
+        public object PrimaryKey
         {
             get;
             set;

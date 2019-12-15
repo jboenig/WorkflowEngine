@@ -32,11 +32,9 @@ namespace Headway.WorkflowEngine
     /// Template used to create and initialize new instances of
     /// <see cref="WorkflowItem"/> objects.
     /// </summary>
-    public class WorkflowItemTemplate : IObjectFactory<WorkflowItem>
+    public sealed class WorkflowItemTemplate : IObjectFactory<WorkflowItem>
     {
         private string objectTypeFullName;
-        private ObjectType objectType;
-        private IMetadataProvider metadataProvider;
 
         /// <summary>
         /// Default constructor.
@@ -48,7 +46,8 @@ namespace Headway.WorkflowEngine
         /// <summary>
         /// Gets or sets the full name of the object type.
         /// </summary>
-        public string ObjectTypeFullName
+        [JsonProperty]
+        private string ObjectTypeFullName
         {
             get
             {
@@ -72,26 +71,8 @@ namespace Headway.WorkflowEngine
         [JsonIgnore]
         public ObjectType ObjectType
         {
-            get
-            {
-                if (this.objectType == null)
-                {
-                    if (this.objectTypeFullName != null)
-                    {
-                        // Resolve object type
-                        this.objectType = this.metadataProvider.GetDataType<ObjectType>(this.objectTypeFullName);
-                    }
-                }
-                return this.objectType;
-            }
-            set
-            {
-                this.objectType = value;
-                if (this.objectType != null)
-                {
-                    this.objectTypeFullName = this.objectType.FullName;
-                }
-            }
+            get;
+            set;
         }
 
         /// <summary>
@@ -158,29 +139,18 @@ namespace Headway.WorkflowEngine
             var workflowItem = workflowItemObjectType.CreateInstance<WorkflowItem>(svcProvider);
             if (workflowItem != null)
             {
+                // Initialize new instance
                 workflowItem.WorkflowName = this.WorkflowName;
                 workflowItem.CurrentState = this.InitialState;
 
-                // Initialize new instance
-                this.InitWorkflowItem(workflowItem);
+                var objInit = workflowItem as IObjectInit;
+                if (objInit != null)
+                {
+                    objInit.Init(svcProvider);
+                }
             }
 
             return workflowItem;
-        }
-
-        /// <summary>
-        /// Initializes newly created <see cref="WorkflowItem"/> objects
-        /// created by this template.
-        /// </summary>
-        /// <param name="workflowItem">
-        /// <see cref="WorkflowItem"/> object to initialize.
-        /// </param>
-        /// <description>
-        /// The following properties are already initialized when this method
-        /// is invoked
-        /// </description>
-        protected virtual void InitWorkflowItem(WorkflowItem workflowItem)
-        {
         }
 
         #region Serialization
@@ -191,7 +161,12 @@ namespace Headway.WorkflowEngine
             var svcProvider = context.Context as IServiceProvider;
             if (svcProvider != null)
             {
-                this.metadataProvider = svcProvider.GetService(typeof(IMetadataProvider)) as IMetadataProvider;
+                var metadataProvider = svcProvider.GetService(typeof(IMetadataProvider)) as IMetadataProvider;
+                if (metadataProvider == null)
+                {
+                    throw new ServiceNotFoundException(typeof(IMetadataProvider));
+                }
+                this.ObjectType = metadataProvider.GetDataType<ObjectType>(this.ObjectTypeFullName);
             }
         }
 

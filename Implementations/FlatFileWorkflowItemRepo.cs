@@ -50,10 +50,10 @@ namespace Headway.WorkflowEngine.Implementations
         /// </summary>
         /// <param name="key">Key value</param>
         /// <returns>Object matching the given key value.</returns>
-        public WorkflowItem Resolve(string key)
+        public WorkflowItem Resolve(object key)
         {
             return (from wi in this.GetQueryable()
-                    where wi.Id == key
+                    where wi.PrimaryKey == key
                     select wi).FirstOrDefault();
         }
     }

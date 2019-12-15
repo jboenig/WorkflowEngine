@@ -18,14 +18,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.ComponentModel.Design;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ninject;
 
 using Headway.Dynamo.Metadata;
-using Headway.Dynamo.Runtime;
 using Headway.Dynamo.Serialization;
-using Headway.Dynamo.Metadata.Reflection;
+using Headway.Dynamo.Exceptions;
 using Headway.WorkflowEngine.UnitTests.MockData;
 using Headway.WorkflowEngine;
 using Headway.WorkflowEngine.Resolvers;
@@ -66,12 +64,31 @@ namespace WorkflowEngine.UnitTests
             Assert.IsNotNull(workflowItemTemplate);
             var workflowItem = workflowItemTemplate.CreateInstance(this.kernel, null) as MyWorkflowItem;
             Assert.IsNotNull(workflowItem);
+            workflowItem.PrimaryKey = Guid.NewGuid();
             workflowItem.Info = "Hello world";
 
             var workflowItemRepo = this.kernel.GetService(typeof(IObjectRepository<WorkflowItem>)) as IObjectRepository<WorkflowItem>;
 
             workflowItemRepo.Add(workflowItem);
             workflowItemRepo.SaveChanges();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(DuplicateKeyException))]
+        public void AddDupWorkflowItemTest1()
+        {
+            var workflowItemTemplateResolver = this.kernel.GetService(typeof(IWorkflowItemTemplateResolver)) as IWorkflowItemTemplateResolver;
+            var workflowItemTemplate = workflowItemTemplateResolver.Resolve("MockData.Templates.Test1Template");
+            Assert.IsNotNull(workflowItemTemplate);
+            var workflowItem = workflowItemTemplate.CreateInstance(this.kernel, null) as MyWorkflowItem;
+            Assert.IsNotNull(workflowItem);
+            workflowItem.PrimaryKey = Guid.NewGuid();
+            workflowItem.Info = "Hello world";
+
+            var workflowItemRepo = this.kernel.GetService(typeof(IObjectRepository<WorkflowItem>)) as IObjectRepository<WorkflowItem>;
+
+            workflowItemRepo.Add(workflowItem);
+            workflowItemRepo.Add(workflowItem);
         }
     }
 }

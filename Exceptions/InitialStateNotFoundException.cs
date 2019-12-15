@@ -28,14 +28,14 @@ namespace Headway.WorkflowEngine.Exceptions
     public sealed class InitialStateNotFoundException : WorkflowException
     {
         /// <summary>
-        /// 
+        /// Default constructor.
         /// </summary>
         public InitialStateNotFoundException()
         {
         }
 
         /// <summary>
-        /// 
+        /// Gets the message associated with this exception.
         /// </summary>
         public override string Message
         {

@@ -1,10 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>Headway.WorkflowEngine</RootNamespace>
     <AssemblyName>Headway.WorkflowEngine</AssemblyName>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.1.0</Version>
+    <Copyright>Headway Software</Copyright>
+    <PackageProjectUrl>https://github.com/jboenig/WorkflowEngine/wiki</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jboenig/WorkflowEngine</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Description>Headway WorkflowEngine is a flexible and powerful workflow engine built around workflows that define states and transitions.  Actions and conditions can be associated with states and transitions in workflows.  Choose from a wide variety of built-in actions and conditions, or create your own simply by subclassing a .NET class.  Workflow items are completely customizable and workflows can be automated or user-driven.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -20,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Headway.Dynamo" Version="0.9.6" />
+    <PackageReference Include="Headway.Dynamo" Version="1.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
