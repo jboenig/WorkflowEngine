@@ -191,7 +191,7 @@ namespace Headway.WorkflowEngine
         /// Interface to service provider.
         /// </param>
         /// <returns>
-        /// Returns a <see cref="WorkflowTransitionResult"/> object
+        /// Returns a <see cref="WorkflowExecutionResult"/> object
         /// that encapsulates the result of the operation.
         /// </returns>
         /// <remarks>
@@ -202,7 +202,7 @@ namespace Headway.WorkflowEngine
         /// <exception cref="InitialStateNotFoundException">
         /// Thrown when the workflow has no initial state defined.
         /// </exception>
-        public WorkflowTransitionResult LoadInitialState(IWorkflowSubject workflowSubject, IServiceProvider serviceProvider)
+        public WorkflowExecutionResult Start(IWorkflowSubject workflowSubject, IServiceProvider serviceProvider)
         {
             ///////////////////////////////////////////////////////////////////
             // Check arguments
@@ -226,7 +226,7 @@ namespace Headway.WorkflowEngine
             // to the INITIAL state
             workflowSubject.CurrentState = initialState.Name;
 
-            return WorkflowTransitionResult.Success;
+            return WorkflowExecutionResult.Success;
         }
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace Headway.WorkflowEngine
         /// <param name="transitionName"></param>
         /// <param name="serviceProvider"></param>
         /// <returns></returns>
-        public WorkflowTransitionResult IsTransitionToAllowed(IWorkflowSubject workflowSubject, string transitionName, IServiceProvider serviceProvider)
+        public WorkflowExecutionResult IsTransitionToAllowed(IWorkflowSubject workflowSubject, string transitionName, IServiceProvider serviceProvider)
         {
             ///////////////////////////////////////////////////////////////////
             // Get the FROM state
@@ -261,10 +261,10 @@ namespace Headway.WorkflowEngine
             // Check to see if the transition is allowed
             if (!transition.IsAllowed(serviceProvider, workflowSubject.GetContextObject(serviceProvider)))
             {
-                return new WorkflowTransitionResult(WorkflowTransitionResultCode.NotAllowed, string.Format("Transition {0} not allowed {1}", transitionName, transition.ConditionErrorMessage));
+                return new WorkflowExecutionResult(WorkflowExecutionResultCode.NotAllowed, string.Format("Transition {0} not allowed {1}", transitionName, transition.ConditionErrorMessage));
             }
 
-            return new WorkflowTransitionResult(WorkflowTransitionResultCode.Success);
+            return new WorkflowExecutionResult(WorkflowExecutionResultCode.Success);
         }
 
         /// <summary>
@@ -282,7 +282,7 @@ namespace Headway.WorkflowEngine
         /// Interface to service provider.
         /// </param>
         /// <returns>
-        /// Returns a <see cref="WorkflowTransitionResult"/> object
+        /// Returns a <see cref="WorkflowExecutionResult"/> object
         /// that encapsulates the result of the operation.
         /// </returns>
         /// <remarks>
@@ -308,9 +308,9 @@ namespace Headway.WorkflowEngine
         /// Thrown when an action fails exiting a state, transitioning,
         /// or entering a state.
         /// </exception>
-        public WorkflowTransitionResult TransitionTo(IWorkflowSubject workflowSubject, string transitionName, IServiceProvider serviceProvider)
+        public WorkflowExecutionResult TransitionTo(IWorkflowSubject workflowSubject, string transitionName, IServiceProvider serviceProvider)
         {
-            WorkflowTransitionResult res = WorkflowTransitionResult.Success;
+            WorkflowExecutionResult res = WorkflowExecutionResult.Success;
 
             ///////////////////////////////////////////////////////////////////
             // Check arguments
@@ -350,8 +350,8 @@ namespace Headway.WorkflowEngine
             // Check to see if the transition is allowed
             if (!transition.IsAllowed(serviceProvider, workflowSubject.GetContextObject(serviceProvider)))
             {
-                return new WorkflowTransitionResult(
-                    WorkflowTransitionResultCode.NotAllowed,
+                return new WorkflowExecutionResult(
+                    WorkflowExecutionResultCode.NotAllowed,
                     string.Format("Transition {0} not allowed {1}", transitionName, transition.ConditionErrorMessage));
             }           
 
@@ -413,12 +413,12 @@ namespace Headway.WorkflowEngine
 
                 if (!actionRes.IsSuccess)
                 {
-                    res = new WorkflowTransitionResult(actionRes);
+                    res = new WorkflowExecutionResult(actionRes);
                 }
             }
             catch (Exception ex)
             {
-                res = new WorkflowTransitionResult(ex);
+                res = new WorkflowExecutionResult(ex);
             }
 
             return res;

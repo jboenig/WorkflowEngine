@@ -80,17 +80,12 @@ namespace Headway.WorkflowEngine
         /// of <see cref="WorkflowItem"/> created by this
         /// template.
         /// </summary>
+        /// <remarks>
+        /// This property is optional.  Binding a <see cref="WorkflowItem"/>
+        /// to a workflow can be done later when the workflow
+        /// is started.
+        /// </remarks>
         public string WorkflowName
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets the initial workflow state for items
-        /// created by this template.
-        /// </summary>
-        public string InitialState
         {
             get;
             set;
@@ -141,7 +136,6 @@ namespace Headway.WorkflowEngine
             {
                 // Initialize new instance
                 workflowItem.WorkflowName = this.WorkflowName;
-                workflowItem.CurrentState = this.InitialState;
 
                 var objInit = workflowItem as IObjectInit;
                 if (objInit != null)

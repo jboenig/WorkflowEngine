@@ -50,7 +50,7 @@ namespace WorkflowEngine.UnitTests
             this.kernel.Bind<ISerializerConfigService>().To<StandardSerializerConfigService>();
             this.kernel.Bind<IMetadataProvider>().To<StandardMetadataProvider>();
             this.kernel.Bind<IWorkflowItemFactory>().To<StandardWorkflowItemFactory>();
-            this.kernel.Bind<IWorkflowTransitionService>().To<StandardWorkflowTransitionService>();
+            this.kernel.Bind<IWorkflowExecutionService>().To<StandardWorkflowExecutionService>();
             this.kernel.Bind<IServiceProvider>().ToConstant(kernel);
         }
 
@@ -67,8 +67,11 @@ namespace WorkflowEngine.UnitTests
             var workflow = workflowResolver.Resolve(workflowItem.WorkflowName);
             Assert.IsNotNull(workflow);
 
-            var res = workflow.TransitionTo(workflowItem, "Start", this.kernel);
-            Assert.IsTrue(res.IsSuccess);
+            var resExec = workflow.Start(workflowItem, this.kernel);
+            Assert.IsTrue(resExec.IsSuccess);
+
+            var resTransition = workflow.TransitionTo(workflowItem, "Start", this.kernel);
+            Assert.IsTrue(resTransition.IsSuccess);
         }
 
         [TestMethod]
@@ -85,6 +88,9 @@ namespace WorkflowEngine.UnitTests
             Assert.IsNotNull(workflowResolver);
             var workflow = workflowResolver.Resolve(workflowItem.WorkflowName);
             Assert.IsNotNull(workflow);
+
+            var resStartWorkflow = workflow.Start(workflowItem, this.kernel);
+            Assert.IsTrue(resStartWorkflow.IsSuccess);
 
             var resStartTransition = workflow.TransitionTo(workflowItem, "Start", this.kernel);
             Assert.IsTrue(resStartTransition.IsSuccess);
@@ -108,6 +114,9 @@ namespace WorkflowEngine.UnitTests
             Assert.IsNotNull(workflowResolver);
             var workflow = workflowResolver.Resolve(workflowItem.WorkflowName);
             Assert.IsNotNull(workflow);
+
+            var resStartWorkflow = workflow.Start(workflowItem, this.kernel);
+            Assert.IsTrue(resStartWorkflow.IsSuccess);
 
             var resTransition1 = workflow.TransitionTo(workflowItem, "Create Employee Records", this.kernel);
             Assert.IsTrue(resTransition1.IsSuccess);

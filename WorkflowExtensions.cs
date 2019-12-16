@@ -43,7 +43,7 @@ namespace Headway.WorkflowEngine
         /// Name of transition to follow.
         /// </param>
         /// <returns>
-        /// Returns a <see cref="WorkflowTransitionResult"/> object
+        /// Returns a <see cref="WorkflowExecutionResult"/> object
         /// that encapsulates the result of the operation.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -61,7 +61,9 @@ namespace Headway.WorkflowEngine
         /// Thrown when an action fails exiting a state, transitioning,
         /// or entering a state.
         /// </exception>
-        public static WorkflowTransitionResult TransitionTo(this IWorkflowSubject workflowSubject, string transitionName, IServiceProvider serviceProvider)
+        public static WorkflowExecutionResult TransitionTo(this IWorkflowSubject workflowSubject,
+            string transitionName,
+            IServiceProvider serviceProvider)
         {
             if (string.IsNullOrEmpty(transitionName))
             {

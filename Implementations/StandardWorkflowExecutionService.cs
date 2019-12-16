@@ -21,13 +21,15 @@ using System;
 using Headway.Dynamo.Exceptions;
 using Headway.WorkflowEngine.Services;
 using Headway.WorkflowEngine.Resolvers;
+using Headway.WorkflowEngine.Exceptions;
 
 namespace Headway.WorkflowEngine.Implementations
 {
     /// <summary>
-    /// 
+    /// Base implementation of the <see cref="IWorkflowExecutionService"/>
+    /// service.
     /// </summary>
-    public sealed class StandardWorkflowTransitionService : IWorkflowTransitionService
+    public sealed class StandardWorkflowExecutionService : IWorkflowExecutionService
     {
         private IServiceProvider serviceProvider;
         private IWorkflowByNameResolver workflowByNameResolver;
@@ -36,7 +38,7 @@ namespace Headway.WorkflowEngine.Implementations
         /// 
         /// </summary>
         /// <param name="svcProvider"></param>
-        public StandardWorkflowTransitionService(IServiceProvider svcProvider)
+        public StandardWorkflowExecutionService(IServiceProvider svcProvider)
         {
             if (svcProvider == null)
             {
@@ -55,9 +57,43 @@ namespace Headway.WorkflowEngine.Implementations
         /// 
         /// </summary>
         /// <param name="item"></param>
+        /// <param name="workflowName"></param>
+        /// <returns></returns>
+        public WorkflowExecutionResult StartWorkflow(WorkflowItem item, string workflowName)
+        {
+            if (item == null)
+            {
+                throw new ArgumentNullException(nameof(item));
+            }
+
+            if (string.IsNullOrEmpty(workflowName))
+            {
+                throw new ArgumentNullException(nameof(workflowName));
+            }
+
+            var workflow = this.workflowByNameResolver.Resolve(workflowName);
+            if (workflow == null)
+            {
+                throw new WorkflowNotFoundException(workflowName);
+            }
+
+            var res = workflow.Start(item, this.serviceProvider);
+
+            if (res.IsSuccess)
+            {
+                item.WorkflowName = workflowName;
+            }
+
+            return res;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
         /// <param name="transitionName"></param>
         /// <returns></returns>
-        public WorkflowTransitionResult TransitionTo(WorkflowItem item, string transitionName)
+        public WorkflowExecutionResult TransitionTo(WorkflowItem item, string transitionName)
         {
             if (item == null)
             {
