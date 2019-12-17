@@ -5,7 +5,7 @@
     <RootNamespace>Headway.WorkflowEngine</RootNamespace>
     <AssemblyName>Headway.WorkflowEngine</AssemblyName>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <Copyright>Headway Software</Copyright>
     <PackageProjectUrl>https://github.com/jboenig/WorkflowEngine/wiki</PackageProjectUrl>
     <RepositoryUrl>https://github.com/jboenig/WorkflowEngine</RepositoryUrl>
