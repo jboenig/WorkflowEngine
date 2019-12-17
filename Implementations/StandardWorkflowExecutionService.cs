@@ -35,9 +35,12 @@ namespace Headway.WorkflowEngine.Implementations
         private IWorkflowByNameResolver workflowByNameResolver;
 
         /// <summary>
-        /// 
+        /// Constructs a <see cref="StandardWorkflowExecutionService"/>
+        /// given a service provider
         /// </summary>
-        /// <param name="svcProvider"></param>
+        /// <param name="svcProvider">
+        /// Service provider
+        /// </param>
         public StandardWorkflowExecutionService(IServiceProvider svcProvider)
         {
             if (svcProvider == null)
@@ -54,16 +57,25 @@ namespace Headway.WorkflowEngine.Implementations
         }
 
         /// <summary>
-        /// 
+        /// Starts execution of an <see cref="IWorkflowSubject"/> object
+        /// in the specified workflow.
         /// </summary>
-        /// <param name="item"></param>
-        /// <param name="workflowName"></param>
-        /// <returns></returns>
-        public WorkflowExecutionResult StartWorkflow(WorkflowItem item, string workflowName)
+        /// <param name="workflowSubject">
+        /// <see cref="IWorkflowSubject"/> object to start in the
+        /// workflow
+        /// </param>
+        /// <param name="workflowName">
+        /// Fully-qualified name of the workflow to execute
+        /// </param>
+        /// <returns>
+        /// Returns a <see cref="WorkflowExecutionResult"/> object
+        /// that encapsulates the result of the operation.
+        /// </returns>
+        public WorkflowExecutionResult StartWorkflow(IWorkflowSubject workflowSubject, string workflowName)
         {
-            if (item == null)
+            if (workflowSubject == null)
             {
-                throw new ArgumentNullException(nameof(item));
+                throw new ArgumentNullException(nameof(workflowSubject));
             }
 
             if (string.IsNullOrEmpty(workflowName))
@@ -77,36 +89,37 @@ namespace Headway.WorkflowEngine.Implementations
                 throw new WorkflowNotFoundException(workflowName);
             }
 
-            var res = workflow.Start(item, this.serviceProvider);
-
-            if (res.IsSuccess)
-            {
-                item.WorkflowName = workflowName;
-            }
-
-            return res;
+            return workflow.Start(workflowSubject, this.serviceProvider);
         }
 
         /// <summary>
-        /// 
+        /// Transitions the specified workflow subject to a
+        /// new state along a given transition.
         /// </summary>
-        /// <param name="item"></param>
-        /// <param name="transitionName"></param>
-        /// <returns></returns>
-        public WorkflowExecutionResult TransitionTo(WorkflowItem item, string transitionName)
+        /// <param name="workflowSubject">
+        /// <see cref="IWorkflowSubject"/> object to transition
+        /// </param>
+        /// <param name="transitionName">
+        /// Name of transition to execute
+        /// </param>
+        /// <returns>
+        /// Returns a <see cref="WorkflowExecutionResult"/> object
+        /// that encapsulates the result of the operation.
+        /// </returns>
+        public WorkflowExecutionResult TransitionTo(IWorkflowSubject workflowSubject, string transitionName)
         {
-            if (item == null)
+            if (workflowSubject == null)
             {
-                throw new ArgumentNullException(nameof(item));
+                throw new ArgumentNullException(nameof(workflowSubject));
             }
 
-            var workflow = this.workflowByNameResolver.Resolve(item.WorkflowName);
+            var workflow = this.workflowByNameResolver.Resolve(workflowSubject.WorkflowName);
             if (workflow == null)
             {
-                var msg = string.Format("Workflow {0} not found", item.WorkflowName);
+                throw new WorkflowNotFoundException(workflowSubject.WorkflowName);
             }
 
-            return workflow.TransitionTo(item, transitionName, this.serviceProvider);
+            return workflow.TransitionTo(workflowSubject, transitionName, this.serviceProvider);
         }
     }
 }

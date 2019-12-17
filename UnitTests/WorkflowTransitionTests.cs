@@ -62,15 +62,13 @@ namespace WorkflowEngine.UnitTests
             var workflowItem = workflowItemFactory.CreateWorkflowItem("MockData.Templates.Test1Template", null);
             Assert.IsNotNull(workflowItem);
 
-            var workflowResolver = this.kernel.GetService(typeof(IWorkflowByNameResolver)) as IWorkflowByNameResolver;
-            Assert.IsNotNull(workflowResolver);
-            var workflow = workflowResolver.Resolve(workflowItem.WorkflowName);
-            Assert.IsNotNull(workflow);
+            var workflowExecutionSvc = this.kernel.GetService(typeof(IWorkflowExecutionService)) as IWorkflowExecutionService;
+            Assert.IsNotNull(workflowExecutionSvc);
 
-            var resExec = workflow.Start(workflowItem, this.kernel);
+            var resExec = workflowExecutionSvc.StartWorkflow(workflowItem);
             Assert.IsTrue(resExec.IsSuccess);
 
-            var resTransition = workflow.TransitionTo(workflowItem, "Start", this.kernel);
+            var resTransition = workflowExecutionSvc.TransitionTo(workflowItem, "Start");
             Assert.IsTrue(resTransition.IsSuccess);
         }
 
@@ -84,18 +82,16 @@ namespace WorkflowEngine.UnitTests
             var workflowItem = workflowItemTemplate.CreateInstance(this.kernel, null) as MyWorkflowItem;
             Assert.IsNotNull(workflowItem);
 
-            var workflowResolver = this.kernel.GetService(typeof(IWorkflowByNameResolver)) as IWorkflowByNameResolver;
-            Assert.IsNotNull(workflowResolver);
-            var workflow = workflowResolver.Resolve(workflowItem.WorkflowName);
-            Assert.IsNotNull(workflow);
+            var workflowExecutionSvc = this.kernel.GetService(typeof(IWorkflowExecutionService)) as IWorkflowExecutionService;
+            Assert.IsNotNull(workflowExecutionSvc);
 
-            var resStartWorkflow = workflow.Start(workflowItem, this.kernel);
+            var resStartWorkflow = workflowExecutionSvc.StartWorkflow(workflowItem, "MockData.Workflows.Test1Workflow");
             Assert.IsTrue(resStartWorkflow.IsSuccess);
 
-            var resStartTransition = workflow.TransitionTo(workflowItem, "Start", this.kernel);
+            var resStartTransition = workflowExecutionSvc.TransitionTo(workflowItem, "Start");
             Assert.IsTrue(resStartTransition.IsSuccess);
 
-            var resNeedMoreInfoTransition = workflow.TransitionTo(workflowItem, "Need More Info", this.kernel);
+            var resNeedMoreInfoTransition = workflowExecutionSvc.TransitionTo(workflowItem, "Need More Info");
             Assert.IsTrue(resNeedMoreInfoTransition.IsSuccess);
 
             Assert.AreEqual(workflowItem.CurrentState, "Reviewing");
@@ -110,15 +106,13 @@ namespace WorkflowEngine.UnitTests
             var workflowItem = workflowItemFactory.CreateWorkflowItem("MockData.Templates.NewEmployeeOnboardingTaskTemplate", null);
             Assert.IsNotNull(workflowItem);
 
-            var workflowResolver = this.kernel.GetService(typeof(IWorkflowByNameResolver)) as IWorkflowByNameResolver;
-            Assert.IsNotNull(workflowResolver);
-            var workflow = workflowResolver.Resolve(workflowItem.WorkflowName);
-            Assert.IsNotNull(workflow);
+            var workflowExecutionSvc = this.kernel.GetService(typeof(IWorkflowExecutionService)) as IWorkflowExecutionService;
+            Assert.IsNotNull(workflowExecutionSvc);
 
-            var resStartWorkflow = workflow.Start(workflowItem, this.kernel);
+            var resStartWorkflow = workflowExecutionSvc.StartWorkflow(workflowItem);
             Assert.IsTrue(resStartWorkflow.IsSuccess);
 
-            var resTransition1 = workflow.TransitionTo(workflowItem, "Create Employee Records", this.kernel);
+            var resTransition1 = workflowExecutionSvc.TransitionTo(workflowItem, "Create Employee Records");
             Assert.IsTrue(resTransition1.IsSuccess);
         }
     }

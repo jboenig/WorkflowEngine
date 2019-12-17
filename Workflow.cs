@@ -181,11 +181,11 @@ namespace Headway.WorkflowEngine
         }
 
         /// <summary>
-        /// Sets an <see cref="IWorkflowSubject"/> object to the initial
-        /// state defined by this workflow.
+        /// Starts execution of an <see cref="IWorkflowSubject"/> object
+        /// in this workflow.
         /// </summary>
         /// <param name="workflowSubject">
-        /// Workflow subject to transition to initialize.
+        /// Workflow subject to start in this workflow.
         /// </param>
         /// <param name="serviceProvider">
         /// Interface to service provider.
@@ -195,6 +195,10 @@ namespace Headway.WorkflowEngine
         /// that encapsulates the result of the operation.
         /// </returns>
         /// <remarks>
+        /// This method associates the <see cref="IWorkflowSubject"/> with
+        /// this workflow, sets the <see cref="IWorkflowSubject.CurrentState"/>
+        /// to the <see cref="Workflow.InitialState"/> of this workflow, and
+        /// executes the enter action of the initial state.
         /// </remarks>
         /// <exception cref="ArgumentNullException">
         /// Thrown when workflowSubject is null.
@@ -222,21 +226,45 @@ namespace Headway.WorkflowEngine
             initialState.ExecuteEnterAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
 
             ///////////////////////////////////////////////////////////////////
+            // Assign the name of the workflow to the object
+            workflowSubject.WorkflowName = this.FullName;
+
+            ///////////////////////////////////////////////////////////////////
             // Set the current state of the workflow subject
             // to the INITIAL state
             workflowSubject.CurrentState = initialState.Name;
+
+            ///////////////////////////////////////////////////////////////////
+            // Invoke OnStarted callback
+            workflowSubject.OnStarted(this);
 
             return WorkflowExecutionResult.Success;
         }
 
         /// <summary>
-        /// 
+        /// Determines if the specified transition is allowed
+        /// for the workflow subject.
         /// </summary>
-        /// <param name="workflowSubject"></param>
-        /// <param name="transitionName"></param>
-        /// <param name="serviceProvider"></param>
-        /// <returns></returns>
-        public WorkflowExecutionResult IsTransitionToAllowed(IWorkflowSubject workflowSubject, string transitionName, IServiceProvider serviceProvider)
+        /// <param name="workflowSubject">
+        /// Workflow subject to test
+        /// </param>
+        /// <param name="transitionName">
+        /// Transition to test
+        /// </param>
+        /// <param name="serviceProvider">
+        /// Service provider
+        /// </param>
+        /// <returns>
+        /// Returns true if the transition is allowed, otherwise
+        /// returns false
+        /// </returns>
+        /// <remarks>
+        /// Checks condition associated with the transition against
+        /// the context provided by the workflow subject.
+        /// </remarks>
+        public WorkflowExecutionResult IsTransitionToAllowed(IWorkflowSubject workflowSubject,
+            string transitionName,
+            IServiceProvider serviceProvider)
         {
             ///////////////////////////////////////////////////////////////////
             // Get the FROM state
@@ -369,7 +397,7 @@ namespace Headway.WorkflowEngine
             {
                 ///////////////////////////////////////////////////////////////////
                 // Fire the pre-transition notification on the workflow subject
-                workflowSubject.OnTransitioningTo(transition);
+                workflowSubject.OnTransitioningTo(this, transition);
 
                 CommandResult actionRes;
 
@@ -392,7 +420,7 @@ namespace Headway.WorkflowEngine
                 {
                     ///////////////////////////////////////////////////////////////////
                     // Fire the post-transition notification on the workflow subject
-                    workflowSubject.OnTransitionedTo(transition);
+                    workflowSubject.OnTransitionedTo(this, transition);
                 }
 
                 if (actionRes.IsSuccess)

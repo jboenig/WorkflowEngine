@@ -22,54 +22,82 @@ using System;
 namespace Headway.WorkflowEngine.Services
 {
     /// <summary>
-    /// 
+    /// Interface to service that executes workflows on
+    /// against <see cref="IWorkflowSubject"/> objects.
     /// </summary>
     public interface IWorkflowExecutionService
     {
         /// <summary>
-        /// 
+        /// Starts execution of an <see cref="IWorkflowSubject"/> object
+        /// in the specified workflow.
         /// </summary>
-        /// <param name="item"></param>
-        /// <param name="workflowName"></param>
-        /// <returns></returns>
-        WorkflowExecutionResult StartWorkflow(WorkflowItem item, string workflowName);
+        /// <param name="workflowSubject">
+        /// <see cref="IWorkflowSubject"/> object to start in the
+        /// workflow
+        /// </param>
+        /// <param name="workflowName">
+        /// Fully-qualified name of the workflow to execute
+        /// </param>
+        /// <returns>
+        /// Returns a <see cref="WorkflowExecutionResult"/> object
+        /// that encapsulates the result of the operation.
+        /// </returns>
+        WorkflowExecutionResult StartWorkflow(IWorkflowSubject workflowSubject, string workflowName);
 
         /// <summary>
-        /// 
+        /// Transitions the specified workflow subject to a
+        /// new state along a given transition.
         /// </summary>
-        /// <param name="item"></param>
-        /// <param name="transitionName"></param>
-        /// <returns></returns>
-        WorkflowExecutionResult TransitionTo(WorkflowItem item, string transitionName);
+        /// <param name="workflowSubject">
+        /// <see cref="IWorkflowSubject"/> object to transition
+        /// </param>
+        /// <param name="transitionName">
+        /// Name of transition to execute
+        /// </param>
+        /// <returns>
+        /// Returns a <see cref="WorkflowExecutionResult"/> object
+        /// that encapsulates the result of the operation.
+        /// </returns>
+        WorkflowExecutionResult TransitionTo(IWorkflowSubject workflowSubject, string transitionName);
     }
 
     /// <summary>
-    /// 
+    /// Extension methods for the <see cref="IWorkflowExecutionService"/>
+    /// interface.
     /// </summary>
     public static class WorkflowExecutionServiceExtensions
     {
         /// <summary>
-        /// 
+        /// Starts execution of an <see cref="IWorkflowSubject"/> object
+        /// in the workflow associated with the object.
         /// </summary>
         /// <param name="workflowTransitionService"></param>
-        /// <param name="item"></param>
-        /// <returns></returns>
+        /// <param name="workflowSubject"></param>
+        /// <returns>
+        /// Returns a <see cref="WorkflowExecutionResult"/> object
+        /// that encapsulates the result of the operation.
+        /// </returns>
+        /// <remarks>
+        /// This is a short-cut method for <see cref="IWorkflowSubject"/>
+        /// objects that already have a value assigned to
+        /// <see cref="IWorkflowSubject.WorkflowName"/>.
+        /// </remarks>
         public static WorkflowExecutionResult StartWorkflow(this IWorkflowExecutionService workflowTransitionService,
-            WorkflowItem item)
+            IWorkflowSubject workflowSubject)
         {
-            if (item == null)
+            if (workflowSubject == null)
             {
-                throw new ArgumentNullException(nameof(item));
+                throw new ArgumentNullException(nameof(workflowSubject));
             }
 
-            var workflowName = item.WorkflowName;
+            var workflowName = workflowSubject.WorkflowName;
             if (string.IsNullOrEmpty(workflowName))
             {
-                var msg = $"{item} is not associated with a workflow";
+                var msg = $"{workflowSubject} is not associated with a workflow";
                 throw new InvalidOperationException(msg);
             }
 
-            return workflowTransitionService.StartWorkflow(item, workflowName);
+            return workflowTransitionService.StartWorkflow(workflowSubject, workflowName);
         }
     }
 }

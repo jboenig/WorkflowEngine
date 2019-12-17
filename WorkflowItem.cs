@@ -99,18 +99,39 @@ namespace Headway.WorkflowEngine
         }
 
         /// <summary>
+        /// Called after this item is started in a workflow.
+        /// </summary>
+        /// <param name="workflow">
+        /// Workflow this item has started
+        /// </param>
+        public virtual void OnStarted(Workflow workflow)
+        {
+            this.LastTransition = null;
+        }
+
+        /// <summary>
         /// Called before this object is transitioned to a new state.
         /// </summary>
-        /// <param name="transition"></param>
-        public virtual void OnTransitioningTo(WorkflowTransition transition)
+        /// <param name="workflow">
+        /// Workflow that contains the transition
+        /// </param>
+        /// <param name="transition">
+        /// Transition executed
+        /// </param>
+        public virtual void OnTransitioningTo(Workflow workflow, WorkflowTransition transition)
         {
         }
 
         /// <summary>
         /// Called after this object is transitioned to a new state.
         /// </summary>
-        /// <param name="transition"></param>
-        public virtual void OnTransitionedTo(WorkflowTransition transition)
+        /// <param name="workflow">
+        /// Workflow that contains the transition
+        /// </param>
+        /// <param name="transition">
+        /// Transition executed
+        /// </param>
+        public virtual void OnTransitionedTo(Workflow workflow, WorkflowTransition transition)
         {
             if (transition != null)
             {

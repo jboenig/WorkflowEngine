@@ -233,25 +233,45 @@
         </member>
         <member name="M:Headway.WorkflowEngine.Implementations.StandardWorkflowExecutionService.#ctor(System.IServiceProvider)">
             <summary>
-            
+            Constructs a <see cref="T:Headway.WorkflowEngine.Implementations.StandardWorkflowExecutionService"/>
+            given a service provider
             </summary>
-            <param name="svcProvider"></param>
+            <param name="svcProvider">
+            Service provider
+            </param>
         </member>
-        <member name="M:Headway.WorkflowEngine.Implementations.StandardWorkflowExecutionService.StartWorkflow(Headway.WorkflowEngine.WorkflowItem,System.String)">
+        <member name="M:Headway.WorkflowEngine.Implementations.StandardWorkflowExecutionService.StartWorkflow(Headway.WorkflowEngine.IWorkflowSubject,System.String)">
             <summary>
-            
+            Starts execution of an <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> object
+            in the specified workflow.
             </summary>
-            <param name="item"></param>
-            <param name="workflowName"></param>
-            <returns></returns>
+            <param name="workflowSubject">
+            <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> object to start in the
+            workflow
+            </param>
+            <param name="workflowName">
+            Fully-qualified name of the workflow to execute
+            </param>
+            <returns>
+            Returns a <see cref="T:Headway.WorkflowEngine.WorkflowExecutionResult"/> object
+            that encapsulates the result of the operation.
+            </returns>
         </member>
-        <member name="M:Headway.WorkflowEngine.Implementations.StandardWorkflowExecutionService.TransitionTo(Headway.WorkflowEngine.WorkflowItem,System.String)">
+        <member name="M:Headway.WorkflowEngine.Implementations.StandardWorkflowExecutionService.TransitionTo(Headway.WorkflowEngine.IWorkflowSubject,System.String)">
             <summary>
-            
+            Transitions the specified workflow subject to a
+            new state along a given transition.
             </summary>
-            <param name="item"></param>
-            <param name="transitionName"></param>
-            <returns></returns>
+            <param name="workflowSubject">
+            <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> object to transition
+            </param>
+            <param name="transitionName">
+            Name of transition to execute
+            </param>
+            <returns>
+            Returns a <see cref="T:Headway.WorkflowEngine.WorkflowExecutionResult"/> object
+            that encapsulates the result of the operation.
+            </returns>
         </member>
         <member name="T:Headway.WorkflowEngine.Implementations.StandardWorkflowItemFactory">
             <summary>
@@ -296,8 +316,8 @@
         </member>
         <member name="P:Headway.WorkflowEngine.IWorkflowSubject.WorkflowName">
             <summary>
-            Gets the fully qualified name of the <see cref="T:Headway.WorkflowEngine.Workflow"/> associated with
-            this object.
+            Gets or sets the fully qualified name of the
+            <see cref="T:Headway.WorkflowEngine.Workflow"/> associated with this object.
             </summary>
         </member>
         <member name="P:Headway.WorkflowEngine.IWorkflowSubject.CurrentState">
@@ -312,16 +332,30 @@
             <param name="svcProvider">Reference to service provider</param>
             <returns>Context object</returns>
         </member>
-        <member name="M:Headway.WorkflowEngine.IWorkflowSubject.OnTransitioningTo(Headway.WorkflowEngine.WorkflowTransition)">
+        <member name="M:Headway.WorkflowEngine.IWorkflowSubject.OnStarted(Headway.WorkflowEngine.Workflow)">
+            <summary>
+            Called after this item is started in a workflow.
+            </summary>
+            <param name="workflow">
+            Workflow this subject has started
+            </param>
+        </member>
+        <member name="M:Headway.WorkflowEngine.IWorkflowSubject.OnTransitioningTo(Headway.WorkflowEngine.Workflow,Headway.WorkflowEngine.WorkflowTransition)">
             <summary>
             Called before this object is transitioned to a new state.
             </summary>
             <param name="transition"></param>
+            <param name="workflow">
+            Workflow that contains the transition
+            </param>
         </member>
-        <member name="M:Headway.WorkflowEngine.IWorkflowSubject.OnTransitionedTo(Headway.WorkflowEngine.WorkflowTransition)">
+        <member name="M:Headway.WorkflowEngine.IWorkflowSubject.OnTransitionedTo(Headway.WorkflowEngine.Workflow,Headway.WorkflowEngine.WorkflowTransition)">
             <summary>
             Called after this object is transitioned to a new state.
             </summary>
+            <param name="workflow">
+            Workflow that contains the transition
+            </param>
             <param name="transition"></param>
         </member>
         <member name="T:Headway.WorkflowEngine.Resolvers.IWorkflowByNameResolver">
@@ -345,37 +379,65 @@
         </member>
         <member name="T:Headway.WorkflowEngine.Services.IWorkflowExecutionService">
             <summary>
-            
+            Interface to service that executes workflows on
+            against <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> objects.
             </summary>
         </member>
-        <member name="M:Headway.WorkflowEngine.Services.IWorkflowExecutionService.StartWorkflow(Headway.WorkflowEngine.WorkflowItem,System.String)">
+        <member name="M:Headway.WorkflowEngine.Services.IWorkflowExecutionService.StartWorkflow(Headway.WorkflowEngine.IWorkflowSubject,System.String)">
             <summary>
-            
+            Starts execution of an <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> object
+            in the specified workflow.
             </summary>
-            <param name="item"></param>
-            <param name="workflowName"></param>
-            <returns></returns>
+            <param name="workflowSubject">
+            <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> object to start in the
+            workflow
+            </param>
+            <param name="workflowName">
+            Fully-qualified name of the workflow to execute
+            </param>
+            <returns>
+            Returns a <see cref="T:Headway.WorkflowEngine.WorkflowExecutionResult"/> object
+            that encapsulates the result of the operation.
+            </returns>
         </member>
-        <member name="M:Headway.WorkflowEngine.Services.IWorkflowExecutionService.TransitionTo(Headway.WorkflowEngine.WorkflowItem,System.String)">
+        <member name="M:Headway.WorkflowEngine.Services.IWorkflowExecutionService.TransitionTo(Headway.WorkflowEngine.IWorkflowSubject,System.String)">
             <summary>
-            
+            Transitions the specified workflow subject to a
+            new state along a given transition.
             </summary>
-            <param name="item"></param>
-            <param name="transitionName"></param>
-            <returns></returns>
+            <param name="workflowSubject">
+            <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> object to transition
+            </param>
+            <param name="transitionName">
+            Name of transition to execute
+            </param>
+            <returns>
+            Returns a <see cref="T:Headway.WorkflowEngine.WorkflowExecutionResult"/> object
+            that encapsulates the result of the operation.
+            </returns>
         </member>
         <member name="T:Headway.WorkflowEngine.Services.WorkflowExecutionServiceExtensions">
             <summary>
-            
+            Extension methods for the <see cref="T:Headway.WorkflowEngine.Services.IWorkflowExecutionService"/>
+            interface.
             </summary>
         </member>
-        <member name="M:Headway.WorkflowEngine.Services.WorkflowExecutionServiceExtensions.StartWorkflow(Headway.WorkflowEngine.Services.IWorkflowExecutionService,Headway.WorkflowEngine.WorkflowItem)">
+        <member name="M:Headway.WorkflowEngine.Services.WorkflowExecutionServiceExtensions.StartWorkflow(Headway.WorkflowEngine.Services.IWorkflowExecutionService,Headway.WorkflowEngine.IWorkflowSubject)">
             <summary>
-            
+            Starts execution of an <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> object
+            in the workflow associated with the object.
             </summary>
             <param name="workflowTransitionService"></param>
-            <param name="item"></param>
-            <returns></returns>
+            <param name="workflowSubject"></param>
+            <returns>
+            Returns a <see cref="T:Headway.WorkflowEngine.WorkflowExecutionResult"/> object
+            that encapsulates the result of the operation.
+            </returns>
+            <remarks>
+            This is a short-cut method for <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/>
+            objects that already have a value assigned to
+            <see cref="P:Headway.WorkflowEngine.IWorkflowSubject.WorkflowName"/>.
+            </remarks>
         </member>
         <member name="T:Headway.WorkflowEngine.Workflow">
             <summary>
@@ -457,11 +519,11 @@
         </member>
         <member name="M:Headway.WorkflowEngine.Workflow.Start(Headway.WorkflowEngine.IWorkflowSubject,System.IServiceProvider)">
             <summary>
-            Sets an <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> object to the initial
-            state defined by this workflow.
+            Starts execution of an <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> object
+            in this workflow.
             </summary>
             <param name="workflowSubject">
-            Workflow subject to transition to initialize.
+            Workflow subject to start in this workflow.
             </param>
             <param name="serviceProvider">
             Interface to service provider.
@@ -471,6 +533,10 @@
             that encapsulates the result of the operation.
             </returns>
             <remarks>
+            This method associates the <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> with
+            this workflow, sets the <see cref="P:Headway.WorkflowEngine.IWorkflowSubject.CurrentState"/>
+            to the <see cref="P:Headway.WorkflowEngine.Workflow.InitialState"/> of this workflow, and
+            executes the enter action of the initial state.
             </remarks>
             <exception cref="T:System.ArgumentNullException">
             Thrown when workflowSubject is null.
@@ -481,12 +547,26 @@
         </member>
         <member name="M:Headway.WorkflowEngine.Workflow.IsTransitionToAllowed(Headway.WorkflowEngine.IWorkflowSubject,System.String,System.IServiceProvider)">
             <summary>
-            
+            Determines if the specified transition is allowed
+            for the workflow subject.
             </summary>
-            <param name="workflowSubject"></param>
-            <param name="transitionName"></param>
-            <param name="serviceProvider"></param>
-            <returns></returns>
+            <param name="workflowSubject">
+            Workflow subject to test
+            </param>
+            <param name="transitionName">
+            Transition to test
+            </param>
+            <param name="serviceProvider">
+            Service provider
+            </param>
+            <returns>
+            Returns true if the transition is allowed, otherwise
+            returns false
+            </returns>
+            <remarks>
+            Checks condition associated with the transition against
+            the context provided by the workflow subject.
+            </remarks>
         </member>
         <member name="M:Headway.WorkflowEngine.Workflow.TransitionTo(Headway.WorkflowEngine.IWorkflowSubject,System.String,System.IServiceProvider)">
             <summary>
@@ -759,17 +839,35 @@
             <param name="svcProvider">Reference to service provider</param>
             <returns>Context object</returns>
         </member>
-        <member name="M:Headway.WorkflowEngine.WorkflowItem.OnTransitioningTo(Headway.WorkflowEngine.WorkflowTransition)">
+        <member name="M:Headway.WorkflowEngine.WorkflowItem.OnStarted(Headway.WorkflowEngine.Workflow)">
+            <summary>
+            Called after this item is started in a workflow.
+            </summary>
+            <param name="workflow">
+            Workflow this item has started
+            </param>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowItem.OnTransitioningTo(Headway.WorkflowEngine.Workflow,Headway.WorkflowEngine.WorkflowTransition)">
             <summary>
             Called before this object is transitioned to a new state.
             </summary>
-            <param name="transition"></param>
+            <param name="workflow">
+            Workflow that contains the transition
+            </param>
+            <param name="transition">
+            Transition executed
+            </param>
         </member>
-        <member name="M:Headway.WorkflowEngine.WorkflowItem.OnTransitionedTo(Headway.WorkflowEngine.WorkflowTransition)">
+        <member name="M:Headway.WorkflowEngine.WorkflowItem.OnTransitionedTo(Headway.WorkflowEngine.Workflow,Headway.WorkflowEngine.WorkflowTransition)">
             <summary>
             Called after this object is transitioned to a new state.
             </summary>
-            <param name="transition"></param>
+            <param name="workflow">
+            Workflow that contains the transition
+            </param>
+            <param name="transition">
+            Transition executed
+            </param>
         </member>
         <member name="T:Headway.WorkflowEngine.WorkflowItemTemplate">
             <summary>

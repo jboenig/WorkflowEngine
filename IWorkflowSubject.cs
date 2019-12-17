@@ -32,12 +32,13 @@ namespace Headway.WorkflowEngine
     public interface IWorkflowSubject
     {
         /// <summary>
-        /// Gets the fully qualified name of the <see cref="Workflow"/> associated with
-        /// this object.
+        /// Gets or sets the fully qualified name of the
+        /// <see cref="Workflow"/> associated with this object.
         /// </summary>
         string WorkflowName
         {
             get;
+            set;
         }
 
         /// <summary>
@@ -57,15 +58,29 @@ namespace Headway.WorkflowEngine
         object GetContextObject(IServiceProvider svcProvider);
 
         /// <summary>
+        /// Called after this item is started in a workflow.
+        /// </summary>
+        /// <param name="workflow">
+        /// Workflow this subject has started
+        /// </param>
+        void OnStarted(Workflow workflow);
+
+        /// <summary>
         /// Called before this object is transitioned to a new state.
         /// </summary>
         /// <param name="transition"></param>
-        void OnTransitioningTo(WorkflowTransition transition);
+        /// <param name="workflow">
+        /// Workflow that contains the transition
+        /// </param>
+        void OnTransitioningTo(Workflow workflow, WorkflowTransition transition);
 
         /// <summary>
         /// Called after this object is transitioned to a new state.
         /// </summary>
+        /// <param name="workflow">
+        /// Workflow that contains the transition
+        /// </param>
         /// <param name="transition"></param>
-        void OnTransitionedTo(WorkflowTransition transition);
+        void OnTransitionedTo(Workflow workflow, WorkflowTransition transition);
     }
 }
