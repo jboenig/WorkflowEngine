@@ -199,6 +199,12 @@
             <param name="svcProvider"></param>
             <param name="assembly"></param>
         </member>
+        <member name="M:Headway.WorkflowEngine.Implementations.JsonResourceWorkflowByNameResolver.#ctor(System.IServiceProvider)">
+            <summary>
+            
+            </summary>
+            <param name="svcProvider"></param>
+        </member>
         <member name="M:Headway.WorkflowEngine.Implementations.JsonResourceWorkflowByNameResolver.Resolve(System.String)">
             <summary>
             
@@ -217,6 +223,12 @@
             </summary>
             <param name="svcProvider"></param>
             <param name="assembly"></param>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Implementations.JsonResourceWorkflowItemTemplateResolver.#ctor(System.IServiceProvider)">
+            <summary>
+            
+            </summary>
+            <param name="svcProvider"></param>
         </member>
         <member name="M:Headway.WorkflowEngine.Implementations.JsonResourceWorkflowItemTemplateResolver.Resolve(System.String)">
             <summary>

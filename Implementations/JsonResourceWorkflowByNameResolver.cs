@@ -46,6 +46,15 @@ namespace Headway.WorkflowEngine.Implementations
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="svcProvider"></param>
+        public JsonResourceWorkflowByNameResolver(IServiceProvider svcProvider)
+        {
+            this.jsonResourceWorkflowResolver = new JsonResourceObjectResolver<Workflow>(svcProvider);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
         public Workflow Resolve(string key)

@@ -46,6 +46,15 @@ namespace Headway.WorkflowEngine.Implementations
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="svcProvider"></param>
+        public JsonResourceWorkflowItemTemplateResolver(IServiceProvider svcProvider)
+        {
+            this.jsonResourceTemplateResolver = new JsonResourceObjectResolver<WorkflowItemTemplate>(svcProvider);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
         public WorkflowItemTemplate Resolve(string key)
