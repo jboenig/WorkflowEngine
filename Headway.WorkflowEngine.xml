@@ -185,6 +185,28 @@
             <param name="key">Key value</param>
             <returns>Object matching the given key value.</returns>
         </member>
+        <member name="T:Headway.WorkflowEngine.Implementations.FlatFileWorkflowRepo">
+            <summary>
+            Implements a <see cref="T:Headway.Dynamo.Repository.FlatFileRepo.FlatFileRepo`1"/> to
+            store and retrieve <see cref="T:Headway.WorkflowEngine.Workflow"/> objects.
+            </summary>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Implementations.FlatFileWorkflowRepo.#ctor(System.String,Headway.Dynamo.Serialization.ISerializerConfigService,System.IServiceProvider)">
+            <summary>
+            
+            </summary>
+            <param name="filePath"></param>
+            <param name="serializerConfigSvc"></param>
+            <param name="svcProvider"></param>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Implementations.FlatFileWorkflowRepo.Resolve(System.String)">
+            <summary>
+            Resolves a <see cref="T:Headway.WorkflowEngine.Workflow"/> object given a
+            fully-qualified workflow name.
+            </summary>
+            <param name="workflowName">Fully qualified name of the workflow</param>
+            <returns>Workflow matching the given workflow name.</returns>
+        </member>
         <member name="T:Headway.WorkflowEngine.Implementations.JsonResourceWorkflowByNameResolver">
             <summary>
             Implements <see cref="T:Headway.WorkflowEngine.Resolvers.IWorkflowByNameResolver"/> by retrieving
