@@ -166,7 +166,7 @@
         </member>
         <member name="T:Headway.WorkflowEngine.Implementations.FlatFileWorkflowItemRepo">
             <summary>
-            Implements a <see cref="T:Headway.Dynamo.Repository.FlatFileRepo.FlatFileRepo`1"/> to
+            Implements a <see cref="T:Headway.Dynamo.Repository.FlatFile.FlatFileRepo`1"/> to
             store and retrieve <see cref="T:Headway.WorkflowEngine.WorkflowItem"/> objects.
             </summary>
         </member>
@@ -187,7 +187,7 @@
         </member>
         <member name="T:Headway.WorkflowEngine.Implementations.FlatFileWorkflowRepo">
             <summary>
-            Implements a <see cref="T:Headway.Dynamo.Repository.FlatFileRepo.FlatFileRepo`1"/> to
+            Implements a <see cref="T:Headway.Dynamo.Repository.FlatFile.FlatFileRepo`1"/> to
             store and retrieve <see cref="T:Headway.WorkflowEngine.Workflow"/> objects.
             </summary>
         </member>
@@ -196,6 +196,13 @@
             
             </summary>
             <param name="filePath"></param>
+            <param name="serializerConfigSvc"></param>
+            <param name="svcProvider"></param>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Implementations.FlatFileWorkflowRepo.#ctor(Headway.Dynamo.Serialization.ISerializerConfigService,System.IServiceProvider)">
+            <summary>
+            
+            </summary>
             <param name="serializerConfigSvc"></param>
             <param name="svcProvider"></param>
         </member>
@@ -391,6 +398,12 @@
             Workflow that contains the transition
             </param>
             <param name="transition"></param>
+        </member>
+        <member name="T:Headway.WorkflowEngine.Repository.IWorkflowRepository">
+            <summary>
+            Interface to repository objects that store
+            <see cref="T:Headway.WorkflowEngine.Workflow"/> objects.
+            </summary>
         </member>
         <member name="T:Headway.WorkflowEngine.Resolvers.IWorkflowByNameResolver">
             <summary>

@@ -23,13 +23,11 @@ using Ninject;
 
 using Headway.Dynamo.Metadata;
 using Headway.Dynamo.Serialization;
-using Headway.Dynamo.Exceptions;
-using Headway.WorkflowEngine.UnitTests.MockData;
+using Headway.Dynamo.Repository;
 using Headway.WorkflowEngine;
 using Headway.WorkflowEngine.Resolvers;
 using Headway.WorkflowEngine.Implementations;
-using Headway.Dynamo.Repository;
-using Headway.Dynamo.Repository.FlatFileRepo;
+using Headway.WorkflowEngine.Repository;
 
 namespace WorkflowEngine.UnitTests
 {
@@ -43,10 +41,7 @@ namespace WorkflowEngine.UnitTests
         {
             this.kernel = new StandardKernel();
             this.kernel.Bind<IServiceProvider>().ToConstant(this.kernel);
-            this.kernel.Bind<IWorkflowByNameResolver>().To<FlatFileWorkflowRepo>()
-                .WithConstructorArgument("filePath", "workflows.json");
-            this.kernel.Bind<IObjectRepository<Workflow>>().To<FlatFileWorkflowRepo>()
-                .WithConstructorArgument("filePath", "workflows.json");
+            this.kernel.Bind<IWorkflowRepository>().To<FlatFileWorkflowRepo>();
             this.kernel.Bind<ISerializerConfigService>().To<StandardSerializerConfigService>();
             this.kernel.Bind<IMetadataProvider>().To<StandardMetadataProvider>();
         }
@@ -59,12 +54,11 @@ namespace WorkflowEngine.UnitTests
             workflow.States.Add(new WorkflowState("Complete"));
             workflow.InitialState.Transitions.Add(new WorkflowTransition("Approve", "Complete"));
 
-            var workflowRepo = this.kernel.GetService(typeof(IObjectRepository<Workflow>)) as IObjectRepository<Workflow>;
+            var workflowRepo = this.kernel.GetService(typeof(IWorkflowRepository)) as IWorkflowRepository;
             workflowRepo.Add(workflow);
             workflowRepo.SaveChanges();
-            var workflowByNameResolver = this.kernel.GetService(typeof(IWorkflowByNameResolver)) as IWorkflowByNameResolver;
 
-            var resWorkflow = workflowByNameResolver.Resolve("Test.Foo");
+            var resWorkflow = workflowRepo.Resolve("Test.Foo");
             Assert.IsNotNull(resWorkflow);
         }
     }

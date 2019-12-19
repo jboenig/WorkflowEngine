@@ -29,7 +29,6 @@ using Headway.WorkflowEngine;
 using Headway.WorkflowEngine.Resolvers;
 using Headway.WorkflowEngine.Implementations;
 using Headway.Dynamo.Repository;
-using Headway.Dynamo.Repository.FlatFileRepo;
 
 namespace WorkflowEngine.UnitTests
 {

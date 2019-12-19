@@ -20,8 +20,8 @@
 using System;
 using System.Linq;
 using Headway.Dynamo.Serialization;
-using Headway.Dynamo.Repository.FlatFileRepo;
-using Headway.WorkflowEngine.Resolvers;
+using Headway.Dynamo.Repository.FlatFile;
+using Headway.WorkflowEngine.Repository;
 
 namespace Headway.WorkflowEngine.Implementations
 {
@@ -30,7 +30,7 @@ namespace Headway.WorkflowEngine.Implementations
     /// store and retrieve <see cref="Workflow"/> objects.
     /// </summary>
     public sealed class FlatFileWorkflowRepo : FlatFileRepo<Workflow>,
-        IWorkflowByNameResolver
+        IWorkflowRepository
     {
         /// <summary>
         /// 
@@ -42,6 +42,17 @@ namespace Headway.WorkflowEngine.Implementations
               ISerializerConfigService serializerConfigSvc,
               IServiceProvider svcProvider) :
             base(filePath, serializerConfigSvc, svcProvider)
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serializerConfigSvc"></param>
+        /// <param name="svcProvider"></param>
+        public FlatFileWorkflowRepo(ISerializerConfigService serializerConfigSvc,
+              IServiceProvider svcProvider) :
+            base(serializerConfigSvc, svcProvider)
         {
         }
 

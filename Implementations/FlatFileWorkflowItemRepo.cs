@@ -20,7 +20,7 @@
 using System;
 using System.Linq;
 using Headway.Dynamo.Serialization;
-using Headway.Dynamo.Repository.FlatFileRepo;
+using Headway.Dynamo.Repository.FlatFile;
 using Headway.WorkflowEngine.Resolvers;
 
 namespace Headway.WorkflowEngine.Implementations

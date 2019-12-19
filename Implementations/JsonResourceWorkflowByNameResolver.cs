@@ -30,7 +30,7 @@ namespace Headway.WorkflowEngine.Implementations
     /// </summary>
     public sealed class JsonResourceWorkflowByNameResolver : IWorkflowByNameResolver
     {
-        private JsonResourceObjectResolver<Workflow> jsonResourceWorkflowResolver;
+        private readonly JsonResourceObjectResolver<Workflow> jsonResourceWorkflowResolver;
 
         /// <summary>
         /// 
