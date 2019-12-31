@@ -109,6 +109,7 @@ namespace Headway.WorkflowEngine
         /// <summary>
         /// Gets or sets the primary key for this object.
         /// </summary>
+        [JsonIgnore]
         public object PrimaryKey
         {
             get { return this.FullName; }
