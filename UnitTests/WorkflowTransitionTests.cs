@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ninject;
 
@@ -75,6 +76,42 @@ namespace WorkflowEngine.UnitTests
 
             var resTransition = workflowExecutionSvc.TransitionTo(workflowItem, "Start");
             Assert.IsTrue(resTransition.IsSuccess);
+        }
+
+        [TestMethod]
+        public void GetAllTransitionsTest()
+        {
+            var workflowItemTemplateResolver = this.kernel.GetService(typeof(IWorkflowItemTemplateResolver)) as IWorkflowItemTemplateResolver;
+            var workflowItemTemplate = workflowItemTemplateResolver.Resolve("MockData.Templates.Test1Template");
+            Assert.IsNotNull(workflowItemTemplate);
+
+            var workflowItem = workflowItemTemplate.CreateInstance(this.kernel, null) as MyWorkflowItem;
+            Assert.IsNotNull(workflowItem);
+            workflowItem.CurrentState = "Reviewing";
+
+            var workflowExecutionSvc = this.kernel.GetService(typeof(IWorkflowExecutionService)) as IWorkflowExecutionService;
+            Assert.IsNotNull(workflowExecutionSvc);
+
+            var allTransitions = workflowExecutionSvc.GetAllTransitions(workflowItem);
+            Assert.AreEqual(allTransitions.Count(), 2);
+        }
+
+        [TestMethod]
+        public void GetAllTransitionNamesTest()
+        {
+            var workflowItemTemplateResolver = this.kernel.GetService(typeof(IWorkflowItemTemplateResolver)) as IWorkflowItemTemplateResolver;
+            var workflowItemTemplate = workflowItemTemplateResolver.Resolve("MockData.Templates.Test1Template");
+            Assert.IsNotNull(workflowItemTemplate);
+
+            var workflowItem = workflowItemTemplate.CreateInstance(this.kernel, null) as MyWorkflowItem;
+            Assert.IsNotNull(workflowItem);
+            workflowItem.CurrentState = "Reviewing";
+
+            var workflowExecutionSvc = this.kernel.GetService(typeof(IWorkflowExecutionService)) as IWorkflowExecutionService;
+            Assert.IsNotNull(workflowExecutionSvc);
+
+            var allTransitionNames = workflowExecutionSvc.GetAllTransitionNames(workflowItem).ToList();
+            Assert.AreEqual(allTransitionNames.Count, 2);
         }
 
         [TestMethod]

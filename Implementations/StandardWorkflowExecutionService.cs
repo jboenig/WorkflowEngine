@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 using Headway.Dynamo.Exceptions;
 using Headway.WorkflowEngine.Services;
 using Headway.WorkflowEngine.Resolvers;
@@ -125,6 +126,64 @@ namespace Headway.WorkflowEngine.Implementations
             }
 
             return workflow.TransitionTo(workflowSubject, transitionName, this.serviceProvider);
+        }
+
+        /// <summary>
+        /// Gets the collection of all transitions that are available
+        /// for the given <see cref="IWorkflowSubject"/> from its
+        /// <see cref="IWorkflowSubject.CurrentState"/>.
+        /// </summary>
+        /// <param name="workflowSubject">
+        /// Workflow subject to get transitions for
+        /// </param>
+        /// <returns>
+        /// Collection of <see cref="WorkflowTransition"/> objects
+        /// that can be taken from the current state of the given
+        /// <see cref="IWorkflowSubject"/> object.
+        /// </returns>
+        public IEnumerable<WorkflowTransition> GetAllTransitions(IWorkflowSubject workflowSubject)
+        {
+            if (workflowSubject == null)
+            {
+                throw new ArgumentNullException(nameof(workflowSubject));
+            }
+
+            var workflow = this.workflowByNameResolver.Resolve(workflowSubject.WorkflowName);
+            if (workflow == null)
+            {
+                throw new WorkflowNotFoundException(workflowSubject.WorkflowName);
+            }
+
+            return workflow.GetAllTransitions(workflowSubject, this.serviceProvider);
+        }
+
+        /// <summary>
+        /// Gets the collection of allowed transitions that are available
+        /// for the given <see cref="IWorkflowSubject"/> from its
+        /// <see cref="IWorkflowSubject.CurrentState"/>.
+        /// </summary>
+        /// <param name="workflowSubject">
+        /// Workflow subject to get transitions for
+        /// </param>
+        /// <returns>
+        /// Collection of <see cref="WorkflowTransition"/> objects
+        /// that can be taken from the current state of the given
+        /// <see cref="IWorkflowSubject"/> object.
+        /// </returns>
+        public IEnumerable<WorkflowTransition> GetAllowedTransitions(IWorkflowSubject workflowSubject)
+        {
+            if (workflowSubject == null)
+            {
+                throw new ArgumentNullException(nameof(workflowSubject));
+            }
+
+            var workflow = this.workflowByNameResolver.Resolve(workflowSubject.WorkflowName);
+            if (workflow == null)
+            {
+                throw new WorkflowNotFoundException(workflowSubject.WorkflowName);
+            }
+
+            return workflow.GetAllowedTransitions(workflowSubject, this.serviceProvider);
         }
     }
 }

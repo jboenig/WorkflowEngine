@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Headway.WorkflowEngine.Services
 {
@@ -64,6 +66,36 @@ namespace Headway.WorkflowEngine.Services
         /// that encapsulates the result of the operation.
         /// </returns>
         WorkflowExecutionResult TransitionTo(IWorkflowSubject workflowSubject, string transitionName);
+
+        /// <summary>
+        /// Gets the collection of all transitions that are available
+        /// for the given <see cref="IWorkflowSubject"/> from its
+        /// <see cref="IWorkflowSubject.CurrentState"/>.
+        /// </summary>
+        /// <param name="workflowSubject">
+        /// Workflow subject to get transitions for
+        /// </param>
+        /// <returns>
+        /// Collection of <see cref="WorkflowTransition"/> objects
+        /// that can be taken from the current state of the given
+        /// <see cref="IWorkflowSubject"/> object.
+        /// </returns>
+        IEnumerable<WorkflowTransition> GetAllTransitions(IWorkflowSubject workflowSubject);
+
+        /// <summary>
+        /// Gets the collection of allowed transitions that are available
+        /// for the given <see cref="IWorkflowSubject"/> from its
+        /// <see cref="IWorkflowSubject.CurrentState"/>.
+        /// </summary>
+        /// <param name="workflowSubject">
+        /// Workflow subject to get transitions for
+        /// </param>
+        /// <returns>
+        /// Collection of <see cref="WorkflowTransition"/> objects
+        /// that can be taken from the current state of the given
+        /// <see cref="IWorkflowSubject"/> object.
+        /// </returns>
+        IEnumerable<WorkflowTransition> GetAllowedTransitions(IWorkflowSubject workflowSubject);
     }
 
     /// <summary>
@@ -76,8 +108,13 @@ namespace Headway.WorkflowEngine.Services
         /// Starts execution of an <see cref="IWorkflowSubject"/> object
         /// in the workflow associated with the object.
         /// </summary>
-        /// <param name="workflowTransitionService"></param>
-        /// <param name="workflowSubject"></param>
+        /// <param name="workflowExeService">
+        /// Reference to the <see cref="IWorkflowExecutionService"/>
+        /// to call
+        /// </param>
+        /// <param name="workflowSubject">
+        /// <see cref="IWorkflowSubject"/> to start in the workflow
+        /// </param>
         /// <returns>
         /// Returns a <see cref="WorkflowExecutionResult"/> object
         /// that encapsulates the result of the operation.
@@ -87,7 +124,7 @@ namespace Headway.WorkflowEngine.Services
         /// objects that already have a value assigned to
         /// <see cref="IWorkflowSubject.WorkflowName"/>.
         /// </remarks>
-        public static WorkflowExecutionResult StartWorkflow(this IWorkflowExecutionService workflowTransitionService,
+        public static WorkflowExecutionResult StartWorkflow(this IWorkflowExecutionService workflowExeService,
             IWorkflowSubject workflowSubject)
         {
             if (workflowSubject == null)
@@ -102,7 +139,75 @@ namespace Headway.WorkflowEngine.Services
                 throw new InvalidOperationException(msg);
             }
 
-            return workflowTransitionService.StartWorkflow(workflowSubject, workflowName);
+            return workflowExeService.StartWorkflow(workflowSubject, workflowName);
+        }
+
+        /// <summary>
+        /// Gets the collection of all transition names that are available
+        /// for the given <see cref="IWorkflowSubject"/> from its
+        /// <see cref="IWorkflowSubject.CurrentState"/>.
+        /// </summary>
+        /// <param name="workflowExeService">
+        /// Reference to the <see cref="IWorkflowExecutionService"/>
+        /// to call
+        /// </param>
+        /// <param name="workflowSubject">
+        /// Workflow subject to get transitions for
+        /// </param>
+        /// <returns>
+        /// Returns a collection of transition names
+        /// </returns>
+        public static IEnumerable<string> GetAllTransitionNames(this IWorkflowExecutionService workflowExeService,
+            IWorkflowSubject workflowSubject)
+        {
+            if (workflowSubject == null)
+            {
+                throw new ArgumentNullException(nameof(workflowSubject));
+            }
+
+            var workflowName = workflowSubject.WorkflowName;
+            if (string.IsNullOrEmpty(workflowName))
+            {
+                var msg = $"{workflowSubject} is not associated with a workflow";
+                throw new InvalidOperationException(msg);
+            }
+
+            return workflowExeService.GetAllTransitions(workflowSubject)
+                .Select(t => t.Name);
+        }
+
+        /// <summary>
+        /// Gets the collection of allowed transition names that are available
+        /// for the given <see cref="IWorkflowSubject"/> from its
+        /// <see cref="IWorkflowSubject.CurrentState"/>.
+        /// </summary>
+        /// <param name="workflowExeService">
+        /// Reference to the <see cref="IWorkflowExecutionService"/>
+        /// to call
+        /// </param>
+        /// <param name="workflowSubject">
+        /// Workflow subject to get transitions for
+        /// </param>
+        /// <returns>
+        /// Returns a collection of transition names
+        /// </returns>
+        public static IEnumerable<string> GetAllowedTransitionNames(this IWorkflowExecutionService workflowExeService,
+            IWorkflowSubject workflowSubject)
+        {
+            if (workflowSubject == null)
+            {
+                throw new ArgumentNullException(nameof(workflowSubject));
+            }
+
+            var workflowName = workflowSubject.WorkflowName;
+            if (string.IsNullOrEmpty(workflowName))
+            {
+                var msg = $"{workflowSubject} is not associated with a workflow";
+                throw new InvalidOperationException(msg);
+            }
+
+            return workflowExeService.GetAllowedTransitions(workflowSubject)
+                .Select(t => t.Name);
         }
     }
 }

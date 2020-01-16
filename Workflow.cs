@@ -302,6 +302,103 @@ namespace Headway.WorkflowEngine
         }
 
         /// <summary>
+        /// Gets the collection of all transitions that are available for
+        /// the given <see cref="IWorkflowSubject"/> from its
+        /// <see cref="IWorkflowSubject.CurrentState"/>.
+        /// </summary>
+        /// <param name="workflowSubject">
+        /// Workflow subject to get transitions for.
+        /// </param>
+        /// <param name="serviceProvider">
+        /// Interface to service provider.
+        /// </param>
+        /// <returns>
+        /// A collection of <see cref="WorkflowTransition"/>
+        /// objects.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when workflowSubject is null.
+        /// </exception>
+        /// <exception cref="StateNotFoundException">
+        /// Thrown when the current state of the workflow subject cannot be
+        /// found in the workflow.
+        /// </exception>
+        public IEnumerable<WorkflowTransition> GetAllTransitions(IWorkflowSubject workflowSubject, IServiceProvider serviceProvider)
+        {
+            ///////////////////////////////////////////////////////////////////
+            // Check arguments
+            if (workflowSubject == null)
+            {
+                throw new ArgumentNullException("workflowSubject");
+            }
+
+            ///////////////////////////////////////////////////////////////////
+            // Get the CURRENT state
+            var currentStateName = workflowSubject.CurrentState;
+            if (string.IsNullOrEmpty(currentStateName))
+            {
+                throw new StateNotFoundException(this, currentStateName);
+            }
+
+            var currentState = this.FindStateByName(currentStateName);
+            if (currentState == null)
+            {
+                throw new StateNotFoundException(this, currentStateName);
+            }
+
+            return currentState.Transitions;
+        }
+
+        /// <summary>
+        /// Gets the collection of allowed transitions that are
+        /// available for the given <see cref="IWorkflowSubject"/> from
+        /// its <see cref="IWorkflowSubject.CurrentState"/>.
+        /// </summary>
+        /// <param name="workflowSubject">
+        /// Workflow subject to get allowed transitions for.
+        /// </param>
+        /// <param name="serviceProvider">
+        /// Interface to service provider.
+        /// </param>
+        /// <returns>
+        /// A collection of <see cref="WorkflowTransition"/>
+        /// objects.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when workflowSubject is null.
+        /// </exception>
+        /// <exception cref="StateNotFoundException">
+        /// Thrown when the current state of the workflow subject cannot be
+        /// found in the workflow.
+        /// </exception>
+        public IEnumerable<WorkflowTransition> GetAllowedTransitions(IWorkflowSubject workflowSubject, IServiceProvider serviceProvider)
+        {
+            ///////////////////////////////////////////////////////////////////
+            // Check arguments
+            if (workflowSubject == null)
+            {
+                throw new ArgumentNullException("workflowSubject");
+            }
+
+            ///////////////////////////////////////////////////////////////////
+            // Get the CURRENT state
+            var currentStateName = workflowSubject.CurrentState;
+            if (string.IsNullOrEmpty(currentStateName))
+            {
+                throw new StateNotFoundException(this, currentStateName);
+            }
+
+            var currentState = this.FindStateByName(currentStateName);
+            if (currentState == null)
+            {
+                throw new StateNotFoundException(this, currentStateName);
+            }
+
+            return currentState.Transitions
+                .Where(t => t.IsAllowed(serviceProvider, workflowSubject.GetContextObject(serviceProvider)));
+        }
+
+        /// <summary>
         /// Transitions the specified workflow subject to a
         /// new state along a given <see cref="WorkflowTransition"/>.
         /// </summary>
