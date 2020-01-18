@@ -42,6 +42,7 @@ namespace Headway.WorkflowEngine
         #region Member Variables
 
         private string name;
+        private string description;
         private string toStateName;
         private Condition isAllowed;
         private Command action;
@@ -81,6 +82,15 @@ namespace Headway.WorkflowEngine
         {
             get { return this.name; }
             set { this.name = value; }
+        }
+
+        /// <summary>
+        /// Gets the description of the state.
+        /// </summary>
+        public string Description
+        {
+            get { return this.description; }
+            set { this.description = value; }
         }
 
         /// <summary>

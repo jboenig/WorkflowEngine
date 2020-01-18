@@ -1130,6 +1130,11 @@
             Gets the name of the state.
             </summary>
         </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowState.Description">
+            <summary>
+            Gets the description of the state.
+            </summary>
+        </member>
         <member name="P:Headway.WorkflowEngine.WorkflowState.Transitions">
             <summary>
             Gets the collection of transitions from this state to
@@ -1238,6 +1243,11 @@
         <member name="P:Headway.WorkflowEngine.WorkflowTransition.Name">
             <summary>
             Gets the name of the transition.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowTransition.Description">
+            <summary>
+            Gets the description of the state.
             </summary>
         </member>
         <member name="P:Headway.WorkflowEngine.WorkflowTransition.ToStateName">

@@ -41,6 +41,7 @@ namespace Headway.WorkflowEngine
         #region Member Variables
 
         private string name;
+        private string description;
         private readonly HashSet<WorkflowTransition> transitions;
         private Condition canEnter;
         private Command enterAction;
@@ -78,6 +79,15 @@ namespace Headway.WorkflowEngine
         {
             get { return this.name; }
             set { this.name = value; }
+        }
+
+        /// <summary>
+        /// Gets the description of the state.
+        /// </summary>
+        public string Description
+        {
+            get { return this.description; }
+            set { this.description = value; }
         }
 
         /// <summary>
