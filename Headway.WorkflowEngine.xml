@@ -344,6 +344,19 @@
             <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> object.
             </returns>
         </member>
+        <member name="M:Headway.WorkflowEngine.Implementations.StandardWorkflowExecutionService.GetCurrentExecutionFrame(Headway.WorkflowEngine.IWorkflowSubject)">
+            <summary>
+            Gets the current <see cref="T:Headway.WorkflowEngine.WorkflowExecutionFrame"/> for the specified
+            <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/>.
+            </summary>
+            <param name="workflowSubject">
+            Workflow subject to get execution frame for
+            </param>
+            <returns>
+            Returns a <see cref="T:Headway.WorkflowEngine.WorkflowExecutionFrame"/> that describes the state of execution
+            for the given <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/>.
+            </returns>
+        </member>
         <member name="T:Headway.WorkflowEngine.Implementations.StandardWorkflowItemFactory">
             <summary>
             Implements <see cref="T:Headway.WorkflowEngine.Factories.IWorkflowItemFactory"/> based on
@@ -521,6 +534,19 @@
             Collection of <see cref="T:Headway.WorkflowEngine.WorkflowTransition"/> objects
             that can be taken from the current state of the given
             <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> object.
+            </returns>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Services.IWorkflowExecutionService.GetCurrentExecutionFrame(Headway.WorkflowEngine.IWorkflowSubject)">
+            <summary>
+            Gets the current <see cref="T:Headway.WorkflowEngine.WorkflowExecutionFrame"/> for the specified
+            <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/>.
+            </summary>
+            <param name="workflowSubject">
+            Workflow subject to get execution frame for
+            </param>
+            <returns>
+            Returns a <see cref="T:Headway.WorkflowEngine.WorkflowExecutionFrame"/> that describes the state of execution
+            for the given <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/>.
             </returns>
         </member>
         <member name="T:Headway.WorkflowEngine.Services.WorkflowExecutionServiceExtensions">
@@ -762,6 +788,30 @@
             found in the workflow.
             </exception>
         </member>
+        <member name="M:Headway.WorkflowEngine.Workflow.GetExecutionFrame(Headway.WorkflowEngine.IWorkflowSubject,System.IServiceProvider)">
+            <summary>
+            Gets the current <see cref="T:Headway.WorkflowEngine.WorkflowExecutionFrame"/> for the specified
+            <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/>.
+            </summary>
+            <param name="workflowSubject">
+            Workflow subject to get execution frame for.
+            </param>
+            <param name="serviceProvider">
+            Interface to service provider.
+            </param>
+            <returns>
+            A <see cref="T:Headway.WorkflowEngine.WorkflowExecutionFrame"/> object containing the current workflow execution
+            state information for the specified <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/>.
+            objects.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when workflowSubject is null.
+            </exception>
+            <exception cref="T:Headway.WorkflowEngine.Exceptions.StateNotFoundException">
+            Thrown when the current state of the workflow subject cannot be
+            found in the workflow.
+            </exception>
+        </member>
         <member name="M:Headway.WorkflowEngine.Workflow.TransitionTo(Headway.WorkflowEngine.IWorkflowSubject,System.String,System.IServiceProvider)">
             <summary>
             Transitions the specified workflow subject to a
@@ -846,6 +896,30 @@
             <summary>
             Gets a flag indicating whether or not the analysis
             unconvered any errors in the workflow.
+            </summary>
+        </member>
+        <member name="T:Headway.WorkflowEngine.WorkflowExecutionFrame">
+            <summary>
+            This class encpasulates a snapshot of the current state of workflow execution
+            for a <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/>.
+            </summary>
+            <remarks>
+            This class provides information about available transitions that are in
+            the context of the given <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/>. Specifically, it
+            flags each transition as allowed or not allowed and includes information
+            explaining why transitions are not allow.
+            </remarks>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowExecutionFrame.Subject">
+            <summary>
+            Gets the <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> described by this
+            execution frame.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowExecutionFrame.NextTransitions">
+            <summary>
+            Gets the collection of transitions from the current state in the
+            context of the <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/>.
             </summary>
         </member>
         <member name="T:Headway.WorkflowEngine.WorkflowExecutionResultCode">
@@ -1329,6 +1403,33 @@
             </summary>
             <param name="obj"></param>
             <returns></returns>
+        </member>
+        <member name="T:Headway.WorkflowEngine.WorkflowTransitionDescriptor">
+            <summary>
+            Describes a <see cref="T:Headway.WorkflowEngine.WorkflowTransition"/> in the
+            context of a particular user and <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/>.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowTransitionDescriptor.TransitionName">
+            <summary>
+            Gets or sets the name of the transition.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowTransitionDescriptor.Description">
+            <summary>
+            Gets the description of the transition.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowTransitionDescriptor.IsAllowed">
+            <summary>
+            Gets or sets a flag indicating whether or not the
+            transition is allowed in the given context.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowTransitionDescriptor.Reason">
+            <summary>
+            Gets or set the reason the transition is not allowed.
+            </summary>
         </member>
         <member name="T:Headway.WorkflowEngine.WorkflowViewModes">
             <summary>

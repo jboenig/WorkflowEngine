@@ -26,7 +26,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using Newtonsoft.Json;
 using Headway.Dynamo.Conditions;
 using Headway.Dynamo.Commands;
 using Headway.WorkflowEngine.Exceptions;
@@ -75,6 +75,7 @@ namespace Headway.WorkflowEngine
         /// <summary>
         /// Gets the name of the state.
         /// </summary>
+        [JsonProperty("name")]
         public string Name
         {
             get { return this.name; }
@@ -84,6 +85,7 @@ namespace Headway.WorkflowEngine
         /// <summary>
         /// Gets the description of the state.
         /// </summary>
+        [JsonProperty("description")]
         public string Description
         {
             get { return this.description; }
@@ -94,6 +96,7 @@ namespace Headway.WorkflowEngine
         /// Gets the collection of transitions from this state to
         /// other states.
         /// </summary>
+        [JsonProperty("transitions")]
         public ICollection<WorkflowTransition> Transitions
         {
             get { return this.transitions; }
@@ -103,6 +106,7 @@ namespace Headway.WorkflowEngine
         /// Gets the <see cref="Condition"/> that determines if
         /// this state can be entered in the current context.
         /// </summary>
+        [JsonProperty("canEnter")]
         public Condition CanEnter
         {
             get { return this.canEnter; }
@@ -113,6 +117,7 @@ namespace Headway.WorkflowEngine
         /// Gets the <see cref="Command"/> that is executed
         /// when this state is entered.
         /// </summary>
+        [JsonProperty("enterAction")]
         public Command EnterAction
         {
             get { return this.enterAction; }
@@ -123,6 +128,7 @@ namespace Headway.WorkflowEngine
         /// Gets the <see cref="Command"/> that is executed
         /// when this state is exited.
         /// </summary>
+        [JsonProperty("exitAction")]
         public Command ExitAction
         {
             get { return this.exitAction; }

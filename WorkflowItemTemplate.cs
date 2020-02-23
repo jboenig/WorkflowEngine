@@ -51,7 +51,7 @@ namespace Headway.WorkflowEngine
         /// <summary>
         /// Gets or sets the full name of the object type.
         /// </summary>
-        [JsonProperty]
+        [JsonProperty("objectTypeFullName")]
         private string ObjectTypeFullName
         {
             get
@@ -90,6 +90,7 @@ namespace Headway.WorkflowEngine
         /// to a workflow can be done later when the workflow
         /// is started.
         /// </remarks>
+        [JsonProperty("workflowName")]
         public string WorkflowName
         {
             get;

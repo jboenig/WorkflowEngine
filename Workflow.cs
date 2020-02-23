@@ -87,6 +87,7 @@ namespace Headway.WorkflowEngine
         /// <summary>
         /// Gets the display name of the workflow.
         /// </summary>        
+        [JsonProperty("displayName")]
         public string DisplayName
         {
             get { return this.displayName; }
@@ -105,6 +106,7 @@ namespace Headway.WorkflowEngine
         /// <summary>
         /// Gets the fullname of the workflow.
         /// </summary>
+        [JsonProperty("fullName")]
         public string FullName
         {
             get { return this.fullName; }
@@ -134,6 +136,7 @@ namespace Headway.WorkflowEngine
         /// added to the <see cref="Workflow.States"/> collection.
         /// </para>
         /// </remarks>
+        [JsonProperty("initialState")]
         public WorkflowState InitialState
         {
             get
@@ -160,6 +163,7 @@ namespace Headway.WorkflowEngine
         /// Gets the collection of <see cref="WorkflowState"/> objects
         /// contained by this <see cref="Workflow"/>.
         /// </summary>
+        [JsonProperty("states")]
         public ICollection<WorkflowState> States
         {
             get { return this.states; }
@@ -396,6 +400,60 @@ namespace Headway.WorkflowEngine
 
             return currentState.Transitions
                 .Where(t => t.IsAllowed(serviceProvider, workflowSubject.GetContextObject(serviceProvider)));
+        }
+
+        /// <summary>
+        /// Gets the current <see cref="WorkflowExecutionFrame"/> for the specified
+        /// <see cref="IWorkflowSubject"/>.
+        /// </summary>
+        /// <param name="workflowSubject">
+        /// Workflow subject to get execution frame for.
+        /// </param>
+        /// <param name="serviceProvider">
+        /// Interface to service provider.
+        /// </param>
+        /// <returns>
+        /// A <see cref="WorkflowExecutionFrame"/> object containing the current workflow execution
+        /// state information for the specified <see cref="IWorkflowSubject"/>.
+        /// objects.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when workflowSubject is null.
+        /// </exception>
+        /// <exception cref="StateNotFoundException">
+        /// Thrown when the current state of the workflow subject cannot be
+        /// found in the workflow.
+        /// </exception>
+        public WorkflowExecutionFrame GetExecutionFrame(IWorkflowSubject workflowSubject, IServiceProvider serviceProvider)
+        {
+            ///////////////////////////////////////////////////////////////////
+            // Check arguments
+            if (workflowSubject == null)
+            {
+                throw new ArgumentNullException("workflowSubject");
+            }
+
+            ///////////////////////////////////////////////////////////////////
+            // Get the CURRENT state
+            var currentStateName = workflowSubject.CurrentState;
+            if (string.IsNullOrEmpty(currentStateName))
+            {
+                throw new StateNotFoundException(this, currentStateName);
+            }
+
+            var currentState = this.FindStateByName(currentStateName);
+            if (currentState == null)
+            {
+                throw new StateNotFoundException(this, currentStateName);
+            }
+
+            var nextTransitions = currentState.Transitions.Select(t => new WorkflowTransitionDescriptor()
+            {
+                TransitionName = t.Name,
+                IsAllowed = t.IsAllowed(serviceProvider, workflowSubject.GetContextObject(serviceProvider))
+            });
+
+            return WorkflowExecutionFrame.Create(workflowSubject, nextTransitions.ToList());
         }
 
         /// <summary>

@@ -25,8 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
-using Headway.Dynamo.Runtime;
+using Newtonsoft.Json;
 using Headway.Dynamo.Commands;
 using Headway.Dynamo.Conditions;
 using Headway.WorkflowEngine.Exceptions;
@@ -78,6 +77,7 @@ namespace Headway.WorkflowEngine
         /// <summary>
         /// Gets the name of the transition.
         /// </summary>
+        [JsonProperty("name")]
         public string Name
         {
             get { return this.name; }
@@ -87,6 +87,7 @@ namespace Headway.WorkflowEngine
         /// <summary>
         /// Gets the description of the state.
         /// </summary>
+        [JsonProperty("description")]
         public string Description
         {
             get { return this.description; }
@@ -96,6 +97,7 @@ namespace Headway.WorkflowEngine
         /// <summary>
         /// Gets the name of the state this transition goes to.
         /// </summary>
+        [JsonProperty("toStateName")]
         public string ToStateName
         {
             get { return this.toStateName; }
@@ -106,6 +108,7 @@ namespace Headway.WorkflowEngine
         /// this transition is allowed in the current context.
         /// state.
         /// </summary>
+        [JsonProperty("condition")]
         public Condition Condition
         {
             get { return this.isAllowed; }
@@ -116,6 +119,7 @@ namespace Headway.WorkflowEngine
         /// Gets the <see cref="Command"/> that is executed
         /// when this transition is taken.
         /// </summary>
+        [JsonProperty("action")]
         public Command Action
         {
             get { return this.action; }
@@ -126,6 +130,7 @@ namespace Headway.WorkflowEngine
         /// Gets or sets the prompt presented to the user prior
         /// to applying this transition.
         /// </summary>
+        [JsonProperty("userPrompt")]
         public string UserPrompt
         {
             get { return this.userPrompt; }
@@ -136,6 +141,7 @@ namespace Headway.WorkflowEngine
         /// Gets or sets the prompt view presented to the user prior
         /// to applying this transition.
         /// </summary>
+        [JsonProperty("userPromptView")]
         public string UserPromptView
         {
             get { return this.userPromptView; }
@@ -146,6 +152,7 @@ namespace Headway.WorkflowEngine
         /// Gets or sets the condition evaluation message
         /// to applying this transition.
         /// </summary>
+        [JsonProperty("conditionErrorMessage")]
         public string ConditionErrorMessage
         {
             get;

@@ -58,6 +58,7 @@ namespace Headway.WorkflowEngine
         /// Gets the unique identifier for this
         /// <see cref="WorkflowItem"/>.
         /// </summary>
+        [JsonProperty("primaryKey")]
         public object PrimaryKey
         {
             get;
@@ -68,6 +69,7 @@ namespace Headway.WorkflowEngine
         /// Gets the fully qualified name of the <see cref="Workflow"/> associated with
         /// this object.
         /// </summary>
+        [JsonProperty("workflowName")]
         public string WorkflowName
         {
             get;
@@ -77,6 +79,7 @@ namespace Headway.WorkflowEngine
         /// <summary>
         /// Gets the name of workflow current state this object is in.
         /// </summary>
+        [JsonProperty("currentState")]
         public string CurrentState
         {
             get;
@@ -87,6 +90,7 @@ namespace Headway.WorkflowEngine
         /// Gets or sets the name of the last transition that occurred
         /// on this <see cref="WorkflowItem"/>.
         /// </summary>
+        [JsonProperty("lastTransition")]
         public string LastTransition
         {
             get;

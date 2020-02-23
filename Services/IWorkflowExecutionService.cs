@@ -96,6 +96,19 @@ namespace Headway.WorkflowEngine.Services
         /// <see cref="IWorkflowSubject"/> object.
         /// </returns>
         IEnumerable<WorkflowTransition> GetAllowedTransitions(IWorkflowSubject workflowSubject);
+
+        /// <summary>
+        /// Gets the current <see cref="WorkflowExecutionFrame"/> for the specified
+        /// <see cref="IWorkflowSubject"/>.
+        /// </summary>
+        /// <param name="workflowSubject">
+        /// Workflow subject to get execution frame for
+        /// </param>
+        /// <returns>
+        /// Returns a <see cref="WorkflowExecutionFrame"/> that describes the state of execution
+        /// for the given <see cref="IWorkflowSubject"/>.
+        /// </returns>
+        WorkflowExecutionFrame GetCurrentExecutionFrame(IWorkflowSubject workflowSubject);
     }
 
     /// <summary>

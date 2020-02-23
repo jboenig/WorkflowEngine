@@ -1,128 +1,128 @@
 ﻿{
   "$type": "Headway.WorkflowEngine.Workflow, Headway.WorkflowEngine",
-  "FullName": "Headway.WorkflowEngine.UnitTests.MockData.Workflows.NewEmployeeOnboarding",
-  "InitialState": {
-    "Name": "Enter New Hire Information",
-    "Transitions": [
+  "fullName": "Headway.WorkflowEngine.UnitTests.MockData.Workflows.NewEmployeeOnboarding",
+  "initialState": {
+    "name": "Enter New Hire Information",
+    "transitions": [
       {
-        "Name": "Create Employee Records",
-        "ToStateName": "New Hire Provides Info"
+        "name": "Create Employee Records",
+        "toStateName": "New Hire Provides Info"
       }
     ],
-    "CanEnter": null,
-    "EnterAction": null,
-    "ExitAction": null
+    "canEnter": null,
+    "enterAction": null,
+    "exitAction": null
   },
-  "States": [
+  "states": [
     {
-      "Name": "New Hire Provides Info",
-      "Transitions": [
+      "name": "New Hire Provides Info",
+      "transitions": [
         {
-          "Name": "Send to IRS",
-          "ToStateName": "Reviewing"
+          "name": "Send to IRS",
+          "toStateName": "Reviewing"
         }
       ],
-      "CanEnter": null,
-      "EnterAction": null,
-      "ExitAction": null
+      "canEnter": null,
+      "enterAction": null,
+      "exitAction": null
     },
     {
-      "Name": "Reviewing",
-      "Transitions": [
+      "name": "Reviewing",
+      "transitions": [
         {
-          "Name": "Need More Info",
-          "ToStateName": "New Hire Provides Info"
+          "name": "Need More Info",
+          "toStateName": "New Hire Provides Info"
         },
-	{
-          "Name": "Approve",
-          "ToStateName": "Ready to Start"
-	}
-      ],
-      "CanEnter": null,
-      "EnterAction": null,
-      "ExitAction": null
-    },
-    {
-      "Name": "Ready to Start",
-      "Transitions": [
         {
-          "Name": "Start",
-          "ToStateName": "Meet with HR"
-        },
-	{
-          "Name": "New Hire Withdrew",
-          "ToStateName": "Complete"
-	}
-      ],
-      "CanEnter": null,
-      "EnterAction": null,
-      "ExitAction": null
-    },
-    {
-      "Name": "Meet with HR",
-      "Transitions": [
-        {
-          "Name": "Review Policies",
-          "ToStateName": "Reviewing Policies"
-        },
-	{
-          "Name": "New Hire Withdrew",
-          "ToStateName": "Complete"
-	}
-      ],
-      "CanEnter": null,
-      "EnterAction": null,
-      "ExitAction": null
-    },
-    {
-      "Name": "Reviewing Policies",
-      "Transitions": [
-        {
-          "Name": "Meet Manager",
-          "ToStateName": "Meeting with Manager"
-        },
-	{
-          "Name": "Begin Training",
-          "ToStateName": ""
-	}
-      ],
-      "CanEnter": null,
-      "EnterAction": null,
-      "ExitAction": null
-    },
-    {
-      "Name": "Meeting with Manager",
-      "Transitions": [
-	{
-          "Name": "Begin Training",
-          "ToStateName": "Training"
-	},
-	{
-          "Name": "Start Working",
-          "ToStateName": "Complete"
-	}
-      ],
-      "CanEnter": null,
-      "EnterAction": null,
-      "ExitAction": null
-    },
-    {
-      "Name": "Training",
-      "Transitions": [
-        {
-          "Name": "Start Working",
-          "ToStateName": "Complete"
+          "name": "Approve",
+          "toStateName": "Ready to Start"
         }
       ],
-      "CanEnter": null,
-      "EnterAction": null,
-      "ExitAction": null
+      "canEnter": null,
+      "enterAction": null,
+      "exitAction": null
     },
     {
-      "Name": "Complete",
-      "CanEnter": null,
-      "EnterAction": null,
-      "ExitAction": null
+      "name": "Ready to Start",
+      "transitions": [
+        {
+          "name": "Start",
+          "toStateName": "Meet with HR"
+        },
+        {
+          "name": "New Hire Withdrew",
+          "toStateName": "Complete"
+        }
+      ],
+      "canEnter": null,
+      "enterAction": null,
+      "exitAction": null
+    },
+    {
+      "name": "Meet with HR",
+      "transitions": [
+        {
+          "name": "Review Policies",
+          "toStateName": "Reviewing Policies"
+        },
+        {
+          "name": "New Hire Withdrew",
+          "toStateName": "Complete"
+        }
+      ],
+      "canEnter": null,
+      "enterAction": null,
+      "exitAction": null
+    },
+    {
+      "name": "Reviewing Policies",
+      "transitions": [
+        {
+          "name": "Meet Manager",
+          "toStateName": "Meeting with Manager"
+        },
+        {
+          "name": "Begin Training",
+          "toStateName": ""
+        }
+      ],
+      "canEnter": null,
+      "enterAction": null,
+      "exitAction": null
+    },
+    {
+      "name": "Meeting with Manager",
+      "transitions": [
+        {
+          "name": "Begin Training",
+          "toStateName": "Training"
+        },
+        {
+          "name": "Start Working",
+          "toStateName": "Complete"
+        }
+      ],
+      "canEnter": null,
+      "enterAction": null,
+      "exitAction": null
+    },
+    {
+      "name": "Training",
+      "transitions": [
+        {
+          "name": "Start Working",
+          "toStateName": "Complete"
+        }
+      ],
+      "canEnter": null,
+      "enterAction": null,
+      "exitAction": null
+    },
+    {
+      "name": "Complete",
+      "canEnter": null,
+      "enterAction": null,
+      "exitAction": null
     }
   ]
 }

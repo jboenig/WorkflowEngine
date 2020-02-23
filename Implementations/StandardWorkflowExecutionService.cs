@@ -185,5 +185,32 @@ namespace Headway.WorkflowEngine.Implementations
 
             return workflow.GetAllowedTransitions(workflowSubject, this.serviceProvider);
         }
+
+        /// <summary>
+        /// Gets the current <see cref="WorkflowExecutionFrame"/> for the specified
+        /// <see cref="IWorkflowSubject"/>.
+        /// </summary>
+        /// <param name="workflowSubject">
+        /// Workflow subject to get execution frame for
+        /// </param>
+        /// <returns>
+        /// Returns a <see cref="WorkflowExecutionFrame"/> that describes the state of execution
+        /// for the given <see cref="IWorkflowSubject"/>.
+        /// </returns>
+        public WorkflowExecutionFrame GetCurrentExecutionFrame(IWorkflowSubject workflowSubject)
+        {
+            if (workflowSubject == null)
+            {
+                throw new ArgumentNullException(nameof(workflowSubject));
+            }
+
+            var workflow = this.workflowByNameResolver.Resolve(workflowSubject.WorkflowName);
+            if (workflow == null)
+            {
+                throw new WorkflowNotFoundException(workflowSubject.WorkflowName);
+            }
+
+            return workflow.GetExecutionFrame(workflowSubject, this.serviceProvider);
+        }
     }
 }

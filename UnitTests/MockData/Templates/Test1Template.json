@@ -1,6 +1,5 @@
 ﻿{
   "$type": "Headway.WorkflowEngine.WorkflowItemTemplate, Headway.WorkflowEngine",
-  "FullName": "Headway.WorkflowEngine.UnitTests.MockData.Templates.Test1Template",
-  "ObjectTypeFullName": "Headway.WorkflowEngine.UnitTests.MockData.MyWorkflowItem",
-  "WorkflowName": "MockData.Workflows.Test1Workflow"
+  "objectTypeFullName": "Headway.WorkflowEngine.UnitTests.MockData.MyWorkflowItem",
+  "workflowName": "MockData.Workflows.Test1Workflow"
 }
