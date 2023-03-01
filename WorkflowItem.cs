@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Headway.Dynamo.Runtime;
 using Headway.Dynamo.Metadata;
@@ -113,9 +114,10 @@ namespace Headway.WorkflowEngine
         /// <param name="workflow">
         /// Workflow this item has started
         /// </param>
-        public virtual void OnStarted(Workflow workflow)
+        public virtual Task OnStarted(Workflow workflow)
         {
             this.LastTransition = null;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -127,8 +129,9 @@ namespace Headway.WorkflowEngine
         /// <param name="transition">
         /// Transition executed
         /// </param>
-        public virtual void OnTransitioningTo(Workflow workflow, WorkflowTransition transition)
+        public virtual Task OnTransitioningTo(Workflow workflow, WorkflowTransition transition)
         {
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -140,7 +143,7 @@ namespace Headway.WorkflowEngine
         /// <param name="transition">
         /// Transition executed
         /// </param>
-        public virtual void OnTransitionedTo(Workflow workflow, WorkflowTransition transition)
+        public virtual Task OnTransitionedTo(Workflow workflow, WorkflowTransition transition)
         {
             if (transition != null)
             {
@@ -150,6 +153,8 @@ namespace Headway.WorkflowEngine
             {
                 this.LastTransition = null;
             }
+
+            return Task.CompletedTask;
         }
     }
 }

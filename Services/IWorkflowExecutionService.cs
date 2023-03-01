@@ -24,6 +24,7 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 
 namespace Headway.WorkflowEngine.Services
@@ -49,7 +50,7 @@ namespace Headway.WorkflowEngine.Services
         /// Returns a <see cref="WorkflowExecutionResult"/> object
         /// that encapsulates the result of the operation.
         /// </returns>
-        WorkflowExecutionResult StartWorkflow(IWorkflowSubject workflowSubject, string workflowName);
+        Task<WorkflowExecutionResult> StartWorkflow(IWorkflowSubject workflowSubject, string workflowName);
 
         /// <summary>
         /// Transitions the specified workflow subject to a
@@ -65,7 +66,7 @@ namespace Headway.WorkflowEngine.Services
         /// Returns a <see cref="WorkflowExecutionResult"/> object
         /// that encapsulates the result of the operation.
         /// </returns>
-        WorkflowExecutionResult TransitionTo(IWorkflowSubject workflowSubject, string transitionName);
+        Task<WorkflowExecutionResult> TransitionTo(IWorkflowSubject workflowSubject, string transitionName);
 
         /// <summary>
         /// Gets the collection of all transitions that are available
@@ -137,7 +138,7 @@ namespace Headway.WorkflowEngine.Services
         /// objects that already have a value assigned to
         /// <see cref="IWorkflowSubject.WorkflowName"/>.
         /// </remarks>
-        public static WorkflowExecutionResult StartWorkflow(this IWorkflowExecutionService workflowExeService,
+        public static async Task<WorkflowExecutionResult> StartWorkflow(this IWorkflowExecutionService workflowExeService,
             IWorkflowSubject workflowSubject)
         {
             if (workflowSubject == null)
@@ -152,7 +153,7 @@ namespace Headway.WorkflowEngine.Services
                 throw new InvalidOperationException(msg);
             }
 
-            return workflowExeService.StartWorkflow(workflowSubject, workflowName);
+            return await workflowExeService.StartWorkflow(workflowSubject, workflowName);
         }
 
         /// <summary>

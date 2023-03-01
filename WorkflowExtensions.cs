@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Threading.Tasks;
 using Headway.Dynamo.Exceptions;
 using Headway.WorkflowEngine.Resolvers;
 using Headway.WorkflowEngine.Exceptions;
@@ -66,7 +67,7 @@ namespace Headway.WorkflowEngine
         /// Thrown when an action fails exiting a state, transitioning,
         /// or entering a state.
         /// </exception>
-        public static WorkflowExecutionResult TransitionTo(this IWorkflowSubject workflowSubject,
+        public static async Task<WorkflowExecutionResult> TransitionTo(this IWorkflowSubject workflowSubject,
             string transitionName,
             IServiceProvider serviceProvider)
         {
@@ -99,7 +100,7 @@ namespace Headway.WorkflowEngine
                 throw new InvalidOperationException(msg);
             }
 
-            return workflow.TransitionTo(workflowSubject, transitionName, serviceProvider);
+            return await workflow.TransitionTo(workflowSubject, transitionName, serviceProvider);
         }
     }
 }

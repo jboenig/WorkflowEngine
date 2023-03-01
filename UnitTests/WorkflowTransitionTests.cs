@@ -24,6 +24,7 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ninject;
 
@@ -61,7 +62,7 @@ namespace WorkflowEngine.UnitTests
         }
 
         [TestMethod]
-        public void TransitionTest1()
+        public async Task TransitionTest1()
         {
             var workflowItemFactory = this.kernel.GetService(typeof(IWorkflowItemFactory)) as IWorkflowItemFactory;
 
@@ -71,10 +72,10 @@ namespace WorkflowEngine.UnitTests
             var workflowExecutionSvc = this.kernel.GetService(typeof(IWorkflowExecutionService)) as IWorkflowExecutionService;
             Assert.IsNotNull(workflowExecutionSvc);
 
-            var resExec = workflowExecutionSvc.StartWorkflow(workflowItem);
+            var resExec = await workflowExecutionSvc.StartWorkflow(workflowItem);
             Assert.IsTrue(resExec.IsSuccess);
 
-            var resTransition = workflowExecutionSvc.TransitionTo(workflowItem, "Start");
+            var resTransition = await workflowExecutionSvc.TransitionTo(workflowItem, "Start");
             Assert.IsTrue(resTransition.IsSuccess);
         }
 
@@ -115,7 +116,7 @@ namespace WorkflowEngine.UnitTests
         }
 
         [TestMethod]
-        public void TransitionToWhenTest()
+        public async Task TransitionToWhenTest()
         {
             var workflowItemTemplateResolver = this.kernel.GetService(typeof(IWorkflowItemTemplateResolver)) as IWorkflowItemTemplateResolver;
             var workflowItemTemplate = workflowItemTemplateResolver.Resolve("MockData.Templates.Test1Template");
@@ -127,13 +128,13 @@ namespace WorkflowEngine.UnitTests
             var workflowExecutionSvc = this.kernel.GetService(typeof(IWorkflowExecutionService)) as IWorkflowExecutionService;
             Assert.IsNotNull(workflowExecutionSvc);
 
-            var resStartWorkflow = workflowExecutionSvc.StartWorkflow(workflowItem, "MockData.Workflows.Test1Workflow");
+            var resStartWorkflow = await workflowExecutionSvc.StartWorkflow(workflowItem, "MockData.Workflows.Test1Workflow");
             Assert.IsTrue(resStartWorkflow.IsSuccess);
 
-            var resStartTransition = workflowExecutionSvc.TransitionTo(workflowItem, "Start");
+            var resStartTransition = await workflowExecutionSvc.TransitionTo(workflowItem, "Start");
             Assert.IsTrue(resStartTransition.IsSuccess);
 
-            var resNeedMoreInfoTransition = workflowExecutionSvc.TransitionTo(workflowItem, "Need More Info");
+            var resNeedMoreInfoTransition = await workflowExecutionSvc.TransitionTo(workflowItem, "Need More Info");
             Assert.IsTrue(resNeedMoreInfoTransition.IsSuccess);
 
             Assert.AreEqual(workflowItem.CurrentState, "Reviewing");
@@ -141,7 +142,7 @@ namespace WorkflowEngine.UnitTests
         }
 
         [TestMethod]
-        public void TransitionOnboardingTest1()
+        public async Task TransitionOnboardingTest1()
         {
             var workflowItemFactory = this.kernel.GetService(typeof(IWorkflowItemFactory)) as IWorkflowItemFactory;
 
@@ -151,10 +152,10 @@ namespace WorkflowEngine.UnitTests
             var workflowExecutionSvc = this.kernel.GetService(typeof(IWorkflowExecutionService)) as IWorkflowExecutionService;
             Assert.IsNotNull(workflowExecutionSvc);
 
-            var resStartWorkflow = workflowExecutionSvc.StartWorkflow(workflowItem);
+            var resStartWorkflow = await workflowExecutionSvc.StartWorkflow(workflowItem);
             Assert.IsTrue(resStartWorkflow.IsSuccess);
 
-            var resTransition1 = workflowExecutionSvc.TransitionTo(workflowItem, "Create Employee Records");
+            var resTransition1 = await workflowExecutionSvc.TransitionTo(workflowItem, "Create Employee Records");
             Assert.IsTrue(resTransition1.IsSuccess);
         }
     }

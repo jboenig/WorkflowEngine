@@ -178,7 +178,7 @@ namespace Headway.WorkflowEngine
             {
                 try
                 {
-                    isAllowed = condition.Evaluate(serviceProvider, context);
+                    isAllowed = Task.Run(() => condition.EvaluateAsync(serviceProvider, context)).GetAwaiter().GetResult();
                 }
                 catch (Exception ex)
                 {
@@ -204,18 +204,15 @@ namespace Headway.WorkflowEngine
         /// Thrown if execution of the <see cref="Command"/> assigned to the
         /// action fails for any reason.
         /// </exception>
-        public Task<CommandResult> ExecuteAction(IServiceProvider serviceProvider, object context)
+        public async Task<CommandResult> ExecuteAction(IServiceProvider serviceProvider, object context)
         {
             var action = this.Action;
             if (action != null)
             {
-                return action.Execute(serviceProvider, context);
+                return await action.ExecuteAsync(serviceProvider, context);
             }
 
-            return new Task<CommandResult>(() =>
-            {
-                return CommandResult.Success;
-            });
+            return CommandResult.Success;
         }
 
         #endregion

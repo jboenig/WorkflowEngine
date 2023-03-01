@@ -24,6 +24,7 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -216,13 +217,13 @@ namespace Headway.WorkflowEngine
         /// <exception cref="InitialStateNotFoundException">
         /// Thrown when the workflow has no initial state defined.
         /// </exception>
-        public WorkflowExecutionResult Start(IWorkflowSubject workflowSubject, IServiceProvider serviceProvider)
+        public async Task<WorkflowExecutionResult> Start(IWorkflowSubject workflowSubject, IServiceProvider serviceProvider)
         {
             ///////////////////////////////////////////////////////////////////
             // Check arguments
             if (workflowSubject == null)
             {
-                throw new ArgumentNullException("workflowSubject");
+                throw new ArgumentNullException(nameof(workflowSubject));
             }
 
             var initialState = this.InitialState;
@@ -233,7 +234,7 @@ namespace Headway.WorkflowEngine
 
             ///////////////////////////////////////////////////////////////////
             // Execute EnterAction associated with the INITIAL state
-            initialState.ExecuteEnterAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
+            await initialState.ExecuteEnterAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
 
             ///////////////////////////////////////////////////////////////////
             // Assign the name of the workflow to the object
@@ -246,7 +247,7 @@ namespace Headway.WorkflowEngine
 
             ///////////////////////////////////////////////////////////////////
             // Invoke OnStarted callback
-            workflowSubject.OnStarted(this);
+            await workflowSubject.OnStarted(this);
 
             return WorkflowExecutionResult.Success;
         }
@@ -295,6 +296,7 @@ namespace Headway.WorkflowEngine
             {
                 throw new TransitionNotFoundException(fromState, transitionName);
             }
+
             ///////////////////////////////////////////////////////////////////
             // Check to see if the transition is allowed
             if (!transition.IsAllowed(serviceProvider, workflowSubject.GetContextObject(serviceProvider)))
@@ -497,7 +499,7 @@ namespace Headway.WorkflowEngine
         /// Thrown when an action fails exiting a state, transitioning,
         /// or entering a state.
         /// </exception>
-        public WorkflowExecutionResult TransitionTo(IWorkflowSubject workflowSubject, string transitionName, IServiceProvider serviceProvider)
+        public async Task<WorkflowExecutionResult> TransitionTo(IWorkflowSubject workflowSubject, string transitionName, IServiceProvider serviceProvider)
         {
             WorkflowExecutionResult res = WorkflowExecutionResult.Success;
 
@@ -558,30 +560,25 @@ namespace Headway.WorkflowEngine
             {
                 ///////////////////////////////////////////////////////////////////
                 // Fire the pre-transition notification on the workflow subject
-                workflowSubject.OnTransitioningTo(this, transition);
+                await workflowSubject.OnTransitioningTo(this, transition);
 
                 CommandResult actionRes;
 
                 ///////////////////////////////////////////////////////////////////
                 // Execute ExitAction associated with the FROM state
-                var exitActionTask = fromState.ExecuteExitAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
-                exitActionTask.RunSynchronously();
-                actionRes = exitActionTask.Result;
-
+                actionRes = await fromState.ExecuteExitAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
                 if (actionRes.IsSuccess)
                 {
                     ///////////////////////////////////////////////////////////////////
                     // Execute Action associated with the transition
-                    var transitionActionTask = transition.ExecuteAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
-                    transitionActionTask.RunSynchronously();
-                    actionRes = transitionActionTask.Result;
+                    actionRes = await transition.ExecuteAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
                 }
 
                 if (actionRes.IsSuccess)
                 {
                     ///////////////////////////////////////////////////////////////////
                     // Fire the post-transition notification on the workflow subject
-                    workflowSubject.OnTransitionedTo(this, transition);
+                    await workflowSubject.OnTransitionedTo(this, transition);
                 }
 
                 if (actionRes.IsSuccess)
@@ -595,9 +592,7 @@ namespace Headway.WorkflowEngine
                 {
                     ///////////////////////////////////////////////////////////////////
                     // Execute EnterAction associated with the TO state
-                    var enterActionTask = toState.ExecuteEnterAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
-                    enterActionTask.RunSynchronously();
-                    actionRes = enterActionTask.Result;
+                    actionRes = await toState.ExecuteEnterAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
                 }
 
                 if (!actionRes.IsSuccess)

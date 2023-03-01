@@ -24,6 +24,7 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ninject;
 
@@ -61,7 +62,7 @@ namespace WorkflowEngine.UnitTests
         }
 
         [TestMethod]
-        public void GetTest1ExecutionFrame()
+        public async Task GetTest1ExecutionFrame()
         {
             var workflowItemFactory = this.kernel.GetService(typeof(IWorkflowItemFactory)) as IWorkflowItemFactory;
 
@@ -71,10 +72,10 @@ namespace WorkflowEngine.UnitTests
             var workflowExecutionSvc = this.kernel.GetService(typeof(IWorkflowExecutionService)) as IWorkflowExecutionService;
             Assert.IsNotNull(workflowExecutionSvc);
 
-            var resExec = workflowExecutionSvc.StartWorkflow(workflowItem);
+            var resExec = await workflowExecutionSvc.StartWorkflow(workflowItem);
             Assert.IsTrue(resExec.IsSuccess);
 
-            var resTransition = workflowExecutionSvc.TransitionTo(workflowItem, "Start");
+            var resTransition = await workflowExecutionSvc.TransitionTo(workflowItem, "Start");
             Assert.IsTrue(resTransition.IsSuccess);
 
             var exeFrame = workflowExecutionSvc.GetCurrentExecutionFrame(workflowItem);

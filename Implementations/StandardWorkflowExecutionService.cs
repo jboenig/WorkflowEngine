@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Headway.Dynamo.Exceptions;
 using Headway.WorkflowEngine.Services;
 using Headway.WorkflowEngine.Resolvers;
@@ -77,7 +78,7 @@ namespace Headway.WorkflowEngine.Implementations
         /// Returns a <see cref="WorkflowExecutionResult"/> object
         /// that encapsulates the result of the operation.
         /// </returns>
-        public WorkflowExecutionResult StartWorkflow(IWorkflowSubject workflowSubject, string workflowName)
+        public async Task<WorkflowExecutionResult> StartWorkflow(IWorkflowSubject workflowSubject, string workflowName)
         {
             if (workflowSubject == null)
             {
@@ -95,7 +96,7 @@ namespace Headway.WorkflowEngine.Implementations
                 throw new WorkflowNotFoundException(workflowName);
             }
 
-            return workflow.Start(workflowSubject, this.serviceProvider);
+            return await workflow.Start(workflowSubject, this.serviceProvider);
         }
 
         /// <summary>
@@ -112,7 +113,7 @@ namespace Headway.WorkflowEngine.Implementations
         /// Returns a <see cref="WorkflowExecutionResult"/> object
         /// that encapsulates the result of the operation.
         /// </returns>
-        public WorkflowExecutionResult TransitionTo(IWorkflowSubject workflowSubject, string transitionName)
+        public async Task<WorkflowExecutionResult> TransitionTo(IWorkflowSubject workflowSubject, string transitionName)
         {
             if (workflowSubject == null)
             {
@@ -125,7 +126,7 @@ namespace Headway.WorkflowEngine.Implementations
                 throw new WorkflowNotFoundException(workflowSubject.WorkflowName);
             }
 
-            return workflow.TransitionTo(workflowSubject, transitionName, this.serviceProvider);
+            return await workflow.TransitionTo(workflowSubject, transitionName, this.serviceProvider);
         }
 
         /// <summary>

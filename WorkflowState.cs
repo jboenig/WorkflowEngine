@@ -175,18 +175,14 @@ namespace Headway.WorkflowEngine
         /// Thrown if execution of the <see cref="Command"/> used for the enter
         /// action fails for any reason.
         /// </exception>
-        public Task<CommandResult> ExecuteEnterAction(IServiceProvider serviceProvider, object context)
+        public async Task<CommandResult> ExecuteEnterAction(IServiceProvider serviceProvider, object context)
         {
             var enterAction = this.EnterAction;
             if (enterAction != null)
             {
-                return enterAction.Execute(serviceProvider, context);
+                return await enterAction.ExecuteAsync(serviceProvider, context);
             }
-
-            return new Task<CommandResult>(() =>
-            {
-                return CommandResult.Success;
-            });
+            return CommandResult.Success;
         }
 
         /// <summary>
@@ -202,18 +198,14 @@ namespace Headway.WorkflowEngine
         /// Thrown if execution of the <see cref="Command"/> used for the exit
         /// action fails for any reason.
         /// </exception>
-        public Task<CommandResult> ExecuteExitAction(IServiceProvider serviceProvider, object context)
+        public async Task<CommandResult> ExecuteExitAction(IServiceProvider serviceProvider, object context)
         {
             var exitAction = this.ExitAction;
             if (exitAction != null)
             {
-                return exitAction.Execute(serviceProvider, context);
+                return await exitAction.ExecuteAsync(serviceProvider, context);
             }
-
-            return new Task<CommandResult>(() =>
-            {
-                return CommandResult.Success;
-            });
+            return CommandResult.Success;
         }
 
         #endregion

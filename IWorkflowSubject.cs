@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Threading.Tasks;
 
 namespace Headway.WorkflowEngine
 {
@@ -68,7 +69,7 @@ namespace Headway.WorkflowEngine
         /// <param name="workflow">
         /// Workflow this subject has started
         /// </param>
-        void OnStarted(Workflow workflow);
+        Task OnStarted(Workflow workflow);
 
         /// <summary>
         /// Called before this object is transitioned to a new state.
@@ -77,7 +78,7 @@ namespace Headway.WorkflowEngine
         /// <param name="workflow">
         /// Workflow that contains the transition
         /// </param>
-        void OnTransitioningTo(Workflow workflow, WorkflowTransition transition);
+        Task OnTransitioningTo(Workflow workflow, WorkflowTransition transition);
 
         /// <summary>
         /// Called after this object is transitioned to a new state.
@@ -86,6 +87,6 @@ namespace Headway.WorkflowEngine
         /// Workflow that contains the transition
         /// </param>
         /// <param name="transition"></param>
-        void OnTransitionedTo(Workflow workflow, WorkflowTransition transition);
+        Task OnTransitionedTo(Workflow workflow, WorkflowTransition transition);
     }
 }
