@@ -69,7 +69,7 @@ namespace Headway.WorkflowEngine.Commands
         /// The <see cref="TransitionToWhenCommand.Condition"/> is evaluated and
         /// if true, the transition is applied.
         /// </remarks>
-        public override async Task<CommandResult> ExecuteAsync(IServiceProvider serviceProvider, object context)
+        public override async Task<CommandResult> Execute(IServiceProvider serviceProvider, object context)
         {
             var workflowSubject = context as IWorkflowSubject;
             if (workflowSubject == null)
@@ -99,7 +99,7 @@ namespace Headway.WorkflowEngine.Commands
 
             CommandResult commandRes = CommandResult.Success;
 
-            if (this.Condition == null || await this.Condition.EvaluateAsync(serviceProvider, context))
+            if (this.Condition == null || await this.Condition.Evaluate(serviceProvider, context))
             {
                 // Apply the transition
                 var workflowTransitionRes = await workflow.TransitionTo(workflowSubject, this.TransitionName, serviceProvider);

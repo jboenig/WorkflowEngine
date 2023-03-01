@@ -21,7 +21,7 @@
             if the transition will occur.
             </summary>
         </member>
-        <member name="M:Headway.WorkflowEngine.Commands.TransitionToWhenCommand.ExecuteAsync(System.IServiceProvider,System.Object)">
+        <member name="M:Headway.WorkflowEngine.Commands.TransitionToWhenCommand.Execute(System.IServiceProvider,System.Object)">
             <summary>
             Executes this command.
             </summary>

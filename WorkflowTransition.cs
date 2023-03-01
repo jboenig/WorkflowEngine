@@ -178,7 +178,7 @@ namespace Headway.WorkflowEngine
             {
                 try
                 {
-                    isAllowed = Task.Run(() => condition.EvaluateAsync(serviceProvider, context)).GetAwaiter().GetResult();
+                    isAllowed = Task.Run(() => condition.Evaluate(serviceProvider, context)).GetAwaiter().GetResult();
                 }
                 catch (Exception ex)
                 {
@@ -209,7 +209,7 @@ namespace Headway.WorkflowEngine
             var action = this.Action;
             if (action != null)
             {
-                return await action.ExecuteAsync(serviceProvider, context);
+                return await action.Execute(serviceProvider, context);
             }
 
             return CommandResult.Success;

@@ -180,7 +180,7 @@ namespace Headway.WorkflowEngine
             var enterAction = this.EnterAction;
             if (enterAction != null)
             {
-                return await enterAction.ExecuteAsync(serviceProvider, context);
+                return await enterAction.Execute(serviceProvider, context);
             }
             return CommandResult.Success;
         }
@@ -203,7 +203,7 @@ namespace Headway.WorkflowEngine
             var exitAction = this.ExitAction;
             if (exitAction != null)
             {
-                return await exitAction.ExecuteAsync(serviceProvider, context);
+                return await exitAction.Execute(serviceProvider, context);
             }
             return CommandResult.Success;
         }
