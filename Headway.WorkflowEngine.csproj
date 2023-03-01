@@ -1,34 +1,62 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <VersionPrefix>3.1.0</VersionPrefix>
-    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>disable</Nullable>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <DocumentationFile>Headway.WorkflowEngine.xml</DocumentationFile>
-    <AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
-    <FileVersion>$(VersionPrefix)</FileVersion>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<SignAssembly>False</SignAssembly>
+		<Authors>Headway Software</Authors>
+		<VersionPrefix>3.1.0</VersionPrefix>
+		<RepositoryUrl>https://github.com/jboenig/Dynamo</RepositoryUrl>
+		<PackageTags>metadata</PackageTags>
+		<PackageProjectUrl>https://www.nuget.org/packages/Headway.WorkflowEngine/</PackageProjectUrl>
+		<PackageIcon>WorkflowEngine.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<DocumentationFile>Headway.WorkflowEngine.xml</DocumentationFile>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Description>Best workflow engine ever created</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="UnitTests\**" />
-    <EmbeddedResource Remove="UnitTests\**" />
-    <None Remove="UnitTests\**" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="UnitTests\**" />
+		<EmbeddedResource Remove="UnitTests\**" />
+		<None Remove="UnitTests\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Headway.Dynamo" Version="3.1.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="WorkflowEngine.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="WorkflowEngine.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Update="README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Headway.Dynamo" Version="3.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="README.md">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>
