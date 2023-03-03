@@ -56,7 +56,7 @@ namespace WorkflowEngine.UnitTests
             this.kernel.Bind<ISerializerConfigService>().To<StandardSerializerConfigService>();
             this.kernel.Bind<IMetadataProvider>().To<StandardMetadataProvider>();
             this.kernel.Bind<IObjectRepository<WorkflowItem>>()
-                .To<FlatFileWorkflowItemRepo>()
+                .To<JsonFileWorkflowItemRepo>()
                 .WithConstructorArgument("filePath", "workflowitems.json");
         }
 
