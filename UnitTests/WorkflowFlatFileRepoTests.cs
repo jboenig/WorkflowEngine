@@ -46,7 +46,7 @@ namespace WorkflowEngine.UnitTests
         {
             this.kernel = new StandardKernel();
             this.kernel.Bind<IServiceProvider>().ToConstant(this.kernel);
-            this.kernel.Bind<IWorkflowRepository>().To<FlatFileWorkflowRepo>();
+            this.kernel.Bind<IWorkflowRepository>().To<JsonFileWorkflowRepo>();
             this.kernel.Bind<ISerializerConfigService>().To<StandardSerializerConfigService>();
             this.kernel.Bind<IMetadataProvider>().To<StandardMetadataProvider>();
         }

@@ -25,16 +25,16 @@
 using System;
 using System.Linq;
 using Headway.Dynamo.Serialization;
-using Headway.Dynamo.Repository.FlatFile;
+using Headway.Dynamo.Repository.Implementation;
 using Headway.WorkflowEngine.Resolvers;
 
 namespace Headway.WorkflowEngine.Implementations
 {
     /// <summary>
-    /// Implements a <see cref="FlatFileRepo{TObject}"/> to
+    /// Implements a <see cref="JsonFileRepo{TObject}"/> to
     /// store and retrieve <see cref="WorkflowItem"/> objects.
     /// </summary>
-    public sealed class FlatFileWorkflowItemRepo : FlatFileRepo<WorkflowItem>,
+    public sealed class JsonFileWorkflowItemRepo : JsonFileRepo<WorkflowItem>,
         IWorkflowItemByIdResolver
     {
         /// <summary>
@@ -43,7 +43,7 @@ namespace Headway.WorkflowEngine.Implementations
         /// <param name="filePath"></param>
         /// <param name="serializerConfigSvc"></param>
         /// <param name="svcProvider"></param>
-        public FlatFileWorkflowItemRepo(string filePath,
+        public JsonFileWorkflowItemRepo(string filePath,
               ISerializerConfigService serializerConfigSvc,
               IServiceProvider svcProvider) :
             base(filePath, serializerConfigSvc, svcProvider)

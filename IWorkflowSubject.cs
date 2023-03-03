@@ -22,71 +22,67 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Threading.Tasks;
+namespace Headway.WorkflowEngine;
 
-namespace Headway.WorkflowEngine
+/// <summary>
+/// Interface to objects that can move through
+/// a <see cref="Workflow"/>.
+/// </summary>
+/// <remarks>
+/// This interface provides the minimal set of properties and
+/// methods needed to apply workflow transitions.
+/// </remarks>
+public interface IWorkflowSubject
 {
     /// <summary>
-    /// Interface to objects that can move through
-    /// a <see cref="Workflow"/>.
+    /// Gets or sets the fully qualified name of the
+    /// <see cref="Workflow"/> associated with this object.
     /// </summary>
-    /// <remarks>
-    /// This interface provides the minimal set of properties and
-    /// methods needed to apply workflow transitions.
-    /// </remarks>
-    public interface IWorkflowSubject
+    string WorkflowName
     {
-        /// <summary>
-        /// Gets or sets the fully qualified name of the
-        /// <see cref="Workflow"/> associated with this object.
-        /// </summary>
-        string WorkflowName
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets the name of workflow current state this object is in.
-        /// </summary>
-        string CurrentState
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets the context object.
-        /// </summary>
-        /// <param name="svcProvider">Reference to service provider</param>
-        /// <returns>Context object</returns>
-        object GetContextObject(IServiceProvider svcProvider);
-
-        /// <summary>
-        /// Called after this item is started in a workflow.
-        /// </summary>
-        /// <param name="workflow">
-        /// Workflow this subject has started
-        /// </param>
-        Task OnStarted(Workflow workflow);
-
-        /// <summary>
-        /// Called before this object is transitioned to a new state.
-        /// </summary>
-        /// <param name="transition"></param>
-        /// <param name="workflow">
-        /// Workflow that contains the transition
-        /// </param>
-        Task OnTransitioningTo(Workflow workflow, WorkflowTransition transition);
-
-        /// <summary>
-        /// Called after this object is transitioned to a new state.
-        /// </summary>
-        /// <param name="workflow">
-        /// Workflow that contains the transition
-        /// </param>
-        /// <param name="transition"></param>
-        Task OnTransitionedTo(Workflow workflow, WorkflowTransition transition);
+        get;
+        set;
     }
+
+    /// <summary>
+    /// Gets the name of workflow current state this object is in.
+    /// </summary>
+    string CurrentState
+    {
+        get;
+        set;
+    }
+
+    /// <summary>
+    /// Gets the context object.
+    /// </summary>
+    /// <param name="svcProvider">Reference to service provider</param>
+    /// <returns>Context object</returns>
+    object GetContextObject(IServiceProvider svcProvider);
+
+    /// <summary>
+    /// Called after this item is started in a workflow.
+    /// </summary>
+    /// <param name="workflow">
+    /// Workflow this subject has started
+    /// </param>
+    Task OnStarted(Workflow workflow);
+
+    /// <summary>
+    /// Called before this object is transitioned to a new state.
+    /// </summary>
+    /// <param name="transition"></param>
+    /// <param name="workflow">
+    /// Workflow that contains the transition
+    /// </param>
+    Task OnTransitioningTo(Workflow workflow, WorkflowTransition transition);
+
+    /// <summary>
+    /// Called after this object is transitioned to a new state.
+    /// </summary>
+    /// <param name="workflow">
+    /// Workflow that contains the transition
+    /// </param>
+    /// <param name="transition"></param>
+    Task OnTransitionedTo(Workflow workflow, WorkflowTransition transition);
 }

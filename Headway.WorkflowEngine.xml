@@ -164,13 +164,13 @@
             template and context data.
             </returns>
         </member>
-        <member name="T:Headway.WorkflowEngine.Implementations.FlatFileWorkflowItemRepo">
+        <member name="T:Headway.WorkflowEngine.Implementations.JsonFileWorkflowItemRepo">
             <summary>
-            Implements a <see cref="T:Headway.Dynamo.Repository.FlatFile.FlatFileRepo`1"/> to
+            Implements a <see cref="T:Headway.Dynamo.Repository.Implementation.JsonFileRepo`1"/> to
             store and retrieve <see cref="T:Headway.WorkflowEngine.WorkflowItem"/> objects.
             </summary>
         </member>
-        <member name="M:Headway.WorkflowEngine.Implementations.FlatFileWorkflowItemRepo.#ctor(System.String,Headway.Dynamo.Serialization.ISerializerConfigService,System.IServiceProvider)">
+        <member name="M:Headway.WorkflowEngine.Implementations.JsonFileWorkflowItemRepo.#ctor(System.String,Headway.Dynamo.Serialization.ISerializerConfigService,System.IServiceProvider)">
             <summary>
             
             </summary>
@@ -178,20 +178,20 @@
             <param name="serializerConfigSvc"></param>
             <param name="svcProvider"></param>
         </member>
-        <member name="M:Headway.WorkflowEngine.Implementations.FlatFileWorkflowItemRepo.Resolve(System.Object)">
+        <member name="M:Headway.WorkflowEngine.Implementations.JsonFileWorkflowItemRepo.Resolve(System.Object)">
             <summary>
             Resolves an object given a key value.
             </summary>
             <param name="key">Key value</param>
             <returns>Object matching the given key value.</returns>
         </member>
-        <member name="T:Headway.WorkflowEngine.Implementations.FlatFileWorkflowRepo">
+        <member name="T:Headway.WorkflowEngine.Implementations.JsonFileWorkflowRepo">
             <summary>
-            Implements a <see cref="T:Headway.Dynamo.Repository.FlatFile.FlatFileRepo`1"/> to
+            Implements a <see cref="T:Headway.Dynamo.Repository.Implementation.JsonFileRepo`1"/> to
             store and retrieve <see cref="T:Headway.WorkflowEngine.Workflow"/> objects.
             </summary>
         </member>
-        <member name="M:Headway.WorkflowEngine.Implementations.FlatFileWorkflowRepo.#ctor(System.String,Headway.Dynamo.Serialization.ISerializerConfigService,System.IServiceProvider)">
+        <member name="M:Headway.WorkflowEngine.Implementations.JsonFileWorkflowRepo.#ctor(System.String,Headway.Dynamo.Serialization.ISerializerConfigService,System.IServiceProvider)">
             <summary>
             
             </summary>
@@ -199,14 +199,14 @@
             <param name="serializerConfigSvc"></param>
             <param name="svcProvider"></param>
         </member>
-        <member name="M:Headway.WorkflowEngine.Implementations.FlatFileWorkflowRepo.#ctor(Headway.Dynamo.Serialization.ISerializerConfigService,System.IServiceProvider)">
+        <member name="M:Headway.WorkflowEngine.Implementations.JsonFileWorkflowRepo.#ctor(Headway.Dynamo.Serialization.ISerializerConfigService,System.IServiceProvider)">
             <summary>
             
             </summary>
             <param name="serializerConfigSvc"></param>
             <param name="svcProvider"></param>
         </member>
-        <member name="M:Headway.WorkflowEngine.Implementations.FlatFileWorkflowRepo.Resolve(System.String)">
+        <member name="M:Headway.WorkflowEngine.Implementations.JsonFileWorkflowRepo.Resolve(System.String)">
             <summary>
             Resolves a <see cref="T:Headway.WorkflowEngine.Workflow"/> object given a
             fully-qualified workflow name.

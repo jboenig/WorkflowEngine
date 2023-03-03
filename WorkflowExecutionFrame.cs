@@ -22,58 +22,56 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Headway.WorkflowEngine
+namespace Headway.WorkflowEngine;
+
+/// <summary>
+/// This class encpasulates a snapshot of the current state of workflow execution
+/// for a <see cref="IWorkflowSubject"/>.
+/// </summary>
+/// <remarks>
+/// This class provides information about available transitions that are in
+/// the context of the given <see cref="IWorkflowSubject"/>. Specifically, it
+/// flags each transition as allowed or not allowed and includes information
+/// explaining why transitions are not allow.
+/// </remarks>
+public sealed class WorkflowExecutionFrame
 {
-    /// <summary>
-    /// This class encpasulates a snapshot of the current state of workflow execution
-    /// for a <see cref="IWorkflowSubject"/>.
-    /// </summary>
-    /// <remarks>
-    /// This class provides information about available transitions that are in
-    /// the context of the given <see cref="IWorkflowSubject"/>. Specifically, it
-    /// flags each transition as allowed or not allowed and includes information
-    /// explaining why transitions are not allow.
-    /// </remarks>
-    public sealed class WorkflowExecutionFrame
+    internal static WorkflowExecutionFrame Create(IWorkflowSubject subject,
+        IEnumerable<WorkflowTransitionDescriptor> nextTransitions)
     {
-        internal static WorkflowExecutionFrame Create(IWorkflowSubject subject,
-            IEnumerable<WorkflowTransitionDescriptor> nextTransitions)
+        var workflowExecutionFrame = new WorkflowExecutionFrame()
         {
-            var workflowExecutionFrame = new WorkflowExecutionFrame()
-            {
-                Subject = subject,
-                NextTransitions = nextTransitions
-            };
-            return workflowExecutionFrame;
-        }
+            Subject = subject,
+            NextTransitions = nextTransitions
+        };
+        return workflowExecutionFrame;
+    }
 
-        private WorkflowExecutionFrame()
-        {
-        }
+    private WorkflowExecutionFrame()
+    {
+    }
 
-        /// <summary>
-        /// Gets the <see cref="IWorkflowSubject"/> described by this
-        /// execution frame.
-        /// </summary>
-        [JsonIgnore]
-        public IWorkflowSubject Subject
-        {
-            get;
-            private set;
-        }
+    /// <summary>
+    /// Gets the <see cref="IWorkflowSubject"/> described by this
+    /// execution frame.
+    /// </summary>
+    [JsonIgnore]
+    public IWorkflowSubject Subject
+    {
+        get;
+        private set;
+    }
 
-        /// <summary>
-        /// Gets the collection of transitions from the current state in the
-        /// context of the <see cref="IWorkflowSubject"/>.
-        /// </summary>
-        [JsonProperty("nextTransitions")]
-        public IEnumerable<WorkflowTransitionDescriptor> NextTransitions
-        {
-            get;
-            private set;
-        }
+    /// <summary>
+    /// Gets the collection of transitions from the current state in the
+    /// context of the <see cref="IWorkflowSubject"/>.
+    /// </summary>
+    [JsonProperty("nextTransitions")]
+    public IEnumerable<WorkflowTransitionDescriptor> NextTransitions
+    {
+        get;
+        private set;
     }
 }

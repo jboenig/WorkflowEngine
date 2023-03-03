@@ -22,19 +22,17 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Linq;
 using Headway.Dynamo.Serialization;
-using Headway.Dynamo.Repository.FlatFile;
+using Headway.Dynamo.Repository.Implementation;
 using Headway.WorkflowEngine.Repository;
 
 namespace Headway.WorkflowEngine.Implementations
 {
     /// <summary>
-    /// Implements a <see cref="FlatFileRepo{TObject}"/> to
+    /// Implements a <see cref="JsonFileRepo{TObject}"/> to
     /// store and retrieve <see cref="Workflow"/> objects.
     /// </summary>
-    public sealed class FlatFileWorkflowRepo : FlatFileRepo<Workflow>,
+    public sealed class JsonFileWorkflowRepo : JsonFileRepo<Workflow>,
         IWorkflowRepository
     {
         /// <summary>
@@ -43,7 +41,7 @@ namespace Headway.WorkflowEngine.Implementations
         /// <param name="filePath"></param>
         /// <param name="serializerConfigSvc"></param>
         /// <param name="svcProvider"></param>
-        public FlatFileWorkflowRepo(string filePath,
+        public JsonFileWorkflowRepo(string filePath,
               ISerializerConfigService serializerConfigSvc,
               IServiceProvider svcProvider) :
             base(filePath, serializerConfigSvc, svcProvider)
@@ -55,7 +53,7 @@ namespace Headway.WorkflowEngine.Implementations
         /// </summary>
         /// <param name="serializerConfigSvc"></param>
         /// <param name="svcProvider"></param>
-        public FlatFileWorkflowRepo(ISerializerConfigService serializerConfigSvc,
+        public JsonFileWorkflowRepo(ISerializerConfigService serializerConfigSvc,
               IServiceProvider svcProvider) :
             base(serializerConfigSvc, svcProvider)
         {
