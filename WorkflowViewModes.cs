@@ -22,36 +22,35 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
 
-namespace Headway.WorkflowEngine
+namespace Headway.WorkflowEngine;
+
+/// <summary>
+/// Defines different modes for viewing workflow subjects.
+/// </summary>
+public enum WorkflowViewModes
 {
     /// <summary>
-    /// Defines different modes for viewing workflow subjects.
+    /// Read-only summary view mode
     /// </summary>
-    public enum WorkflowViewModes
-    {
-        /// <summary>
-        /// Read-only summary view mode
-        /// </summary>
-        SummaryView,
+    SummaryView,
 
-        /// <summary>
-        /// Read-only detail view mode
-        /// </summary>
-        DetailView,
+    /// <summary>
+    /// Read-only detail view mode
+    /// </summary>
+    DetailView,
 
-        /// <summary>
-        /// Editable summary view mode
-        /// </summary>
-        SummaryEdit,
+    /// <summary>
+    /// Editable summary view mode
+    /// </summary>
+    SummaryEdit,
 
-        /// <summary>
-        /// Editable detail view mode
-        /// </summary>
-        DetailEdit,
+    /// <summary>
+    /// Editable detail view mode
+    /// </summary>
+    DetailEdit,
 
-        /// <summary>
-        /// List item view mode
-        /// </summary>
-        ListItem
-    }
+    /// <summary>
+    /// List item view mode
+    /// </summary>
+    ListItem
 }

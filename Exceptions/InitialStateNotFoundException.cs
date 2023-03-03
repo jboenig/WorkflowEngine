@@ -22,33 +22,30 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
 
-using System;
+namespace Headway.WorkflowEngine.Exceptions;
 
-namespace Headway.WorkflowEngine.Exceptions
+/// <summary>
+/// Exception thrown when a workflow has no initial
+/// state defined.
+/// </summary>
+public sealed class InitialStateNotFoundException : WorkflowException
 {
     /// <summary>
-    /// Exception thrown when a workflow has no initial
-    /// state defined.
+    /// Default constructor.
     /// </summary>
-    public sealed class InitialStateNotFoundException : WorkflowException
+    public InitialStateNotFoundException()
     {
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public InitialStateNotFoundException()
-        {
-        }
+    }
 
-        /// <summary>
-        /// Gets the message associated with this exception.
-        /// </summary>
-        public override string Message
+    /// <summary>
+    /// Gets the message associated with this exception.
+    /// </summary>
+    public override string Message
+    {
+        get
         {
-            get
-            {
-                var msg = "Workflow has no initial state defined";
-                return msg;
-            }
+            var msg = "Workflow has no initial state defined";
+            return msg;
         }
     }
 }

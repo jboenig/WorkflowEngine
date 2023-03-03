@@ -22,30 +22,27 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
 
-using System;
+namespace Headway.WorkflowEngine.Exceptions;
 
-namespace Headway.WorkflowEngine.Exceptions
+/// <summary>
+/// Base class for workflow exceptions.
+/// </summary>
+public abstract class WorkflowException : Exception
 {
     /// <summary>
-    /// Base class for workflow exceptions.
+    /// Default constructor.
     /// </summary>
-    public abstract class WorkflowException : Exception
+    public WorkflowException()
     {
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public WorkflowException()
-        {
-        }
+    }
 
-        /// <summary>
-        /// Construct from a message and inner exception.
-        /// </summary>
-        /// <param name="message">Message</param>
-        /// <param name="innerException">Inner exception</param>
-        public WorkflowException(string message, Exception innerException) :
-            base(message, innerException)
-        {
-        }
+    /// <summary>
+    /// Construct from a message and inner exception.
+    /// </summary>
+    /// <param name="message">Message</param>
+    /// <param name="innerException">Inner exception</param>
+    public WorkflowException(string message, Exception innerException) :
+        base(message, innerException)
+    {
     }
 }

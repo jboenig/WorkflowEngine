@@ -26,50 +26,49 @@ using Headway.Dynamo.Serialization;
 using Headway.Dynamo.Repository.Implementation;
 using Headway.WorkflowEngine.Repository;
 
-namespace Headway.WorkflowEngine.Implementations
+namespace Headway.WorkflowEngine.Implementations;
+
+/// <summary>
+/// Implements a <see cref="JsonFileRepo{TObject}"/> to
+/// store and retrieve <see cref="Workflow"/> objects.
+/// </summary>
+public sealed class JsonFileWorkflowRepo : JsonFileRepo<Workflow>,
+    IWorkflowRepository
 {
     /// <summary>
-    /// Implements a <see cref="JsonFileRepo{TObject}"/> to
-    /// store and retrieve <see cref="Workflow"/> objects.
+    /// 
     /// </summary>
-    public sealed class JsonFileWorkflowRepo : JsonFileRepo<Workflow>,
-        IWorkflowRepository
+    /// <param name="filePath"></param>
+    /// <param name="serializerConfigSvc"></param>
+    /// <param name="svcProvider"></param>
+    public JsonFileWorkflowRepo(string filePath,
+          ISerializerConfigService serializerConfigSvc,
+          IServiceProvider svcProvider) :
+        base(filePath, serializerConfigSvc, svcProvider)
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="serializerConfigSvc"></param>
-        /// <param name="svcProvider"></param>
-        public JsonFileWorkflowRepo(string filePath,
-              ISerializerConfigService serializerConfigSvc,
-              IServiceProvider svcProvider) :
-            base(filePath, serializerConfigSvc, svcProvider)
-        {
-        }
+    }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="serializerConfigSvc"></param>
-        /// <param name="svcProvider"></param>
-        public JsonFileWorkflowRepo(ISerializerConfigService serializerConfigSvc,
-              IServiceProvider svcProvider) :
-            base(serializerConfigSvc, svcProvider)
-        {
-        }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="serializerConfigSvc"></param>
+    /// <param name="svcProvider"></param>
+    public JsonFileWorkflowRepo(ISerializerConfigService serializerConfigSvc,
+          IServiceProvider svcProvider) :
+        base(serializerConfigSvc, svcProvider)
+    {
+    }
 
-        /// <summary>
-        /// Resolves a <see cref="Workflow"/> object given a
-        /// fully-qualified workflow name.
-        /// </summary>
-        /// <param name="workflowName">Fully qualified name of the workflow</param>
-        /// <returns>Workflow matching the given workflow name.</returns>
-        public Workflow Resolve(string workflowName)
-        {
-            return (from w in this.GetQueryable()
-                    where w.FullName == workflowName
-                    select w).FirstOrDefault();
-        }
+    /// <summary>
+    /// Resolves a <see cref="Workflow"/> object given a
+    /// fully-qualified workflow name.
+    /// </summary>
+    /// <param name="workflowName">Fully qualified name of the workflow</param>
+    /// <returns>Workflow matching the given workflow name.</returns>
+    public Workflow Resolve(string workflowName)
+    {
+        return (from w in this.GetQueryable()
+                where w.FullName == workflowName
+                select w).FirstOrDefault();
     }
 }

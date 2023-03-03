@@ -47,10 +47,10 @@ namespace Headway.WorkflowEngine.Services
         /// Fully-qualified name of the workflow to execute
         /// </param>
         /// <returns>
-        /// Returns a <see cref="WorkflowExecutionResult"/> object
+        /// Returns a <see cref="WorkflowTransitionResult"/> object
         /// that encapsulates the result of the operation.
         /// </returns>
-        Task<WorkflowExecutionResult> StartWorkflow(IWorkflowSubject workflowSubject, string workflowName);
+        Task<WorkflowTransitionResult> StartWorkflow(IWorkflowSubject workflowSubject, string workflowName);
 
         /// <summary>
         /// Transitions the specified workflow subject to a
@@ -63,10 +63,10 @@ namespace Headway.WorkflowEngine.Services
         /// Name of transition to execute
         /// </param>
         /// <returns>
-        /// Returns a <see cref="WorkflowExecutionResult"/> object
+        /// Returns a <see cref="WorkflowTransitionResult"/> object
         /// that encapsulates the result of the operation.
         /// </returns>
-        Task<WorkflowExecutionResult> TransitionTo(IWorkflowSubject workflowSubject, string transitionName);
+        Task<WorkflowTransitionResult> TransitionTo(IWorkflowSubject workflowSubject, string transitionName);
 
         /// <summary>
         /// Gets the collection of all transitions that are available
@@ -99,17 +99,17 @@ namespace Headway.WorkflowEngine.Services
         IEnumerable<WorkflowTransition> GetAllowedTransitions(IWorkflowSubject workflowSubject);
 
         /// <summary>
-        /// Gets the current <see cref="WorkflowExecutionFrame"/> for the specified
+        /// Gets the current <see cref="WorkflowExecutionContext"/> for the specified
         /// <see cref="IWorkflowSubject"/>.
         /// </summary>
         /// <param name="workflowSubject">
         /// Workflow subject to get execution frame for
         /// </param>
         /// <returns>
-        /// Returns a <see cref="WorkflowExecutionFrame"/> that describes the state of execution
+        /// Returns a <see cref="WorkflowExecutionContext"/> that describes the state of execution
         /// for the given <see cref="IWorkflowSubject"/>.
         /// </returns>
-        WorkflowExecutionFrame GetCurrentExecutionFrame(IWorkflowSubject workflowSubject);
+        WorkflowExecutionContext GetCurrentExecutionFrame(IWorkflowSubject workflowSubject);
     }
 
     /// <summary>
@@ -130,7 +130,7 @@ namespace Headway.WorkflowEngine.Services
         /// <see cref="IWorkflowSubject"/> to start in the workflow
         /// </param>
         /// <returns>
-        /// Returns a <see cref="WorkflowExecutionResult"/> object
+        /// Returns a <see cref="WorkflowTransitionResult"/> object
         /// that encapsulates the result of the operation.
         /// </returns>
         /// <remarks>
@@ -138,7 +138,7 @@ namespace Headway.WorkflowEngine.Services
         /// objects that already have a value assigned to
         /// <see cref="IWorkflowSubject.WorkflowName"/>.
         /// </remarks>
-        public static async Task<WorkflowExecutionResult> StartWorkflow(this IWorkflowExecutionService workflowExeService,
+        public static async Task<WorkflowTransitionResult> StartWorkflow(this IWorkflowExecutionService workflowExeService,
             IWorkflowSubject workflowSubject)
         {
             if (workflowSubject == null)

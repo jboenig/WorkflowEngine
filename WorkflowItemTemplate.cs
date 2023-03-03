@@ -36,6 +36,9 @@ namespace Headway.WorkflowEngine;
 /// Template used to create and initialize new instances of
 /// <see cref="WorkflowItem"/> objects.
 /// </summary>
+/// <remarks>
+/// This class is a factory for <see cref="WorkflowItem"/> objects.
+/// </remarks>
 public sealed class WorkflowItemTemplate : IObjectFactory<WorkflowItem>
 {
     private string objectTypeFullName;

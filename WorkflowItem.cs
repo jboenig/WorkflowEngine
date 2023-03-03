@@ -29,8 +29,12 @@ using Headway.Dynamo.Metadata;
 namespace Headway.WorkflowEngine;
 
 /// <summary>
-/// Base class for items that participate in workflow.
+/// Base class for items that can be the subject of a workflow.
 /// </summary>
+/// <remarks>
+/// This class provides an implementation of <see cref="IWorkflowSubject"/> that
+/// is a dynamic object
+/// </remarks>
 [JsonObject]
 public class WorkflowItem : DynamoObject, IWorkflowSubject, IPrimaryKeyAccessor
 {

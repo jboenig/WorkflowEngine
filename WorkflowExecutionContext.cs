@@ -36,12 +36,12 @@ namespace Headway.WorkflowEngine;
 /// flags each transition as allowed or not allowed and includes information
 /// explaining why transitions are not allow.
 /// </remarks>
-public sealed class WorkflowExecutionFrame
+public sealed class WorkflowExecutionContext
 {
-    internal static WorkflowExecutionFrame Create(IWorkflowSubject subject,
+    internal static WorkflowExecutionContext Create(IWorkflowSubject subject,
         IEnumerable<WorkflowTransitionDescriptor> nextTransitions)
     {
-        var workflowExecutionFrame = new WorkflowExecutionFrame()
+        var workflowExecutionFrame = new WorkflowExecutionContext()
         {
             Subject = subject,
             NextTransitions = nextTransitions
@@ -49,7 +49,7 @@ public sealed class WorkflowExecutionFrame
         return workflowExecutionFrame;
     }
 
-    private WorkflowExecutionFrame()
+    private WorkflowExecutionContext()
     {
     }
 

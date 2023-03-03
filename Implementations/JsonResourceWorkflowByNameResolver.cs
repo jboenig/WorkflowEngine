@@ -23,48 +23,46 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 using Headway.WorkflowEngine.Resolvers;
-using System;
 using Headway.Dynamo.Serialization;
 
-namespace Headway.WorkflowEngine.Implementations
+namespace Headway.WorkflowEngine.Implementations;
+
+/// <summary>
+/// Implements <see cref="IWorkflowByNameResolver"/> by retrieving
+/// <see cref="Workflow"/> objects from an assembly resource and
+/// parsing as JSON.
+/// </summary>
+public sealed class JsonResourceWorkflowByNameResolver : IWorkflowByNameResolver
 {
+    private readonly JsonResourceObjectResolver<Workflow> jsonResourceWorkflowResolver;
+
     /// <summary>
-    /// Implements <see cref="IWorkflowByNameResolver"/> by retrieving
-    /// <see cref="Workflow"/> objects from an assembly resource and
-    /// parsing as JSON.
+    /// 
     /// </summary>
-    public sealed class JsonResourceWorkflowByNameResolver : IWorkflowByNameResolver
+    /// <param name="svcProvider"></param>
+    /// <param name="assembly"></param>
+    public JsonResourceWorkflowByNameResolver(IServiceProvider svcProvider,
+        System.Reflection.Assembly assembly)
     {
-        private readonly JsonResourceObjectResolver<Workflow> jsonResourceWorkflowResolver;
+        this.jsonResourceWorkflowResolver = new JsonResourceObjectResolver<Workflow>(svcProvider, assembly);
+    }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="svcProvider"></param>
-        /// <param name="assembly"></param>
-        public JsonResourceWorkflowByNameResolver(IServiceProvider svcProvider,
-            System.Reflection.Assembly assembly)
-        {
-            this.jsonResourceWorkflowResolver = new JsonResourceObjectResolver<Workflow>(svcProvider, assembly);
-        }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="svcProvider"></param>
+    public JsonResourceWorkflowByNameResolver(IServiceProvider svcProvider)
+    {
+        this.jsonResourceWorkflowResolver = new JsonResourceObjectResolver<Workflow>(svcProvider);
+    }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="svcProvider"></param>
-        public JsonResourceWorkflowByNameResolver(IServiceProvider svcProvider)
-        {
-            this.jsonResourceWorkflowResolver = new JsonResourceObjectResolver<Workflow>(svcProvider);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public Workflow Resolve(string key)
-        {
-            return this.jsonResourceWorkflowResolver.Resolve(key);
-        }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public Workflow Resolve(string key)
+    {
+        return this.jsonResourceWorkflowResolver.Resolve(key);
     }
 }

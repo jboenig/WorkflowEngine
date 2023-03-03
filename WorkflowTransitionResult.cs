@@ -22,7 +22,6 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
 
-using System;
 using Headway.Dynamo.Commands;
 
 namespace Headway.WorkflowEngine;
@@ -32,7 +31,7 @@ namespace Headway.WorkflowEngine;
 /// start or transition an <see cref="IWorkflowSubject"/> from
 /// one state to another.
 /// </summary>
-public enum WorkflowExecutionResultCode
+public enum WorkflowTransitionResultCode
 {
     /// <summary>
     /// Transition successful.
@@ -60,15 +59,15 @@ public enum WorkflowExecutionResultCode
 /// to transition an <see cref="IWorkflowSubject"/> from one
 /// state to another.
 /// </summary>
-public class WorkflowExecutionResult
+public class WorkflowTransitionResult
 {
     /// <summary>
-    /// Constructs a <see cref="WorkflowExecutionResult"/> given a result
+    /// Constructs a <see cref="WorkflowTransitionResult"/> given a result
     /// code and a description.
     /// </summary>
     /// <param name="resultCode">Code describing the result.</param>
     /// <param name="description">Text description of the result.</param>
-    public WorkflowExecutionResult(WorkflowExecutionResultCode resultCode, string description = null)
+    public WorkflowTransitionResult(WorkflowTransitionResultCode resultCode, string description = null)
     {
         this.ActionResult = CommandResult.Success;
         this.ResultCode = resultCode;
@@ -76,40 +75,40 @@ public class WorkflowExecutionResult
     }
 
     /// <summary>
-    /// Constructs a <see cref="WorkflowExecutionResult"/> given an
+    /// Constructs a <see cref="WorkflowTransitionResult"/> given an
     /// exception object.
     /// </summary>
     /// <param name="ex">Exception that occurred during the transition.</param>
-    public WorkflowExecutionResult(Exception ex)
+    public WorkflowTransitionResult(Exception ex)
     {
         this.ActionResult = CommandResult.Success;
-        this.ResultCode = WorkflowExecutionResultCode.Exception;
+        this.ResultCode = WorkflowTransitionResultCode.Exception;
         this.Description = ex.Message;
     }
 
     /// <summary>
-    /// Constructs a <see cref="WorkflowExecutionResult"/> given an
+    /// Constructs a <see cref="WorkflowTransitionResult"/> given an
     /// exception object.
     /// </summary>
     /// <param name="actionRes">
     /// Result of the last command executed.
     /// </param>
-    public WorkflowExecutionResult(CommandResult actionRes)
+    public WorkflowTransitionResult(CommandResult actionRes)
     {
         if (actionRes == null)
         {
-            this.ResultCode = WorkflowExecutionResultCode.Success;
+            this.ResultCode = WorkflowTransitionResultCode.Success;
             this.ActionResult = CommandResult.Success;
         }
         else
         {
             if (actionRes.IsSuccess)
             {
-                this.ResultCode = WorkflowExecutionResultCode.Success;
+                this.ResultCode = WorkflowTransitionResultCode.Success;
             }
             else
             {
-                this.ResultCode = WorkflowExecutionResultCode.ActionFailed;
+                this.ResultCode = WorkflowTransitionResultCode.ActionFailed;
             }
             this.Description = actionRes.Description;
             this.ActionResult = actionRes;
@@ -119,7 +118,7 @@ public class WorkflowExecutionResult
     /// <summary>
     /// Gets the result code.
     /// </summary>
-    public WorkflowExecutionResultCode ResultCode
+    public WorkflowTransitionResultCode ResultCode
     {
         get;
         private set;
@@ -166,11 +165,11 @@ public class WorkflowExecutionResult
     /// </summary>
     public bool IsSuccess
     {
-        get { return (this.ResultCode == WorkflowExecutionResultCode.Success); }
+        get { return (this.ResultCode == WorkflowTransitionResultCode.Success); }
     }
 
     /// <summary>
     /// Singleton object used to indicate success.
     /// </summary>
-    public static WorkflowExecutionResult Success = new WorkflowExecutionResult(WorkflowExecutionResultCode.Success);
+    public static WorkflowTransitionResult Success = new WorkflowTransitionResult(WorkflowTransitionResultCode.Success);
 }

@@ -22,44 +22,41 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Linq;
 using Headway.Dynamo.Serialization;
 using Headway.Dynamo.Repository.Implementation;
 using Headway.WorkflowEngine.Resolvers;
 
-namespace Headway.WorkflowEngine.Implementations
+namespace Headway.WorkflowEngine.Implementations;
+
+/// <summary>
+/// Implements a <see cref="JsonFileRepo{TObject}"/> to
+/// store and retrieve <see cref="WorkflowItem"/> objects.
+/// </summary>
+public sealed class JsonFileWorkflowItemRepo : JsonFileRepo<WorkflowItem>,
+    IWorkflowItemByIdResolver
 {
     /// <summary>
-    /// Implements a <see cref="JsonFileRepo{TObject}"/> to
-    /// store and retrieve <see cref="WorkflowItem"/> objects.
+    /// 
     /// </summary>
-    public sealed class JsonFileWorkflowItemRepo : JsonFileRepo<WorkflowItem>,
-        IWorkflowItemByIdResolver
+    /// <param name="filePath"></param>
+    /// <param name="serializerConfigSvc"></param>
+    /// <param name="svcProvider"></param>
+    public JsonFileWorkflowItemRepo(string filePath,
+          ISerializerConfigService serializerConfigSvc,
+          IServiceProvider svcProvider) :
+        base(filePath, serializerConfigSvc, svcProvider)
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="serializerConfigSvc"></param>
-        /// <param name="svcProvider"></param>
-        public JsonFileWorkflowItemRepo(string filePath,
-              ISerializerConfigService serializerConfigSvc,
-              IServiceProvider svcProvider) :
-            base(filePath, serializerConfigSvc, svcProvider)
-        {
-        }
+    }
 
-        /// <summary>
-        /// Resolves an object given a key value.
-        /// </summary>
-        /// <param name="key">Key value</param>
-        /// <returns>Object matching the given key value.</returns>
-        public WorkflowItem Resolve(object key)
-        {
-            return (from wi in this.GetQueryable()
-                    where wi.PrimaryKey == key
-                    select wi).FirstOrDefault();
-        }
+    /// <summary>
+    /// Resolves an object given a key value.
+    /// </summary>
+    /// <param name="key">Key value</param>
+    /// <returns>Object matching the given key value.</returns>
+    public WorkflowItem Resolve(object key)
+    {
+        return (from wi in this.GetQueryable()
+                where wi.PrimaryKey == key
+                select wi).FirstOrDefault();
     }
 }

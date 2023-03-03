@@ -22,40 +22,37 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
 
-using System;
+namespace Headway.WorkflowEngine.Exceptions;
 
-namespace Headway.WorkflowEngine.Exceptions
+/// <summary>
+/// Exception thrown when an expected transition cannot be
+/// found in a state.
+/// </summary>
+public sealed class TransitionNotFoundException : WorkflowException
 {
+    private readonly WorkflowState state;
+    private readonly string transitionName;
+
     /// <summary>
-    /// Exception thrown when an expected transition cannot be
-    /// found in a state.
+    /// 
     /// </summary>
-    public sealed class TransitionNotFoundException : WorkflowException
+    /// <param name="state"></param>
+    /// <param name="transitionName"></param>
+    public TransitionNotFoundException(WorkflowState state, string transitionName)
     {
-        private WorkflowState state;
-        private string transitionName;
+        this.state = state;
+        this.transitionName = transitionName;
+    }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="state"></param>
-        /// <param name="transitionName"></param>
-        public TransitionNotFoundException(WorkflowState state, string transitionName)
+    /// <summary>
+    /// 
+    /// </summary>
+    public override string Message
+    {
+        get
         {
-            this.state = state;
-            this.transitionName = transitionName;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public override string Message
-        {
-            get
-            {
-                var msg = string.Format("Transition named {0} does not existing in the {1} state", this.transitionName, this.state.Name);
-                throw new InvalidOperationException(msg);
-            }
+            var msg = string.Format("Transition named {0} does not existing in the {1} state", this.transitionName, this.state.Name);
+            throw new InvalidOperationException(msg);
         }
     }
 }

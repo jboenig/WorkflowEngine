@@ -47,7 +47,7 @@ public static class WorkflowSubjectExtensions
     /// Name of transition to follow.
     /// </param>
     /// <returns>
-    /// Returns a <see cref="WorkflowExecutionResult"/> object
+    /// Returns a <see cref="WorkflowTransitionResult"/> object
     /// that encapsulates the result of the operation.
     /// </returns>
     /// <exception cref="ArgumentNullException">
@@ -65,7 +65,7 @@ public static class WorkflowSubjectExtensions
     /// Thrown when an action fails exiting a state, transitioning,
     /// or entering a state.
     /// </exception>
-    public static async Task<WorkflowExecutionResult> TransitionTo(this IWorkflowSubject workflowSubject,
+    public static async Task<WorkflowTransitionResult> TransitionTo(this IWorkflowSubject workflowSubject,
         string transitionName,
         IServiceProvider serviceProvider)
     {

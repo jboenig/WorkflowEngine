@@ -25,14 +25,13 @@
 using Headway.Dynamo.Repository;
 using Headway.WorkflowEngine.Resolvers;
 
-namespace Headway.WorkflowEngine.Repository
+namespace Headway.WorkflowEngine.Repository;
+
+/// <summary>
+/// Interface to repository objects that store
+/// <see cref="Workflow"/> objects.
+/// </summary>
+public interface IWorkflowRepository : IWorkflowByNameResolver,
+    IObjectRepository<Workflow>
 {
-    /// <summary>
-    /// Interface to repository objects that store
-    /// <see cref="Workflow"/> objects.
-    /// </summary>
-    public interface IWorkflowRepository : IWorkflowByNameResolver,
-        IObjectRepository<Workflow>
-    {
-    }
 }

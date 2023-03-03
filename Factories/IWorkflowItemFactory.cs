@@ -22,28 +22,27 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
 
-namespace Headway.WorkflowEngine.Factories
+namespace Headway.WorkflowEngine.Factories;
+
+/// <summary>
+/// Interface to factory that creates <see cref="WorkflowItem"/>
+/// objects.
+/// </summary>
+public interface IWorkflowItemFactory
 {
     /// <summary>
-    /// Interface to factory that creates <see cref="WorkflowItem"/>
-    /// objects.
+    /// Creates a <see cref="WorkflowItem"/> based on the specified
+    /// template.
     /// </summary>
-    public interface IWorkflowItemFactory
-    {
-        /// <summary>
-        /// Creates a <see cref="WorkflowItem"/> based on the specified
-        /// template.
-        /// </summary>
-        /// <param name="templateName">
-        /// Name of template to use to generate new <see cref="WorkflowItem"/>
-        /// </param>
-        /// <param name="context">
-        /// Reference to context object.
-        /// </param>
-        /// <returns>
-        /// New instance of a <see cref="WorkflowItem"/> based on specified
-        /// template and context data.
-        /// </returns>
-        WorkflowItem CreateWorkflowItem(string templateName, object context);
-    }
+    /// <param name="templateName">
+    /// Name of template to use to generate new <see cref="WorkflowItem"/>
+    /// </param>
+    /// <param name="context">
+    /// Reference to context object.
+    /// </param>
+    /// <returns>
+    /// New instance of a <see cref="WorkflowItem"/> based on specified
+    /// template and context data.
+    /// </returns>
+    WorkflowItem CreateWorkflowItem(string templateName, object context);
 }

@@ -22,20 +22,19 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
 
-namespace Headway.WorkflowEngine.Exceptions
+namespace Headway.WorkflowEngine.Exceptions;
+
+/// <summary>
+/// 
+/// </summary>
+public sealed class WorkflowNotFoundException : WorkflowException
 {
     /// <summary>
     /// 
     /// </summary>
-    public sealed class WorkflowNotFoundException : WorkflowException
+    /// <param name="workflowFullName"></param>
+    public WorkflowNotFoundException(string workflowFullName) :
+        base(string.Format("Workflow {0} not found", workflowFullName), null)
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="workflowFullName"></param>
-        public WorkflowNotFoundException(string workflowFullName) :
-            base(string.Format("Workflow {0} not found", workflowFullName), null)
-        {
-        }
     }
 }

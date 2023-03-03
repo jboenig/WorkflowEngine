@@ -198,7 +198,7 @@ public sealed class Workflow : INamedObject, IPrimaryKeyAccessor
     /// Interface to service provider.
     /// </param>
     /// <returns>
-    /// Returns a <see cref="WorkflowExecutionResult"/> object
+    /// Returns a <see cref="WorkflowTransitionResult"/> object
     /// that encapsulates the result of the operation.
     /// </returns>
     /// <remarks>
@@ -213,7 +213,7 @@ public sealed class Workflow : INamedObject, IPrimaryKeyAccessor
     /// <exception cref="InitialStateNotFoundException">
     /// Thrown when the workflow has no initial state defined.
     /// </exception>
-    public async Task<WorkflowExecutionResult> Start(IWorkflowSubject workflowSubject, IServiceProvider serviceProvider)
+    public async Task<WorkflowTransitionResult> Start(IWorkflowSubject workflowSubject, IServiceProvider serviceProvider)
     {
         ///////////////////////////////////////////////////////////////////
         // Check arguments
@@ -245,7 +245,7 @@ public sealed class Workflow : INamedObject, IPrimaryKeyAccessor
         // Invoke OnStarted callback
         await workflowSubject.OnStarted(this);
 
-        return WorkflowExecutionResult.Success;
+        return WorkflowTransitionResult.Success;
     }
 
     /// <summary>
@@ -269,7 +269,7 @@ public sealed class Workflow : INamedObject, IPrimaryKeyAccessor
     /// Checks condition associated with the transition against
     /// the context provided by the workflow subject.
     /// </remarks>
-    public WorkflowExecutionResult IsTransitionToAllowed(IWorkflowSubject workflowSubject,
+    public WorkflowTransitionResult IsTransitionToAllowed(IWorkflowSubject workflowSubject,
         string transitionName,
         IServiceProvider serviceProvider)
     {
@@ -297,10 +297,10 @@ public sealed class Workflow : INamedObject, IPrimaryKeyAccessor
         // Check to see if the transition is allowed
         if (!transition.IsAllowed(serviceProvider, workflowSubject.GetContextObject(serviceProvider)))
         {
-            return new WorkflowExecutionResult(WorkflowExecutionResultCode.NotAllowed, string.Format("Transition {0} not allowed {1}", transitionName, transition.ConditionErrorMessage));
+            return new WorkflowTransitionResult(WorkflowTransitionResultCode.NotAllowed, string.Format("Transition {0} not allowed {1}", transitionName, transition.ConditionErrorMessage));
         }
 
-        return new WorkflowExecutionResult(WorkflowExecutionResultCode.Success);
+        return new WorkflowTransitionResult(WorkflowTransitionResultCode.Success);
     }
 
     /// <summary>
@@ -401,7 +401,7 @@ public sealed class Workflow : INamedObject, IPrimaryKeyAccessor
     }
 
     /// <summary>
-    /// Gets the current <see cref="WorkflowExecutionFrame"/> for the specified
+    /// Gets the current <see cref="WorkflowExecutionContext"/> for the specified
     /// <see cref="IWorkflowSubject"/>.
     /// </summary>
     /// <param name="workflowSubject">
@@ -411,7 +411,7 @@ public sealed class Workflow : INamedObject, IPrimaryKeyAccessor
     /// Interface to service provider.
     /// </param>
     /// <returns>
-    /// A <see cref="WorkflowExecutionFrame"/> object containing the current workflow execution
+    /// A <see cref="WorkflowExecutionContext"/> object containing the current workflow execution
     /// state information for the specified <see cref="IWorkflowSubject"/>.
     /// objects.
     /// </returns>
@@ -422,7 +422,7 @@ public sealed class Workflow : INamedObject, IPrimaryKeyAccessor
     /// Thrown when the current state of the workflow subject cannot be
     /// found in the workflow.
     /// </exception>
-    public WorkflowExecutionFrame GetExecutionFrame(IWorkflowSubject workflowSubject, IServiceProvider serviceProvider)
+    public WorkflowExecutionContext GetExecutionFrame(IWorkflowSubject workflowSubject, IServiceProvider serviceProvider)
     {
         ///////////////////////////////////////////////////////////////////
         // Check arguments
@@ -451,7 +451,7 @@ public sealed class Workflow : INamedObject, IPrimaryKeyAccessor
             IsAllowed = t.IsAllowed(serviceProvider, workflowSubject.GetContextObject(serviceProvider))
         });
 
-        return WorkflowExecutionFrame.Create(workflowSubject, nextTransitions.ToList());
+        return WorkflowExecutionContext.Create(workflowSubject, nextTransitions.ToList());
     }
 
     /// <summary>
@@ -469,7 +469,7 @@ public sealed class Workflow : INamedObject, IPrimaryKeyAccessor
     /// Interface to service provider.
     /// </param>
     /// <returns>
-    /// Returns a <see cref="WorkflowExecutionResult"/> object
+    /// Returns a <see cref="WorkflowTransitionResult"/> object
     /// that encapsulates the result of the operation.
     /// </returns>
     /// <remarks>
@@ -495,9 +495,9 @@ public sealed class Workflow : INamedObject, IPrimaryKeyAccessor
     /// Thrown when an action fails exiting a state, transitioning,
     /// or entering a state.
     /// </exception>
-    public async Task<WorkflowExecutionResult> TransitionTo(IWorkflowSubject workflowSubject, string transitionName, IServiceProvider serviceProvider)
+    public async Task<WorkflowTransitionResult> TransitionTo(IWorkflowSubject workflowSubject, string transitionName, IServiceProvider serviceProvider)
     {
-        WorkflowExecutionResult res = WorkflowExecutionResult.Success;
+        WorkflowTransitionResult res = WorkflowTransitionResult.Success;
 
         ///////////////////////////////////////////////////////////////////
         // Check arguments
@@ -537,8 +537,8 @@ public sealed class Workflow : INamedObject, IPrimaryKeyAccessor
         // Check to see if the transition is allowed
         if (!transition.IsAllowed(serviceProvider, workflowSubject.GetContextObject(serviceProvider)))
         {
-            return new WorkflowExecutionResult(
-                WorkflowExecutionResultCode.NotAllowed,
+            return new WorkflowTransitionResult(
+                WorkflowTransitionResultCode.NotAllowed,
                 string.Format("Transition {0} not allowed {1}", transitionName, transition.ConditionErrorMessage));
         }           
 
@@ -593,12 +593,12 @@ public sealed class Workflow : INamedObject, IPrimaryKeyAccessor
 
             if (!actionRes.IsSuccess)
             {
-                res = new WorkflowExecutionResult(actionRes);
+                res = new WorkflowTransitionResult(actionRes);
             }
         }
         catch (Exception ex)
         {
-            res = new WorkflowExecutionResult(ex);
+            res = new WorkflowTransitionResult(ex);
         }
 
         return res;

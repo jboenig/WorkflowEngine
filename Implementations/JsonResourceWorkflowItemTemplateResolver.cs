@@ -22,49 +22,46 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
 using Headway.Dynamo.Serialization;
 using Headway.WorkflowEngine.Resolvers;
 
-namespace Headway.WorkflowEngine.Implementations
+namespace Headway.WorkflowEngine.Implementations;
+
+/// <summary>
+/// Implements a resolver for finding <see cref="WorkflowItemTemplate"/> objects
+/// stored as JSON in assembly resources.
+/// </summary>
+public sealed class JsonResourceWorkflowItemTemplateResolver : IWorkflowItemTemplateResolver
 {
+    private readonly JsonResourceObjectResolver<WorkflowItemTemplate> jsonResourceTemplateResolver;
+
     /// <summary>
     /// 
     /// </summary>
-    public sealed class JsonResourceWorkflowItemTemplateResolver : IWorkflowItemTemplateResolver
+    /// <param name="svcProvider"></param>
+    /// <param name="assembly"></param>
+    public JsonResourceWorkflowItemTemplateResolver(IServiceProvider svcProvider,
+        System.Reflection.Assembly assembly)
     {
-        private Dictionary<string, WorkflowItemTemplate> templates = new Dictionary<string, WorkflowItemTemplate>();
-        private JsonResourceObjectResolver<WorkflowItemTemplate> jsonResourceTemplateResolver;
+        this.jsonResourceTemplateResolver = new JsonResourceObjectResolver<WorkflowItemTemplate>(svcProvider, assembly);
+    }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="svcProvider"></param>
-        /// <param name="assembly"></param>
-        public JsonResourceWorkflowItemTemplateResolver(IServiceProvider svcProvider,
-            System.Reflection.Assembly assembly)
-        {
-            this.jsonResourceTemplateResolver = new JsonResourceObjectResolver<WorkflowItemTemplate>(svcProvider, assembly);
-        }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="svcProvider"></param>
+    public JsonResourceWorkflowItemTemplateResolver(IServiceProvider svcProvider)
+    {
+        this.jsonResourceTemplateResolver = new JsonResourceObjectResolver<WorkflowItemTemplate>(svcProvider);
+    }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="svcProvider"></param>
-        public JsonResourceWorkflowItemTemplateResolver(IServiceProvider svcProvider)
-        {
-            this.jsonResourceTemplateResolver = new JsonResourceObjectResolver<WorkflowItemTemplate>(svcProvider);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public WorkflowItemTemplate Resolve(string key)
-        {
-            return this.jsonResourceTemplateResolver.Resolve(key);
-        }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public WorkflowItemTemplate Resolve(string key)
+    {
+        return this.jsonResourceTemplateResolver.Resolve(key);
     }
 }
