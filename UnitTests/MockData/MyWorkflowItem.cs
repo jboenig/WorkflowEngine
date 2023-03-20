@@ -38,6 +38,13 @@ namespace Headway.WorkflowEngine.UnitTests.MockData
         {
         }
 
+        [JsonProperty("status")]
+        public string Status
+        {
+            get;
+            set;
+        }
+
         [JsonProperty("info")]
         public string Info
         {
