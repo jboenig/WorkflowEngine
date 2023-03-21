@@ -4,6 +4,74 @@
         <name>Headway.WorkflowEngine</name>
     </assembly>
     <members>
+        <member name="T:Headway.WorkflowEngine.Commands.StartWorkflowCommand">
+            <summary>
+            Starts or executes a workflow.
+            </summary>
+            <remarks>
+            <para>
+            This command executes a workflow. Executing a workflow requires a reference
+            to the <see cref="T:Headway.WorkflowEngine.Services.IWorkflowExecutionService"/>, an <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/>
+            object, and the name of the workflow.
+            </para>
+            <para>
+            The workflow subject can either be a property of the context object passed
+            to the <see cref="M:Headway.WorkflowEngine.Commands.StartWorkflowCommand.Execute(System.IServiceProvider,System.Object)"/>
+            method or it can be the context object itself. If no property name
+            is specified in the <see cref="P:Headway.WorkflowEngine.Commands.StartWorkflowCommand.WorkflowSubjectPropertyName"/>
+            property, then the context object is cast to <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:Headway.WorkflowEngine.Commands.StartWorkflowCommand.WorkflowName">
+            <summary>
+            Gets or sets the name of the workflow to execute.
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.Commands.StartWorkflowCommand.WorkflowSubjectPropertyName">
+            <summary>
+            Gets or sets the name of the property on the context object that
+            stores the <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> object that the workflow
+            execution applies to.
+            </summary>
+            <remarks>
+            <para>
+            If this property is specified, then it must resolve to the name of
+            a property on the context object passed to the
+            <see cref="M:Headway.WorkflowEngine.Commands.StartWorkflowCommand.Execute(System.IServiceProvider,System.Object)"/>
+            method. In addition, the value of the property must be of type
+            <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/>.
+            </para>
+            <para>
+            If this property is null or whitespace, then the context object
+            passed to the <see cref="M:Headway.WorkflowEngine.Commands.StartWorkflowCommand.Execute(System.IServiceProvider,System.Object)"/>
+            method will be cast to <see cref="T:Headway.WorkflowEngine.IWorkflowSubject"/> in order to
+            get the workflow subject.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Commands.StartWorkflowCommand.Execute(System.IServiceProvider,System.Object)">
+            <summary>
+            Executes the command.
+            </summary>
+            <param name="serviceProvider">
+            Reference to service provider
+            </param>
+            <param name="context">
+            Context object
+            </param>
+            <returns>Returns a <see cref="T:Headway.Dynamo.Commands.CommandResult"/></returns>
+            <exception cref="T:Headway.Dynamo.Exceptions.ServiceNotFoundException">
+            Throws this exception of the <see cref="T:Headway.WorkflowEngine.Services.IWorkflowExecutionService"/>
+            is not found
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            Throws this exception of the context object is null
+            </exception>
+            <exception cref="T:System.IO.InvalidDataException">
+            Throws this exception if it cannot resolve the workflow subject
+            </exception>
+        </member>
         <member name="T:Headway.WorkflowEngine.Commands.TransitionToWhenCommand">
             <summary>
             This command is designed to be used in a workflow to
@@ -35,6 +103,34 @@
             The <see cref="P:Headway.WorkflowEngine.Commands.TransitionToWhenCommand.Condition"/> is evaluated and
             if true, the transition is applied.
             </remarks>
+        </member>
+        <member name="T:Headway.WorkflowEngine.Commands.WorkflowTransitionCommandResult">
+            <summary>
+            Implements the <see cref="T:Headway.Dynamo.Commands.CommandResult"/> abstract class
+            for a <see cref="T:Headway.WorkflowEngine.Commands.WorkflowTransitionCommandResult"/> object.
+            </summary>
+            <remarks>This class is a simple wrapper</remarks>
+        </member>
+        <member name="M:Headway.WorkflowEngine.Commands.WorkflowTransitionCommandResult.#ctor(Headway.WorkflowEngine.WorkflowTransitionResult)">
+            <summary>
+            Constructs a <see cref="T:Headway.WorkflowEngine.Commands.WorkflowTransitionCommandResult"/>
+            given a <see cref="T:Headway.WorkflowEngine.WorkflowTransitionResult"/>
+            </summary>
+            <param name="workflowRes">
+            The <see cref="T:Headway.WorkflowEngine.WorkflowTransitionResult"/> object that this
+            object wraps.
+            </param>
+        </member>
+        <member name="P:Headway.WorkflowEngine.Commands.WorkflowTransitionCommandResult.Description">
+            <summary>
+            Gets the description of the result
+            </summary>
+        </member>
+        <member name="P:Headway.WorkflowEngine.Commands.WorkflowTransitionCommandResult.IsSuccess">
+            <summary>
+            Gets a flag indicating whether or not the command
+            was successful.
+            </summary>
         </member>
         <member name="T:Headway.WorkflowEngine.Exceptions.ActionFailedException">
             <summary>

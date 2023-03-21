@@ -95,18 +95,14 @@ public sealed class TransitionToWhenCommand : Command
             throw new InvalidOperationException(msg);
         }
 
-        CommandResult commandRes = CommandResult.Success;
+        var workflowRes = WorkflowTransitionResult.Success;
 
         if (this.Condition == null || await this.Condition.Evaluate(serviceProvider, context))
         {
             // Apply the transition
-            var workflowTransitionRes = await workflow.TransitionTo(workflowSubject, this.TransitionName, serviceProvider);
-            if (!workflowTransitionRes.IsSuccess)
-            {
-                commandRes = new BoolCommandResult(false, workflowTransitionRes.Description);
-            }
+            workflowRes = await workflow.TransitionTo(workflowSubject, this.TransitionName, serviceProvider);
         }
 
-        return commandRes;
+        return new WorkflowTransitionCommandResult(workflowRes);
     }
 }
