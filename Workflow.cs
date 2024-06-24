@@ -22,637 +22,632 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 using Headway.Dynamo.Runtime;
 using Headway.Dynamo.Commands;
 using Headway.WorkflowEngine.Exceptions;
 
-namespace Headway.WorkflowEngine
+namespace Headway.WorkflowEngine;
+
+/// <summary>
+/// Encapsulates a workflow is a set of states and transitions
+/// that can be applied to a <see cref="IWorkflowSubject"/>.
+/// </summary>
+public sealed class Workflow : INamedObject, IPrimaryKeyAccessor
 {
+    #region Member Variables
+
+    private string fullName;
+    private string displayName;
+    private WorkflowState initialState;
+    private readonly HashSet<WorkflowState> states;
+
+    #endregion
+
+    #region Constructors
+
     /// <summary>
-    /// Encapsulates a workflow is a set of states and transitions
-    /// that can be applied to a <see cref="IWorkflowSubject"/>.
+    /// Default constructor.
     /// </summary>
-    public sealed class Workflow : INamedObject, IPrimaryKeyAccessor
+    private Workflow()
     {
-        #region Member Variables
+        this.states = new HashSet<WorkflowState>(new WorkflowState.EqualityComparer());
+    }
 
-        private string fullName;
-        private string displayName;
-        private WorkflowState initialState;
-        private readonly HashSet<WorkflowState> states;
+    /// <summary>
+    /// Constructs a <see cref="Workflow"/> given a
+    /// fully qualified name.
+    /// </summary>
+    /// <param name="fullName">
+    /// Fully qualified name of the workflow.
+    /// </param>
+    public Workflow(string fullName)
+    {
+        this.fullName = fullName;
+        this.states = new HashSet<WorkflowState>(new WorkflowState.EqualityComparer());
+    }
 
-        #endregion
+    #endregion
 
-        #region Constructors
+    #region Public Properties
 
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        private Workflow()
+    /// <summary>
+    /// Gets the name of the workflow.
+    /// </summary>
+    [JsonIgnore]
+    public string Name
+    {
+        get { return NameHelpers.GetName(this.fullName); }
+    }
+
+    /// <summary>
+    /// Gets the display name of the workflow.
+    /// </summary>        
+    [JsonProperty("displayName")]
+    public string DisplayName
+    {
+        get { return this.displayName; }
+        set { this.displayName = value; }
+    }
+
+    /// <summary>
+    /// Gets the namespace of the workflow.
+    /// </summary>
+    [JsonIgnore]
+    public string Namespace
+    {
+        get { return NameHelpers.GetNamespace(this.fullName); }
+    }
+
+    /// <summary>
+    /// Gets the fullname of the workflow.
+    /// </summary>
+    [JsonProperty("fullName")]
+    public string FullName
+    {
+        get { return this.fullName; }
+        set { this.fullName = value; }
+    }
+
+    /// <summary>
+    /// Gets or sets the primary key for this object.
+    /// </summary>
+    [JsonIgnore]
+    public object PrimaryKey
+    {
+        get { return this.FullName; }
+        set { this.FullName = value.ToString(); }
+    }
+
+    /// <summary>
+    /// Gets the initial state in this workflow.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// This value defines the state that workflow subjects
+    /// should start in.
+    /// </para>
+    /// <para>
+    /// The value assigned to this property is automatically
+    /// added to the <see cref="Workflow.States"/> collection.
+    /// </para>
+    /// </remarks>
+    [JsonProperty("initialState")]
+    public WorkflowState InitialState
+    {
+        get
         {
-            this.states = new HashSet<WorkflowState>(new WorkflowState.EqualityComparer());
+            return this.initialState;
         }
-
-        /// <summary>
-        /// Constructs a <see cref="Workflow"/> given a
-        /// fully qualified name.
-        /// </summary>
-        /// <param name="fullName">
-        /// Fully qualified name of the workflow.
-        /// </param>
-        public Workflow(string fullName)
+        set
         {
-            this.fullName = fullName;
-            this.states = new HashSet<WorkflowState>(new WorkflowState.EqualityComparer());
-        }
-
-        #endregion
-
-        #region Public Properties
-
-        /// <summary>
-        /// Gets the name of the workflow.
-        /// </summary>
-        [JsonIgnore]
-        public string Name
-        {
-            get { return NameHelpers.GetName(this.fullName); }
-        }
-
-        /// <summary>
-        /// Gets the display name of the workflow.
-        /// </summary>        
-        [JsonProperty("displayName")]
-        public string DisplayName
-        {
-            get { return this.displayName; }
-            set { this.displayName = value; }
-        }
-
-        /// <summary>
-        /// Gets the namespace of the workflow.
-        /// </summary>
-        [JsonIgnore]
-        public string Namespace
-        {
-            get { return NameHelpers.GetNamespace(this.fullName); }
-        }
-
-        /// <summary>
-        /// Gets the fullname of the workflow.
-        /// </summary>
-        [JsonProperty("fullName")]
-        public string FullName
-        {
-            get { return this.fullName; }
-            set { this.fullName = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the primary key for this object.
-        /// </summary>
-        [JsonIgnore]
-        public object PrimaryKey
-        {
-            get { return this.FullName; }
-            set { this.FullName = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Gets the initial state in this workflow.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// This value defines the state that workflow subjects
-        /// should start in.
-        /// </para>
-        /// <para>
-        /// The value assigned to this property is automatically
-        /// added to the <see cref="Workflow.States"/> collection.
-        /// </para>
-        /// </remarks>
-        [JsonProperty("initialState")]
-        public WorkflowState InitialState
-        {
-            get
+            if (this.initialState != null)
             {
-                return this.initialState;
+                this.states.Remove(this.initialState);
             }
-            set
+
+            this.initialState = value;
+
+            if (this.initialState != null)
             {
-                if (this.initialState != null)
-                {
-                    this.states.Remove(this.initialState);
-                }
-
-                this.initialState = value;
-
-                if (this.initialState != null)
-                {
-                    this.states.Add(this.initialState);
-                }
+                this.states.Add(this.initialState);
             }
         }
+    }
 
-        /// <summary>
-        /// Gets the collection of <see cref="WorkflowState"/> objects
-        /// contained by this <see cref="Workflow"/>.
-        /// </summary>
-        [JsonProperty("states")]
-        public ICollection<WorkflowState> States
+    /// <summary>
+    /// Gets the collection of <see cref="WorkflowState"/> objects
+    /// contained by this <see cref="Workflow"/>.
+    /// </summary>
+    [JsonProperty("states")]
+    public ICollection<WorkflowState> States
+    {
+        get { return this.states; }
+    }
+
+    #endregion
+
+    #region Public Methods
+
+    /// <summary>
+    /// Searches the <see cref="Workflow.States"/> collection
+    /// for a <see cref="WorkflowState"/> matching the specified
+    /// name.
+    /// </summary>
+    /// <param name="stateName">Name of state to find.</param>
+    /// <returns>
+    /// Returns the <see cref="WorkflowState"/> matching the
+    /// specified name or null if no matching state is found.
+    /// </returns>
+    public WorkflowState FindStateByName(string stateName)
+    {
+        return (from s in this.States
+                where s.Name == stateName
+                select s).FirstOrDefault();
+    }
+
+    /// <summary>
+    /// Starts execution of an <see cref="IWorkflowSubject"/> object
+    /// in this workflow.
+    /// </summary>
+    /// <param name="workflowSubject">
+    /// Workflow subject to start in this workflow.
+    /// </param>
+    /// <param name="serviceProvider">
+    /// Interface to service provider.
+    /// </param>
+    /// <returns>
+    /// Returns a <see cref="WorkflowTransitionResult"/> object
+    /// that encapsulates the result of the operation.
+    /// </returns>
+    /// <remarks>
+    /// This method associates the <see cref="IWorkflowSubject"/> with
+    /// this workflow, sets the <see cref="IWorkflowSubject.CurrentState"/>
+    /// to the <see cref="Workflow.InitialState"/> of this workflow, and
+    /// executes the enter action of the initial state.
+    /// </remarks>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when workflowSubject is null.
+    /// </exception>
+    /// <exception cref="InitialStateNotFoundException">
+    /// Thrown when the workflow has no initial state defined.
+    /// </exception>
+    public async Task<WorkflowTransitionResult> Start(IWorkflowSubject workflowSubject, IServiceProvider serviceProvider)
+    {
+        ///////////////////////////////////////////////////////////////////
+        // Check arguments
+        if (workflowSubject == null)
         {
-            get { return this.states; }
+            throw new ArgumentNullException(nameof(workflowSubject));
         }
 
-        #endregion
-
-        #region Public Methods
-
-        /// <summary>
-        /// Searches the <see cref="Workflow.States"/> collection
-        /// for a <see cref="WorkflowState"/> matching the specified
-        /// name.
-        /// </summary>
-        /// <param name="stateName">Name of state to find.</param>
-        /// <returns>
-        /// Returns the <see cref="WorkflowState"/> matching the
-        /// specified name or null if no matching state is found.
-        /// </returns>
-        public WorkflowState FindStateByName(string stateName)
+        var initialState = this.InitialState;
+        if (initialState == null)
         {
-            return (from s in this.States
-                    where s.Name == stateName
-                    select s).FirstOrDefault();
+            throw new InitialStateNotFoundException();
         }
 
-        /// <summary>
-        /// Starts execution of an <see cref="IWorkflowSubject"/> object
-        /// in this workflow.
-        /// </summary>
-        /// <param name="workflowSubject">
-        /// Workflow subject to start in this workflow.
-        /// </param>
-        /// <param name="serviceProvider">
-        /// Interface to service provider.
-        /// </param>
-        /// <returns>
-        /// Returns a <see cref="WorkflowExecutionResult"/> object
-        /// that encapsulates the result of the operation.
-        /// </returns>
-        /// <remarks>
-        /// This method associates the <see cref="IWorkflowSubject"/> with
-        /// this workflow, sets the <see cref="IWorkflowSubject.CurrentState"/>
-        /// to the <see cref="Workflow.InitialState"/> of this workflow, and
-        /// executes the enter action of the initial state.
-        /// </remarks>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when workflowSubject is null.
-        /// </exception>
-        /// <exception cref="InitialStateNotFoundException">
-        /// Thrown when the workflow has no initial state defined.
-        /// </exception>
-        public async Task<WorkflowExecutionResult> Start(IWorkflowSubject workflowSubject, IServiceProvider serviceProvider)
+        ///////////////////////////////////////////////////////////////////
+        // Execute EnterAction associated with the INITIAL state
+        await initialState.ExecuteEnterAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
+
+        ///////////////////////////////////////////////////////////////////
+        // Assign the name of the workflow to the object
+        workflowSubject.WorkflowName = this.FullName;
+
+        ///////////////////////////////////////////////////////////////////
+        // Set the current state of the workflow subject
+        // to the INITIAL state
+        workflowSubject.CurrentState = initialState.Name;
+
+        ///////////////////////////////////////////////////////////////////
+        // Invoke OnStarted callback
+        await workflowSubject.OnStarted(this);
+
+        return WorkflowTransitionResult.Success;
+    }
+
+    /// <summary>
+    /// Determines if the specified transition is allowed
+    /// for the workflow subject.
+    /// </summary>
+    /// <param name="workflowSubject">
+    /// Workflow subject to test
+    /// </param>
+    /// <param name="transitionName">
+    /// Transition to test
+    /// </param>
+    /// <param name="serviceProvider">
+    /// Service provider
+    /// </param>
+    /// <returns>
+    /// Returns true if the transition is allowed, otherwise
+    /// returns false
+    /// </returns>
+    /// <remarks>
+    /// Checks condition associated with the transition against
+    /// the context provided by the workflow subject.
+    /// </remarks>
+    public WorkflowTransitionResult IsTransitionToAllowed(IWorkflowSubject workflowSubject,
+        string transitionName,
+        IServiceProvider serviceProvider)
+    {
+        ///////////////////////////////////////////////////////////////////
+        // Get the FROM state
+        var currentStateName = workflowSubject.CurrentState;
+        if (string.IsNullOrEmpty(currentStateName))
         {
-            ///////////////////////////////////////////////////////////////////
-            // Check arguments
-            if (workflowSubject == null)
-            {
-                throw new ArgumentNullException(nameof(workflowSubject));
-            }
-
-            var initialState = this.InitialState;
-            if (initialState == null)
-            {
-                throw new InitialStateNotFoundException();
-            }
-
-            ///////////////////////////////////////////////////////////////////
-            // Execute EnterAction associated with the INITIAL state
-            await initialState.ExecuteEnterAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
-
-            ///////////////////////////////////////////////////////////////////
-            // Assign the name of the workflow to the object
-            workflowSubject.WorkflowName = this.FullName;
-
-            ///////////////////////////////////////////////////////////////////
-            // Set the current state of the workflow subject
-            // to the INITIAL state
-            workflowSubject.CurrentState = initialState.Name;
-
-            ///////////////////////////////////////////////////////////////////
-            // Invoke OnStarted callback
-            await workflowSubject.OnStarted(this);
-
-            return WorkflowExecutionResult.Success;
+            throw new StateNotFoundException(this, currentStateName);
         }
 
-        /// <summary>
-        /// Determines if the specified transition is allowed
-        /// for the workflow subject.
-        /// </summary>
-        /// <param name="workflowSubject">
-        /// Workflow subject to test
-        /// </param>
-        /// <param name="transitionName">
-        /// Transition to test
-        /// </param>
-        /// <param name="serviceProvider">
-        /// Service provider
-        /// </param>
-        /// <returns>
-        /// Returns true if the transition is allowed, otherwise
-        /// returns false
-        /// </returns>
-        /// <remarks>
-        /// Checks condition associated with the transition against
-        /// the context provided by the workflow subject.
-        /// </remarks>
-        public WorkflowExecutionResult IsTransitionToAllowed(IWorkflowSubject workflowSubject,
-            string transitionName,
-            IServiceProvider serviceProvider)
+        var fromState = this.FindStateByName(currentStateName);
+        if (fromState == null)
         {
-            ///////////////////////////////////////////////////////////////////
-            // Get the FROM state
-            var currentStateName = workflowSubject.CurrentState;
-            if (string.IsNullOrEmpty(currentStateName))
-            {
-                throw new StateNotFoundException(this, currentStateName);
-            }
-
-            var fromState = this.FindStateByName(currentStateName);
-            if (fromState == null)
-            {
-                throw new StateNotFoundException(this, currentStateName);
-            }
-
-            var transition = fromState.GetTransition(transitionName);
-            if (transition == null)
-            {
-                throw new TransitionNotFoundException(fromState, transitionName);
-            }
-
-            ///////////////////////////////////////////////////////////////////
-            // Check to see if the transition is allowed
-            if (!transition.IsAllowed(serviceProvider, workflowSubject.GetContextObject(serviceProvider)))
-            {
-                return new WorkflowExecutionResult(WorkflowExecutionResultCode.NotAllowed, string.Format("Transition {0} not allowed {1}", transitionName, transition.ConditionErrorMessage));
-            }
-
-            return new WorkflowExecutionResult(WorkflowExecutionResultCode.Success);
+            throw new StateNotFoundException(this, currentStateName);
         }
 
-        /// <summary>
-        /// Gets the collection of all transitions that are available for
-        /// the given <see cref="IWorkflowSubject"/> from its
-        /// <see cref="IWorkflowSubject.CurrentState"/>.
-        /// </summary>
-        /// <param name="workflowSubject">
-        /// Workflow subject to get transitions for.
-        /// </param>
-        /// <param name="serviceProvider">
-        /// Interface to service provider.
-        /// </param>
-        /// <returns>
-        /// A collection of <see cref="WorkflowTransition"/>
-        /// objects.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when workflowSubject is null.
-        /// </exception>
-        /// <exception cref="StateNotFoundException">
-        /// Thrown when the current state of the workflow subject cannot be
-        /// found in the workflow.
-        /// </exception>
-        public IEnumerable<WorkflowTransition> GetAllTransitions(IWorkflowSubject workflowSubject, IServiceProvider serviceProvider)
+        var transition = fromState.GetTransition(transitionName);
+        if (transition == null)
         {
-            ///////////////////////////////////////////////////////////////////
-            // Check arguments
-            if (workflowSubject == null)
-            {
-                throw new ArgumentNullException("workflowSubject");
-            }
-
-            ///////////////////////////////////////////////////////////////////
-            // Get the CURRENT state
-            var currentStateName = workflowSubject.CurrentState;
-            if (string.IsNullOrEmpty(currentStateName))
-            {
-                throw new StateNotFoundException(this, currentStateName);
-            }
-
-            var currentState = this.FindStateByName(currentStateName);
-            if (currentState == null)
-            {
-                throw new StateNotFoundException(this, currentStateName);
-            }
-
-            return currentState.Transitions;
+            throw new TransitionNotFoundException(fromState, transitionName);
         }
 
-        /// <summary>
-        /// Gets the collection of allowed transitions that are
-        /// available for the given <see cref="IWorkflowSubject"/> from
-        /// its <see cref="IWorkflowSubject.CurrentState"/>.
-        /// </summary>
-        /// <param name="workflowSubject">
-        /// Workflow subject to get allowed transitions for.
-        /// </param>
-        /// <param name="serviceProvider">
-        /// Interface to service provider.
-        /// </param>
-        /// <returns>
-        /// A collection of <see cref="WorkflowTransition"/>
-        /// objects.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when workflowSubject is null.
-        /// </exception>
-        /// <exception cref="StateNotFoundException">
-        /// Thrown when the current state of the workflow subject cannot be
-        /// found in the workflow.
-        /// </exception>
-        public IEnumerable<WorkflowTransition> GetAllowedTransitions(IWorkflowSubject workflowSubject, IServiceProvider serviceProvider)
+        ///////////////////////////////////////////////////////////////////
+        // Check to see if the transition is allowed
+        if (!transition.IsAllowed(serviceProvider, workflowSubject.GetContextObject(serviceProvider)))
         {
-            ///////////////////////////////////////////////////////////////////
-            // Check arguments
-            if (workflowSubject == null)
-            {
-                throw new ArgumentNullException("workflowSubject");
-            }
-
-            ///////////////////////////////////////////////////////////////////
-            // Get the CURRENT state
-            var currentStateName = workflowSubject.CurrentState;
-            if (string.IsNullOrEmpty(currentStateName))
-            {
-                throw new StateNotFoundException(this, currentStateName);
-            }
-
-            var currentState = this.FindStateByName(currentStateName);
-            if (currentState == null)
-            {
-                throw new StateNotFoundException(this, currentStateName);
-            }
-
-            return currentState.Transitions
-                .Where(t => t.IsAllowed(serviceProvider, workflowSubject.GetContextObject(serviceProvider)));
+            return new WorkflowTransitionResult(WorkflowTransitionResultCode.NotAllowed, string.Format("Transition {0} not allowed {1}", transitionName, transition.ConditionErrorMessage));
         }
 
-        /// <summary>
-        /// Gets the current <see cref="WorkflowExecutionFrame"/> for the specified
-        /// <see cref="IWorkflowSubject"/>.
-        /// </summary>
-        /// <param name="workflowSubject">
-        /// Workflow subject to get execution frame for.
-        /// </param>
-        /// <param name="serviceProvider">
-        /// Interface to service provider.
-        /// </param>
-        /// <returns>
-        /// A <see cref="WorkflowExecutionFrame"/> object containing the current workflow execution
-        /// state information for the specified <see cref="IWorkflowSubject"/>.
-        /// objects.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when workflowSubject is null.
-        /// </exception>
-        /// <exception cref="StateNotFoundException">
-        /// Thrown when the current state of the workflow subject cannot be
-        /// found in the workflow.
-        /// </exception>
-        public WorkflowExecutionFrame GetExecutionFrame(IWorkflowSubject workflowSubject, IServiceProvider serviceProvider)
+        return new WorkflowTransitionResult(WorkflowTransitionResultCode.Success);
+    }
+
+    /// <summary>
+    /// Gets the collection of all transitions that are available for
+    /// the given <see cref="IWorkflowSubject"/> from its
+    /// <see cref="IWorkflowSubject.CurrentState"/>.
+    /// </summary>
+    /// <param name="workflowSubject">
+    /// Workflow subject to get transitions for.
+    /// </param>
+    /// <param name="serviceProvider">
+    /// Interface to service provider.
+    /// </param>
+    /// <returns>
+    /// A collection of <see cref="WorkflowTransition"/>
+    /// objects.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when workflowSubject is null.
+    /// </exception>
+    /// <exception cref="StateNotFoundException">
+    /// Thrown when the current state of the workflow subject cannot be
+    /// found in the workflow.
+    /// </exception>
+    public IEnumerable<WorkflowTransition> GetAllTransitions(IWorkflowSubject workflowSubject, IServiceProvider serviceProvider)
+    {
+        ///////////////////////////////////////////////////////////////////
+        // Check arguments
+        if (workflowSubject == null)
         {
-            ///////////////////////////////////////////////////////////////////
-            // Check arguments
-            if (workflowSubject == null)
-            {
-                throw new ArgumentNullException("workflowSubject");
-            }
-
-            ///////////////////////////////////////////////////////////////////
-            // Get the CURRENT state
-            var currentStateName = workflowSubject.CurrentState;
-            if (string.IsNullOrEmpty(currentStateName))
-            {
-                throw new StateNotFoundException(this, currentStateName);
-            }
-
-            var currentState = this.FindStateByName(currentStateName);
-            if (currentState == null)
-            {
-                throw new StateNotFoundException(this, currentStateName);
-            }
-
-            var nextTransitions = currentState.Transitions.Select(t => new WorkflowTransitionDescriptor()
-            {
-                TransitionName = t.Name,
-                IsAllowed = t.IsAllowed(serviceProvider, workflowSubject.GetContextObject(serviceProvider))
-            });
-
-            return WorkflowExecutionFrame.Create(workflowSubject, nextTransitions.ToList());
+            throw new ArgumentNullException("workflowSubject");
         }
 
-        /// <summary>
-        /// Transitions the specified workflow subject to a
-        /// new state along a given <see cref="WorkflowTransition"/>.
-        /// </summary>
-        /// <param name="workflowSubject">
-        /// Workflow subject to transition to a new state.
-        /// </param>
-        /// <param name="transitionName">
-        /// Name of the <see cref="WorkflowTransition"/> to follow to
-        /// the new state.
-        /// </param>
-        /// <param name="serviceProvider">
-        /// Interface to service provider.
-        /// </param>
-        /// <returns>
-        /// Returns a <see cref="WorkflowExecutionResult"/> object
-        /// that encapsulates the result of the operation.
-        /// </returns>
-        /// <remarks>
-        /// The transition is only allowed if the
-        /// <see cref="WorkflowTransition.Condition"/> evaluates to true.
-        /// The <see cref="WorkflowState.ExitAction"/>,
-        /// <see cref="WorkflowTransition.Action"/>, and
-        /// <see cref="WorkflowState.EnterAction"/> are all fired
-        /// along the way.
-        /// </remarks>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when workflowSubject or transitionName is null.
-        /// </exception>
-        /// <exception cref="StateNotFoundException">
-        /// Thrown when the current state of the workflow subject cannot be
-        /// found in the workflow.
-        /// </exception>
-        /// <exception cref="TransitionNotFoundException">
-        /// Thrown when the specified transitionName cannot be found
-        /// in the FROM state.
-        /// </exception>
-        /// <exception cref="ActionFailedException">
-        /// Thrown when an action fails exiting a state, transitioning,
-        /// or entering a state.
-        /// </exception>
-        public async Task<WorkflowExecutionResult> TransitionTo(IWorkflowSubject workflowSubject, string transitionName, IServiceProvider serviceProvider)
+        ///////////////////////////////////////////////////////////////////
+        // Get the CURRENT state
+        var currentStateName = workflowSubject.CurrentState;
+        if (string.IsNullOrEmpty(currentStateName))
         {
-            WorkflowExecutionResult res = WorkflowExecutionResult.Success;
+            throw new StateNotFoundException(this, currentStateName);
+        }
+
+        var currentState = this.FindStateByName(currentStateName);
+        if (currentState == null)
+        {
+            throw new StateNotFoundException(this, currentStateName);
+        }
+
+        return currentState.Transitions;
+    }
+
+    /// <summary>
+    /// Gets the collection of allowed transitions that are
+    /// available for the given <see cref="IWorkflowSubject"/> from
+    /// its <see cref="IWorkflowSubject.CurrentState"/>.
+    /// </summary>
+    /// <param name="workflowSubject">
+    /// Workflow subject to get allowed transitions for.
+    /// </param>
+    /// <param name="serviceProvider">
+    /// Interface to service provider.
+    /// </param>
+    /// <returns>
+    /// A collection of <see cref="WorkflowTransition"/>
+    /// objects.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when workflowSubject is null.
+    /// </exception>
+    /// <exception cref="StateNotFoundException">
+    /// Thrown when the current state of the workflow subject cannot be
+    /// found in the workflow.
+    /// </exception>
+    public IEnumerable<WorkflowTransition> GetAllowedTransitions(IWorkflowSubject workflowSubject, IServiceProvider serviceProvider)
+    {
+        ///////////////////////////////////////////////////////////////////
+        // Check arguments
+        if (workflowSubject == null)
+        {
+            throw new ArgumentNullException("workflowSubject");
+        }
+
+        ///////////////////////////////////////////////////////////////////
+        // Get the CURRENT state
+        var currentStateName = workflowSubject.CurrentState;
+        if (string.IsNullOrEmpty(currentStateName))
+        {
+            throw new StateNotFoundException(this, currentStateName);
+        }
+
+        var currentState = this.FindStateByName(currentStateName);
+        if (currentState == null)
+        {
+            throw new StateNotFoundException(this, currentStateName);
+        }
+
+        return currentState.Transitions
+            .Where(t => t.IsAllowed(serviceProvider, workflowSubject.GetContextObject(serviceProvider)));
+    }
+
+    /// <summary>
+    /// Gets the current <see cref="WorkflowExecutionContext"/> for the specified
+    /// <see cref="IWorkflowSubject"/>.
+    /// </summary>
+    /// <param name="workflowSubject">
+    /// Workflow subject to get execution frame for.
+    /// </param>
+    /// <param name="serviceProvider">
+    /// Interface to service provider.
+    /// </param>
+    /// <returns>
+    /// A <see cref="WorkflowExecutionContext"/> object containing the current workflow execution
+    /// state information for the specified <see cref="IWorkflowSubject"/>.
+    /// objects.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when workflowSubject is null.
+    /// </exception>
+    /// <exception cref="StateNotFoundException">
+    /// Thrown when the current state of the workflow subject cannot be
+    /// found in the workflow.
+    /// </exception>
+    public WorkflowExecutionContext GetExecutionFrame(IWorkflowSubject workflowSubject, IServiceProvider serviceProvider)
+    {
+        ///////////////////////////////////////////////////////////////////
+        // Check arguments
+        if (workflowSubject == null)
+        {
+            throw new ArgumentNullException("workflowSubject");
+        }
+
+        ///////////////////////////////////////////////////////////////////
+        // Get the CURRENT state
+        var currentStateName = workflowSubject.CurrentState;
+        if (string.IsNullOrEmpty(currentStateName))
+        {
+            throw new StateNotFoundException(this, currentStateName);
+        }
+
+        var currentState = this.FindStateByName(currentStateName);
+        if (currentState == null)
+        {
+            throw new StateNotFoundException(this, currentStateName);
+        }
+
+        var nextTransitions = currentState.Transitions.Select(t => new WorkflowTransitionDescriptor()
+        {
+            TransitionName = t.Name,
+            IsAllowed = t.IsAllowed(serviceProvider, workflowSubject.GetContextObject(serviceProvider))
+        });
+
+        return WorkflowExecutionContext.Create(workflowSubject, nextTransitions.ToList());
+    }
+
+    /// <summary>
+    /// Transitions the specified workflow subject to a
+    /// new state along a given <see cref="WorkflowTransition"/>.
+    /// </summary>
+    /// <param name="workflowSubject">
+    /// Workflow subject to transition to a new state.
+    /// </param>
+    /// <param name="transitionName">
+    /// Name of the <see cref="WorkflowTransition"/> to follow to
+    /// the new state.
+    /// </param>
+    /// <param name="serviceProvider">
+    /// Interface to service provider.
+    /// </param>
+    /// <returns>
+    /// Returns a <see cref="WorkflowTransitionResult"/> object
+    /// that encapsulates the result of the operation.
+    /// </returns>
+    /// <remarks>
+    /// The transition is only allowed if the
+    /// <see cref="WorkflowTransition.Condition"/> evaluates to true.
+    /// The <see cref="WorkflowState.ExitAction"/>,
+    /// <see cref="WorkflowTransition.Action"/>, and
+    /// <see cref="WorkflowState.EnterAction"/> are all fired
+    /// along the way.
+    /// </remarks>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when workflowSubject or transitionName is null.
+    /// </exception>
+    /// <exception cref="StateNotFoundException">
+    /// Thrown when the current state of the workflow subject cannot be
+    /// found in the workflow.
+    /// </exception>
+    /// <exception cref="TransitionNotFoundException">
+    /// Thrown when the specified transitionName cannot be found
+    /// in the FROM state.
+    /// </exception>
+    /// <exception cref="ActionFailedException">
+    /// Thrown when an action fails exiting a state, transitioning,
+    /// or entering a state.
+    /// </exception>
+    public async Task<WorkflowTransitionResult> TransitionTo(IWorkflowSubject workflowSubject, string transitionName, IServiceProvider serviceProvider)
+    {
+        WorkflowTransitionResult res = WorkflowTransitionResult.Success;
+
+        ///////////////////////////////////////////////////////////////////
+        // Check arguments
+        if (workflowSubject == null)
+        {
+            throw new ArgumentNullException("workflowSubject");
+        }
+
+        if (string.IsNullOrEmpty(transitionName))
+        {
+            throw new ArgumentNullException("transitionName");
+        }
+
+        ///////////////////////////////////////////////////////////////////
+        // Get the FROM state
+        var currentStateName = workflowSubject.CurrentState;
+        if (string.IsNullOrEmpty(currentStateName))
+        {
+            throw new StateNotFoundException(this, currentStateName);
+        }
+
+        var fromState = this.FindStateByName(currentStateName);
+        if (fromState == null)
+        {
+            throw new StateNotFoundException(this, currentStateName);
+        }
+
+        ///////////////////////////////////////////////////////////////////
+        // Get the transition
+        var transition = fromState.GetTransition(transitionName);
+        if (transition == null)
+        {
+            throw new TransitionNotFoundException(fromState, transitionName);
+        }
+
+        ///////////////////////////////////////////////////////////////////
+        // Check to see if the transition is allowed
+        if (!transition.IsAllowed(serviceProvider, workflowSubject.GetContextObject(serviceProvider)))
+        {
+            return new WorkflowTransitionResult(
+                WorkflowTransitionResultCode.NotAllowed,
+                string.Format("Transition {0} not allowed {1}", transitionName, transition.ConditionErrorMessage));
+        }           
+
+        ///////////////////////////////////////////////////////////////////
+        // Get the TO state
+        var toState = (from s in this.States
+                       where s.Name == transition.ToStateName
+                       select s).FirstOrDefault();
+        if (toState == null)
+        {
+            throw new StateNotFoundException(this, transition.ToStateName);
+        }
+
+        try
+        {
+            ///////////////////////////////////////////////////////////////////
+            // Fire the pre-transition notification on the workflow subject
+            await workflowSubject.OnTransitioningTo(this, transition);
+
+            CommandResult actionRes;
 
             ///////////////////////////////////////////////////////////////////
-            // Check arguments
-            if (workflowSubject == null)
+            // Execute ExitAction associated with the FROM state
+            actionRes = await fromState.ExecuteExitAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
+            if (actionRes.IsSuccess)
             {
-                throw new ArgumentNullException("workflowSubject");
+                ///////////////////////////////////////////////////////////////////
+                // Execute Action associated with the transition
+                actionRes = await transition.ExecuteAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
             }
 
-            if (string.IsNullOrEmpty(transitionName))
+            if (actionRes.IsSuccess)
             {
-                throw new ArgumentNullException("transitionName");
+                ///////////////////////////////////////////////////////////////////
+                // Fire the post-transition notification on the workflow subject
+                await workflowSubject.OnTransitionedTo(this, transition);
             }
 
-            ///////////////////////////////////////////////////////////////////
-            // Get the FROM state
-            var currentStateName = workflowSubject.CurrentState;
-            if (string.IsNullOrEmpty(currentStateName))
+            if (actionRes.IsSuccess)
             {
-                throw new StateNotFoundException(this, currentStateName);
+                ///////////////////////////////////////////////////////////////////
+                // Set the current state of the workflow subject to the new state
+                workflowSubject.CurrentState = toState.Name;
             }
 
-            var fromState = this.FindStateByName(currentStateName);
-            if (fromState == null)
+            if (actionRes.IsSuccess)
             {
-                throw new StateNotFoundException(this, currentStateName);
+                ///////////////////////////////////////////////////////////////////
+                // Execute EnterAction associated with the TO state
+                actionRes = await toState.ExecuteEnterAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
             }
 
-            ///////////////////////////////////////////////////////////////////
-            // Get the transition
-            var transition = fromState.GetTransition(transitionName);
-            if (transition == null)
+            if (!actionRes.IsSuccess)
             {
-                throw new TransitionNotFoundException(fromState, transitionName);
+                res = new WorkflowTransitionResult(actionRes);
             }
+        }
+        catch (Exception ex)
+        {
+            res = new WorkflowTransitionResult(ex);
+        }
 
-            ///////////////////////////////////////////////////////////////////
-            // Check to see if the transition is allowed
-            if (!transition.IsAllowed(serviceProvider, workflowSubject.GetContextObject(serviceProvider)))
-            {
-                return new WorkflowExecutionResult(
-                    WorkflowExecutionResultCode.NotAllowed,
-                    string.Format("Transition {0} not allowed {1}", transitionName, transition.ConditionErrorMessage));
-            }           
+        return res;
+    }
 
-            ///////////////////////////////////////////////////////////////////
-            // Get the TO state
-            var toState = (from s in this.States
-                           where s.Name == transition.ToStateName
-                           select s).FirstOrDefault();
+    /// <summary>
+    /// Check for disconnects between states and transitions.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="WorkflowAnalysis"/> object containing counters
+    /// and information about errors found during analysis.
+    /// </returns>
+    public WorkflowAnalysis Analyze()
+    {
+        var res = new WorkflowAnalysis();
+        var visitedStates = new List<WorkflowState>();
+        this.Analyze(this.InitialState, visitedStates, res);
+        return res;
+    }
+
+    #endregion
+
+    #region Implementation
+
+    private void Analyze(WorkflowState workflowState, ICollection<WorkflowState> visitedStates, WorkflowAnalysis res)
+    {
+        if (visitedStates.Contains(workflowState))
+        {
+            return;
+        }
+
+        visitedStates.Add(workflowState);
+        res.StateCount = res.StateCount + 1;
+
+        foreach (var transition in workflowState.Transitions)
+        {
+            res.TransitionCount = res.TransitionCount + 1;
+
+            var toState = this.FindStateByName(transition.ToStateName);
             if (toState == null)
             {
-                throw new StateNotFoundException(this, transition.ToStateName);
+                res.AddError(new StateNotFoundException(this, transition.ToStateName));
             }
-
-            try
+            else
             {
-                ///////////////////////////////////////////////////////////////////
-                // Fire the pre-transition notification on the workflow subject
-                await workflowSubject.OnTransitioningTo(this, transition);
-
-                CommandResult actionRes;
-
-                ///////////////////////////////////////////////////////////////////
-                // Execute ExitAction associated with the FROM state
-                actionRes = await fromState.ExecuteExitAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
-                if (actionRes.IsSuccess)
-                {
-                    ///////////////////////////////////////////////////////////////////
-                    // Execute Action associated with the transition
-                    actionRes = await transition.ExecuteAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
-                }
-
-                if (actionRes.IsSuccess)
-                {
-                    ///////////////////////////////////////////////////////////////////
-                    // Fire the post-transition notification on the workflow subject
-                    await workflowSubject.OnTransitionedTo(this, transition);
-                }
-
-                if (actionRes.IsSuccess)
-                {
-                    ///////////////////////////////////////////////////////////////////
-                    // Set the current state of the workflow subject to the new state
-                    workflowSubject.CurrentState = toState.Name;
-                }
-
-                if (actionRes.IsSuccess)
-                {
-                    ///////////////////////////////////////////////////////////////////
-                    // Execute EnterAction associated with the TO state
-                    actionRes = await toState.ExecuteEnterAction(serviceProvider, workflowSubject.GetContextObject(serviceProvider));
-                }
-
-                if (!actionRes.IsSuccess)
-                {
-                    res = new WorkflowExecutionResult(actionRes);
-                }
-            }
-            catch (Exception ex)
-            {
-                res = new WorkflowExecutionResult(ex);
-            }
-
-            return res;
-        }
-
-        /// <summary>
-        /// Check for disconnects between states and transitions.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="WorkflowAnalysis"/> object containing counters
-        /// and information about errors found during analysis.
-        /// </returns>
-        public WorkflowAnalysis Analyze()
-        {
-            var res = new WorkflowAnalysis();
-            var visitedStates = new List<WorkflowState>();
-            this.Analyze(this.InitialState, visitedStates, res);
-            return res;
-        }
-
-        #endregion
-
-        #region Implementation
-
-        private void Analyze(WorkflowState workflowState, ICollection<WorkflowState> visitedStates, WorkflowAnalysis res)
-        {
-            if (visitedStates.Contains(workflowState))
-            {
-                return;
-            }
-
-            visitedStates.Add(workflowState);
-            res.StateCount = res.StateCount + 1;
-
-            foreach (var transition in workflowState.Transitions)
-            {
-                res.TransitionCount = res.TransitionCount + 1;
-
-                var toState = this.FindStateByName(transition.ToStateName);
-                if (toState == null)
-                {
-                    res.AddError(new StateNotFoundException(this, transition.ToStateName));
-                }
-                else
-                {
-                    this.Analyze(toState, visitedStates, res);
-                }
+                this.Analyze(toState, visitedStates, res);
             }
         }
-
-        #endregion
     }
+
+    #endregion
 }

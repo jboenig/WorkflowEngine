@@ -24,53 +24,52 @@
 
 using Newtonsoft.Json;
 
-namespace Headway.WorkflowEngine
+namespace Headway.WorkflowEngine;
+
+/// <summary>
+/// Describes a <see cref="WorkflowTransition"/> in the
+/// context of a particular user and <see cref="IWorkflowSubject"/>.
+/// </summary>
+public sealed class WorkflowTransitionDescriptor
 {
     /// <summary>
-    /// Describes a <see cref="WorkflowTransition"/> in the
-    /// context of a particular user and <see cref="IWorkflowSubject"/>.
+    /// Gets or sets the name of the transition.
     /// </summary>
-    public sealed class WorkflowTransitionDescriptor
+    [JsonProperty("transitionName")]
+    public string TransitionName
     {
-        /// <summary>
-        /// Gets or sets the name of the transition.
-        /// </summary>
-        [JsonProperty("transitionName")]
-        public string TransitionName
-        {
-            get;
-            set;
-        }
+        get;
+        set;
+    }
 
-        /// <summary>
-        /// Gets the description of the transition.
-        /// </summary>
-        [JsonProperty("description")]
-        public string Description
-        {
-            get;
-            set;
-        }
+    /// <summary>
+    /// Gets the description of the transition.
+    /// </summary>
+    [JsonProperty("description")]
+    public string Description
+    {
+        get;
+        set;
+    }
 
-        /// <summary>
-        /// Gets or sets a flag indicating whether or not the
-        /// transition is allowed in the given context.
-        /// </summary>
-        [JsonProperty("isAllowed")]
-        public bool IsAllowed
-        {
-            get;
-            set;
-        }
+    /// <summary>
+    /// Gets or sets a flag indicating whether or not the
+    /// transition is allowed in the given context.
+    /// </summary>
+    [JsonProperty("isAllowed")]
+    public bool IsAllowed
+    {
+        get;
+        set;
+    }
 
-        /// <summary>
-        /// Gets or set the reason the transition is not allowed.
-        /// </summary>
-        [JsonProperty("reason")]
-        public string Reason
-        {
-            get;
-            set;
-        }
+    /// <summary>
+    /// Gets or set the reason the transition is not allowed.
+    /// </summary>
+    [JsonProperty("reason")]
+    public string Reason
+    {
+        get;
+        set;
     }
 }

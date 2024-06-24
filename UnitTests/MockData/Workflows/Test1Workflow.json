@@ -10,7 +10,16 @@
       }
     ],
     "canEnter": null,
-    "enterAction": null,
+    "enterAction": {
+        "$type": "Headway.Dynamo.Commands.MacroCommand, Headway.Dynamo",
+        "commands": [
+            {
+                "$type": "Headway.Dynamo.Commands.SetPropertyValueCommand, Headway.Dynamo",
+                "propertyName": "Status",
+                "value": "In Progress"
+            }
+        ]
+    },
     "exitAction": null
   },
   "states": [
@@ -59,7 +68,16 @@
       "name": "Complete",
       "canEnter": null,
       "enterAction": null,
-      "exitAction": null
+      "exitAction": {
+          "$type": "Headway.Dynamo.Commands.MacroCommand, Headway.Dynamo",
+          "commands": [
+              {
+                  "$type": "Headway.Dynamo.Commands.SetPropertyValueCommand, Headway.Dynamo",
+                  "propertyName": "Status",
+                  "value": "Done"
+              }
+          ]
+      }
     }
   ]
 }

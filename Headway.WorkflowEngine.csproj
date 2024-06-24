@@ -6,7 +6,7 @@
 		<Nullable>disable</Nullable>
 		<SignAssembly>False</SignAssembly>
 		<Authors>Headway Software</Authors>
-		<VersionPrefix>3.1.0</VersionPrefix>
+		<VersionPrefix>3.2.1</VersionPrefix>
 		<RepositoryUrl>https://github.com/jboenig/Dynamo</RepositoryUrl>
 		<PackageTags>metadata</PackageTags>
 		<PackageProjectUrl>https://www.nuget.org/packages/Headway.WorkflowEngine/</PackageProjectUrl>
@@ -20,11 +20,13 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+		<WarningLevel>3</WarningLevel>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+		<WarningLevel>3</WarningLevel>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -50,7 +52,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Headway.Dynamo" Version="3.1.0" />
+		<PackageReference Include="Headway.Dynamo" Version="3.2.1" />
 	</ItemGroup>
 
 	<ItemGroup>

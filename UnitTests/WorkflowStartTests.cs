@@ -38,7 +38,7 @@ using Headway.WorkflowEngine.Implementations;
 namespace WorkflowEngine.UnitTests
 {
     [TestClass]
-    public class WorkflowExecutionFrameTests
+    public class WorkflowStartTests
     {
         private IKernel kernel;
 
@@ -60,7 +60,7 @@ namespace WorkflowEngine.UnitTests
         }
 
         [TestMethod]
-        public async Task GetTest1ExecutionFrame()
+        public async Task StartWorkflowTest1()
         {
             var workflowItemFactory = this.kernel.GetService(typeof(IWorkflowItemFactory)) as IWorkflowItemFactory;
 
@@ -73,15 +73,8 @@ namespace WorkflowEngine.UnitTests
             var resExec = await workflowExecutionSvc.StartWorkflow(workflowItem);
             Assert.IsTrue(resExec.IsSuccess);
 
-            var resTransition = await workflowExecutionSvc.TransitionTo(workflowItem, "Start");
-            Assert.IsTrue(resTransition.IsSuccess);
-
-            var exeFrame = workflowExecutionSvc.GetCurrentExecutionFrame(workflowItem);
-            Assert.IsNotNull(exeFrame);
-
-            Assert.AreEqual(exeFrame.NextTransitions.Count(), 2);
-            Assert.AreEqual(exeFrame.NextTransitions.First().TransitionName, "Review Complete");
-            Assert.AreEqual(exeFrame.NextTransitions.First().IsAllowed, true);
+            var statusValue = workflowItem.GetPropertyValue<string>("Status");
+            Assert.AreEqual("In Progress", statusValue);
         }
     }
 }

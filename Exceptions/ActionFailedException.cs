@@ -22,38 +22,37 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
 
-using System;
+namespace Headway.WorkflowEngine.Exceptions;
 
-namespace Headway.WorkflowEngine.Exceptions
+/// <summary>
+/// Exception thrown when an action fails during workflow execution.
+/// </summary>
+public sealed class ActionFailedException : WorkflowException
 {
     /// <summary>
-    /// Exception thrown when an action fails during workflow execution.
+    /// Constructs an <see cref="ActionFailedException"/>
+    /// given a message.
     /// </summary>
-    public sealed class ActionFailedException : WorkflowException
+    /// <param name="message">
+    /// Message to associate with this exception.
+    /// </param>
+    public ActionFailedException(string message) :
+        base(message, null)
     {
-        /// <summary>
-        /// Constructs an <see cref="ActionFailedException"/>
-        /// given a message.
-        /// </summary>
-        /// <param name="message">
-        /// Message to associate with this exception.
-        /// </param>
-        public ActionFailedException(string message)
-        {
-        }
+    }
 
-        /// <summary>
-        /// Constructs an <see cref="ActionFailedException"/>
-        /// given a message and inner exception.
-        /// </summary>
-        /// <param name="message">
-        /// Message to associate with this exception.
-        /// </param>
-        /// <param name="innerException">
-        /// Exception that caused the action to fail.
-        /// </param>
-        public ActionFailedException(string message, Exception innerException)
-        {
-        }
+    /// <summary>
+    /// Constructs an <see cref="ActionFailedException"/>
+    /// given a message and inner exception.
+    /// </summary>
+    /// <param name="message">
+    /// Message to associate with this exception.
+    /// </param>
+    /// <param name="innerException">
+    /// Exception that caused the action to fail.
+    /// </param>
+    public ActionFailedException(string message, Exception innerException) :
+        base(message, innerException)
+    {
     }
 }

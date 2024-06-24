@@ -22,37 +22,56 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
 
-namespace Headway.WorkflowEngine.Exceptions;
+using Newtonsoft.Json;
+
+namespace Headway.WorkflowEngine;
 
 /// <summary>
-/// Exception thrown when an expected transition cannot be
-/// found in a state.
+/// This class encpasulates a snapshot of the current state of workflow execution
+/// for a <see cref="IWorkflowSubject"/>.
 /// </summary>
-public sealed class TransitionNotFoundException : WorkflowException
+/// <remarks>
+/// This class provides information about available transitions that are in
+/// the context of the given <see cref="IWorkflowSubject"/>. Specifically, it
+/// flags each transition as allowed or not allowed and includes information
+/// explaining why transitions are not allow.
+/// </remarks>
+public sealed class WorkflowExecutionContext
 {
-    private readonly WorkflowState state;
-    private readonly string transitionName;
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="state"></param>
-    /// <param name="transitionName"></param>
-    public TransitionNotFoundException(WorkflowState state, string transitionName)
+    internal static WorkflowExecutionContext Create(IWorkflowSubject subject,
+        IEnumerable<WorkflowTransitionDescriptor> nextTransitions)
     {
-        this.state = state;
-        this.transitionName = transitionName;
+        var workflowExecutionFrame = new WorkflowExecutionContext()
+        {
+            Subject = subject,
+            NextTransitions = nextTransitions
+        };
+        return workflowExecutionFrame;
+    }
+
+    private WorkflowExecutionContext()
+    {
     }
 
     /// <summary>
-    /// 
+    /// Gets the <see cref="IWorkflowSubject"/> described by this
+    /// execution frame.
     /// </summary>
-    public override string Message
+    [JsonIgnore]
+    public IWorkflowSubject Subject
     {
-        get
-        {
-            var msg = string.Format("Transition named {0} does not existing in the {1} state", this.transitionName, this.state.Name);
-            throw new InvalidOperationException(msg);
-        }
+        get;
+        private set;
+    }
+
+    /// <summary>
+    /// Gets the collection of transitions from the current state in the
+    /// context of the <see cref="IWorkflowSubject"/>.
+    /// </summary>
+    [JsonProperty("nextTransitions")]
+    public IEnumerable<WorkflowTransitionDescriptor> NextTransitions
+    {
+        get;
+        private set;
     }
 }

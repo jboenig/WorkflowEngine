@@ -22,139 +22,140 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Headway.Dynamo.Runtime;
 using Headway.Dynamo.Metadata;
 
-namespace Headway.WorkflowEngine
+namespace Headway.WorkflowEngine;
+
+/// <summary>
+/// Base class for items that can be the subject of a workflow.
+/// </summary>
+/// <remarks>
+/// This class provides an implementation of <see cref="IWorkflowSubject"/> that
+/// is a dynamic object
+/// </remarks>
+[JsonObject]
+public class WorkflowItem : DynamoObject, IWorkflowSubject, IPrimaryKeyAccessor
 {
     /// <summary>
-    /// Base class for items that participate in workflow.
+    /// Default constructor
     /// </summary>
-    [JsonObject]
-    public class WorkflowItem : DynamoObject, IWorkflowSubject, IPrimaryKeyAccessor
+    public WorkflowItem()
     {
-        /// <summary>
-        /// Default constructor
-        /// </summary>
-        public WorkflowItem()
-        {
-        }
+    }
 
-        /// <summary>
-        /// Constructs a <see cref="WorkflowItem"/> given
-        /// an <see cref="ObjectType"/>
-        /// </summary>
-        /// <param name="objType">
-        /// Object metadata for this <see cref="WorkflowItem"/>
-        /// </param>
-        public WorkflowItem(ObjectType objType) :
-            base(objType)
-        {
-        }
+    /// <summary>
+    /// Constructs a <see cref="WorkflowItem"/> given
+    /// an <see cref="ObjectType"/>
+    /// </summary>
+    /// <param name="objType">
+    /// Object metadata for this <see cref="WorkflowItem"/>
+    /// </param>
+    public WorkflowItem(ObjectType objType) :
+        base(objType)
+    {
+    }
 
-        /// <summary>
-        /// Gets the unique identifier for this
-        /// <see cref="WorkflowItem"/>.
-        /// </summary>
-        [JsonProperty("primaryKey")]
-        public object PrimaryKey
-        {
-            get;
-            set;
-        }
+    /// <summary>
+    /// Gets the unique identifier for this
+    /// <see cref="WorkflowItem"/>.
+    /// </summary>
+    [JsonProperty("primaryKey")]
+    public object PrimaryKey
+    {
+        get;
+        set;
+    }
 
-        /// <summary>
-        /// Gets the fully qualified name of the <see cref="Workflow"/> associated with
-        /// this object.
-        /// </summary>
-        [JsonProperty("workflowName")]
-        public string WorkflowName
-        {
-            get;
-            set;
-        }
+    /// <summary>
+    /// Gets the fully qualified name of the <see cref="Workflow"/> associated with
+    /// this object.
+    /// </summary>
+    [JsonProperty("workflowName")]
+    public string WorkflowName
+    {
+        get;
+        set;
+    }
 
-        /// <summary>
-        /// Gets the name of workflow current state this object is in.
-        /// </summary>
-        [JsonProperty("currentState")]
-        public string CurrentState
-        {
-            get;
-            set;
-        }
+    /// <summary>
+    /// Gets the name of workflow current state this object is in.
+    /// </summary>
+    [JsonProperty("currentState")]
+    public string CurrentState
+    {
+        get;
+        set;
+    }
 
-        /// <summary>
-        /// Gets or sets the name of the last transition that occurred
-        /// on this <see cref="WorkflowItem"/>.
-        /// </summary>
-        [JsonProperty("lastTransition")]
-        public string LastTransition
-        {
-            get;
-            protected set;
-        }
+    /// <summary>
+    /// Gets or sets the name of the last transition that occurred
+    /// on this <see cref="WorkflowItem"/>.
+    /// </summary>
+    [JsonProperty("lastTransition")]
+    public string LastTransition
+    {
+        get;
+        protected set;
+    }
 
-        /// <summary>
-        /// Gets the context object.
-        /// </summary>
-        /// <param name="svcProvider">Reference to service provider</param>
-        /// <returns>Context object</returns>
-        public virtual object GetContextObject(IServiceProvider svcProvider)
-        {
-            return this;
-        }
+    /// <summary>
+    /// Gets the context object.
+    /// </summary>
+    /// <param name="svcProvider">Reference to service provider</param>
+    /// <returns>Context object</returns>
+    public virtual object GetContextObject(IServiceProvider svcProvider)
+    {
+        return this;
+    }
 
-        /// <summary>
-        /// Called after this item is started in a workflow.
-        /// </summary>
-        /// <param name="workflow">
-        /// Workflow this item has started
-        /// </param>
-        public virtual Task OnStarted(Workflow workflow)
+    /// <summary>
+    /// Called after this item is started in a workflow.
+    /// </summary>
+    /// <param name="workflow">
+    /// Workflow this item has started
+    /// </param>
+    public virtual Task OnStarted(Workflow workflow)
+    {
+        this.LastTransition = null;
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Called before this object is transitioned to a new state.
+    /// </summary>
+    /// <param name="workflow">
+    /// Workflow that contains the transition
+    /// </param>
+    /// <param name="transition">
+    /// Transition executed
+    /// </param>
+    public virtual Task OnTransitioningTo(Workflow workflow, WorkflowTransition transition)
+    {
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Called after this object is transitioned to a new state.
+    /// </summary>
+    /// <param name="workflow">
+    /// Workflow that contains the transition
+    /// </param>
+    /// <param name="transition">
+    /// Transition executed
+    /// </param>
+    public virtual Task OnTransitionedTo(Workflow workflow, WorkflowTransition transition)
+    {
+        if (transition != null)
+        {
+            this.LastTransition = transition.Name;
+        }
+        else
         {
             this.LastTransition = null;
-            return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// Called before this object is transitioned to a new state.
-        /// </summary>
-        /// <param name="workflow">
-        /// Workflow that contains the transition
-        /// </param>
-        /// <param name="transition">
-        /// Transition executed
-        /// </param>
-        public virtual Task OnTransitioningTo(Workflow workflow, WorkflowTransition transition)
-        {
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Called after this object is transitioned to a new state.
-        /// </summary>
-        /// <param name="workflow">
-        /// Workflow that contains the transition
-        /// </param>
-        /// <param name="transition">
-        /// Transition executed
-        /// </param>
-        public virtual Task OnTransitionedTo(Workflow workflow, WorkflowTransition transition)
-        {
-            if (transition != null)
-            {
-                this.LastTransition = transition.Name;
-            }
-            else
-            {
-                this.LastTransition = null;
-            }
-
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

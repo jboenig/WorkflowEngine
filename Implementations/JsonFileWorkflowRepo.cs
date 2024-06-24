@@ -22,37 +22,53 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
 
-namespace Headway.WorkflowEngine.Exceptions;
+using Headway.Dynamo.Serialization;
+using Headway.Dynamo.Repository.Implementation;
+using Headway.WorkflowEngine.Repository;
+
+namespace Headway.WorkflowEngine.Implementations;
 
 /// <summary>
-/// Exception thrown when an expected transition cannot be
-/// found in a state.
+/// Implements a <see cref="JsonFileRepo{TObject}"/> to
+/// store and retrieve <see cref="Workflow"/> objects.
 /// </summary>
-public sealed class TransitionNotFoundException : WorkflowException
+public sealed class JsonFileWorkflowRepo : JsonFileRepo<Workflow>,
+    IWorkflowRepository
 {
-    private readonly WorkflowState state;
-    private readonly string transitionName;
-
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="state"></param>
-    /// <param name="transitionName"></param>
-    public TransitionNotFoundException(WorkflowState state, string transitionName)
+    /// <param name="filePath"></param>
+    /// <param name="serializerConfigSvc"></param>
+    /// <param name="svcProvider"></param>
+    public JsonFileWorkflowRepo(string filePath,
+          ISerializerConfigService serializerConfigSvc,
+          IServiceProvider svcProvider) :
+        base(filePath, serializerConfigSvc, svcProvider)
     {
-        this.state = state;
-        this.transitionName = transitionName;
     }
 
     /// <summary>
     /// 
     /// </summary>
-    public override string Message
+    /// <param name="serializerConfigSvc"></param>
+    /// <param name="svcProvider"></param>
+    public JsonFileWorkflowRepo(ISerializerConfigService serializerConfigSvc,
+          IServiceProvider svcProvider) :
+        base(serializerConfigSvc, svcProvider)
     {
-        get
-        {
-            var msg = string.Format("Transition named {0} does not existing in the {1} state", this.transitionName, this.state.Name);
-            throw new InvalidOperationException(msg);
-        }
+    }
+
+    /// <summary>
+    /// Resolves a <see cref="Workflow"/> object given a
+    /// fully-qualified workflow name.
+    /// </summary>
+    /// <param name="workflowName">Fully qualified name of the workflow</param>
+    /// <returns>Workflow matching the given workflow name.</returns>
+    public Workflow Resolve(string workflowName)
+    {
+        return (from w in this.GetQueryable()
+                where w.FullName == workflowName
+                select w).FirstOrDefault();
     }
 }

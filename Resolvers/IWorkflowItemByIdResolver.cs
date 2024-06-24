@@ -24,13 +24,12 @@
 
 using Headway.Dynamo.Runtime;
 
-namespace Headway.WorkflowEngine.Resolvers
+namespace Headway.WorkflowEngine.Resolvers;
+
+/// <summary>
+/// Service interface for resolving <see cref="WorkflowItem"/> objects
+/// given a unique ID.
+/// </summary>
+public interface IWorkflowItemByIdResolver : IObjectResolver<object, WorkflowItem>
 {
-    /// <summary>
-    /// Service interface for resolving <see cref="WorkflowItem"/> objects
-    /// given a unique ID.
-    /// </summary>
-    public interface IWorkflowItemByIdResolver : IObjectResolver<object, WorkflowItem>
-    {
-    }
 }
