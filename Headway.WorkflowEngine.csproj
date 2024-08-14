@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 		<SignAssembly>False</SignAssembly>
 		<Authors>Headway Software</Authors>
-		<VersionPrefix>3.1.0</VersionPrefix>
+		<VersionPrefix>3.3.0</VersionPrefix>
 		<RepositoryUrl>https://github.com/jboenig/Dynamo</RepositoryUrl>
 		<PackageTags>metadata</PackageTags>
 		<PackageProjectUrl>https://www.nuget.org/packages/Headway.WorkflowEngine/</PackageProjectUrl>
@@ -38,6 +38,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="Headway.Dynamo" Version="3.3.0" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Update="WorkflowEngine.png">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
@@ -47,10 +51,6 @@
 			<PackagePath>\</PackagePath>
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Headway.Dynamo" Version="3.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -166,7 +166,7 @@
         </member>
         <member name="T:Headway.WorkflowEngine.Implementations.FlatFileWorkflowItemRepo">
             <summary>
-            Implements a <see cref="T:Headway.Dynamo.Repository.FlatFile.FlatFileRepo`1"/> to
+            Implements a <see cref="!:FlatFileRepo&lt;TObject&gt;"/> to
             store and retrieve <see cref="T:Headway.WorkflowEngine.WorkflowItem"/> objects.
             </summary>
         </member>
@@ -187,7 +187,7 @@
         </member>
         <member name="T:Headway.WorkflowEngine.Implementations.FlatFileWorkflowRepo">
             <summary>
-            Implements a <see cref="T:Headway.Dynamo.Repository.FlatFile.FlatFileRepo`1"/> to
+            Implements a <see cref="!:FlatFileRepo&lt;TObject&gt;"/> to
             store and retrieve <see cref="T:Headway.WorkflowEngine.Workflow"/> objects.
             </summary>
         </member>

@@ -25,7 +25,7 @@
 using System;
 using System.Linq;
 using Headway.Dynamo.Serialization;
-using Headway.Dynamo.Repository.FlatFile;
+using Headway.Dynamo.Repository.Implementation;
 using Headway.WorkflowEngine.Resolvers;
 
 namespace Headway.WorkflowEngine.Implementations
@@ -34,7 +34,7 @@ namespace Headway.WorkflowEngine.Implementations
     /// Implements a <see cref="FlatFileRepo{TObject}"/> to
     /// store and retrieve <see cref="WorkflowItem"/> objects.
     /// </summary>
-    public sealed class FlatFileWorkflowItemRepo : FlatFileRepo<WorkflowItem>,
+    public sealed class FlatFileWorkflowItemRepo : JsonFileRepo<WorkflowItem>,
         IWorkflowItemByIdResolver
     {
         /// <summary>
