@@ -166,7 +166,7 @@
         </member>
         <member name="T:Headway.WorkflowEngine.Implementations.FlatFileWorkflowItemRepo">
             <summary>
-            Implements a <see cref="!:FlatFileRepo&lt;TObject&gt;"/> to
+            Implements a <see cref="T:Headway.Dynamo.Repository.Implementation.JsonFileRepo`1"/> to
             store and retrieve <see cref="T:Headway.WorkflowEngine.WorkflowItem"/> objects.
             </summary>
         </member>
@@ -187,7 +187,7 @@
         </member>
         <member name="T:Headway.WorkflowEngine.Implementations.FlatFileWorkflowRepo">
             <summary>
-            Implements a <see cref="!:FlatFileRepo&lt;TObject&gt;"/> to
+            Implements a <see cref="T:Headway.Dynamo.Repository.Implementation.JsonFileRepo`1"/> to
             store and retrieve <see cref="T:Headway.WorkflowEngine.Workflow"/> objects.
             </summary>
         </member>
@@ -1329,6 +1329,11 @@
             Gets the name of the state this transition goes to.
             </summary>
         </member>
+        <member name="P:Headway.WorkflowEngine.WorkflowTransition.ToStateNameWhenFalse">
+            <summary>
+            Gets the name of the state this transition goes to.
+            </summary>
+        </member>
         <member name="P:Headway.WorkflowEngine.WorkflowTransition.Condition">
             <summary>
             Gets the <see cref="P:Headway.WorkflowEngine.WorkflowTransition.Condition"/> that determines if
@@ -1367,6 +1372,22 @@
             <param name="serviceProvider">Interface to service provider.</param>
             <param name="context"></param>
             <returns></returns>
+        </member>
+        <member name="M:Headway.WorkflowEngine.WorkflowTransition.EvaluateCondition(System.IServiceProvider,System.Object)">
+            <summary>
+            Evaluates the <see cref="P:Headway.WorkflowEngine.WorkflowTransition.Condition"/> and determines if the transition
+            is allowed, and if so, what the next workflow state will be.
+            </summary>
+            <param name="serviceProvider">
+            The service provider used to resolve dependencies for condition evaluation.
+            </param>
+            <param name="context">
+            Context object used during condition evaluation
+            </param>
+            <returns>
+            Returns the name of the next workflow state or null if the
+            transition is not allowed.
+            </returns>
         </member>
         <member name="M:Headway.WorkflowEngine.WorkflowTransition.ExecuteAction(System.IServiceProvider,System.Object)">
             <summary>

@@ -31,7 +31,7 @@ using Headway.WorkflowEngine.Resolvers;
 namespace Headway.WorkflowEngine.Implementations
 {
     /// <summary>
-    /// Implements a <see cref="FlatFileRepo{TObject}"/> to
+    /// Implements a <see cref="JsonFileRepo{TObject}"/> to
     /// store and retrieve <see cref="WorkflowItem"/> objects.
     /// </summary>
     public sealed class FlatFileWorkflowItemRepo : JsonFileRepo<WorkflowItem>,

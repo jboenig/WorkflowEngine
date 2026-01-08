@@ -22,6 +22,8 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -41,12 +43,12 @@ namespace Headway.WorkflowEngine
         #region Member Variables
 
         private string name;
-        private string description;
+        private string? description;
         private string toStateName;
-        private Condition isAllowed;
-        private Command action;
-        private string userPrompt;
-        private string userPromptView;
+        private Condition? condition;
+        private Command? action;
+        private string? userPrompt;
+        private string? userPromptView;
 
         #endregion
 
@@ -57,6 +59,9 @@ namespace Headway.WorkflowEngine
         /// </summary>
         private WorkflowTransition()
         {
+            this.name = string.Empty;
+            this.toStateName = string.Empty;
+            this.Description = string.Empty;
         }
 
         /// <summary>
@@ -68,6 +73,7 @@ namespace Headway.WorkflowEngine
         {
             this.name = name;
             this.toStateName = toStateName;
+            this.Description = string.Empty;
         }
 
         #endregion
@@ -88,7 +94,7 @@ namespace Headway.WorkflowEngine
         /// Gets the description of the state.
         /// </summary>
         [JsonProperty("description")]
-        public string Description
+        public string? Description
         {
             get { return this.description; }
             set { this.description = value; }
@@ -104,15 +110,24 @@ namespace Headway.WorkflowEngine
         }
 
         /// <summary>
+        /// Gets the name of the state this transition goes to.
+        /// </summary>
+        [JsonProperty("toStateName")]
+        public string? ToStateNameWhenFalse
+        {
+            get { return this.toStateName; }
+        }
+
+        /// <summary>
         /// Gets the <see cref="Condition"/> that determines if
         /// this transition is allowed in the current context.
         /// state.
         /// </summary>
         [JsonProperty("condition")]
-        public Condition Condition
+        public Condition? Condition
         {
-            get { return this.isAllowed; }
-            set { this.isAllowed = value; }
+            get { return this.condition; }
+            set { this.condition = value; }
         }
 
         /// <summary>
@@ -120,7 +135,7 @@ namespace Headway.WorkflowEngine
         /// when this transition is taken.
         /// </summary>
         [JsonProperty("action")]
-        public Command Action
+        public Command? Action
         {
             get { return this.action; }
             set { this.action = value; }
@@ -131,7 +146,7 @@ namespace Headway.WorkflowEngine
         /// to applying this transition.
         /// </summary>
         [JsonProperty("userPrompt")]
-        public string UserPrompt
+        public string? UserPrompt
         {
             get { return this.userPrompt; }
             set { this.userPrompt = value; }
@@ -142,7 +157,7 @@ namespace Headway.WorkflowEngine
         /// to applying this transition.
         /// </summary>
         [JsonProperty("userPromptView")]
-        public string UserPromptView
+        public string? UserPromptView
         {
             get { return this.userPromptView; }
             set { this.userPromptView = value; }
@@ -153,7 +168,7 @@ namespace Headway.WorkflowEngine
         /// to applying this transition.
         /// </summary>
         [JsonProperty("conditionErrorMessage")]
-        public string ConditionErrorMessage
+        public string? ConditionErrorMessage
         {
             get;
             set;
@@ -171,23 +186,51 @@ namespace Headway.WorkflowEngine
         /// <returns></returns>
         public bool IsAllowed(IServiceProvider serviceProvider, object context)
         {
-            var isAllowed = true;
+            var toStateName = Task.Run(() => this.EvaluateCondition(serviceProvider, context)).GetAwaiter().GetResult();
+            return !string.IsNullOrEmpty(toStateName);
+        }
+
+        /// <summary>
+        /// Evaluates the <see cref="WorkflowTransition.Condition"/> and determines if the transition
+        /// is allowed, and if so, what the next workflow state will be.
+        /// </summary>
+        /// <param name="serviceProvider">
+        /// The service provider used to resolve dependencies for condition evaluation.
+        /// </param>
+        /// <param name="context">
+        /// Context object used during condition evaluation
+        /// </param>
+        /// <returns>
+        /// Returns the name of the next workflow state or null if the
+        /// transition is not allowed.
+        /// </returns>
+        public async Task<string?> EvaluateCondition(IServiceProvider serviceProvider, dynamic context)
+        {
+            string? toStateName = this.ToStateName;
 
             var condition = this.Condition;
             if (condition != null)
             {
                 try
                 {
-                    isAllowed = Task.Run(() => condition.Evaluate(serviceProvider, context)).GetAwaiter().GetResult();
+                    var conditionRes = await condition.Evaluate(serviceProvider, context);
+                    if (conditionRes)
+                    {
+                        toStateName = this.ToStateName;
+                    }
+                    else
+                    {
+                        toStateName = this.ToStateNameWhenFalse;
+                    }
                 }
                 catch (Exception ex)
                 {
-                    isAllowed = false;
+                    toStateName = null;
                     this.ConditionErrorMessage = ex.Message;
                 }
             }
 
-            return isAllowed;
+            return toStateName;
         }
 
         /// <summary>
@@ -230,8 +273,14 @@ namespace Headway.WorkflowEngine
             /// <param name="x"></param>
             /// <param name="y"></param>
             /// <returns></returns>
-            public bool Equals(WorkflowTransition x, WorkflowTransition y)
+            public bool Equals(WorkflowTransition? x, WorkflowTransition? y)
             {
+                if (x == null && y == null)
+                    return true;
+                else if (x == null)
+                    return false;
+                else if (y == null)
+                    return false;
                 return (x.Name.CompareTo(y.Name) == 0);
             }
 
